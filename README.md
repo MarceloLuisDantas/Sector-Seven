@@ -1,17 +1,17 @@
 [:brazil:](/readme_languages/README_pt-br.md) :uk:
 
 # Sector Seven
-Sector Seven é um C Project Builder, feito para ser fácil de utilizar por iniciantes e para a criação de testes.
-PS: Não é recomendado utilizar esta ferramenta para projetos grandes, porém pode ser usada para projetos menores.
+**Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
+**Note**: This tool is not recommended for large projects, but works well for smaller ones.
 
 ## Motivações
-Eu gosto de C e sempre tive vontade de utilizar para meus projetos pessoais, porém não consegui me adaptar às principais ferramentas de build. Ou eram excessivamente complexas para minhas necessidades, ou eram muito complicadas de usar sem a ajuda de um programador mais experiente. Eu só queria poder criar testes de forma simples e não sofrer com arquivos espalhados, mas isso não estava sendo possível. A cada blog post que lia sobre "Tests with CMake", "Testing C with Google Test" ou algo similar, eu desanimava mais em usar C, até que acabei abandonando a ideia de utilizá-la.
+I love C and always wanted to use it for my personal projects, but I couldn't adapt to the build tools used by most of the community. They were either over-engineered for my needs or too complicated to use without help from others. I just wanted to create tests easily and avoid dealing with scattered files, but this wasn't possible(in an easy way). Every blog post I read about "Tests with CMake" or "Testing C with Google Test" made me more lazy about learning not C, but the tools to learn C, until I eventually gave up on the idea.
 
-Minha primeira opção foi olhar para linguagens que se propõem a ser versões modernas de C: Rust, Nim, Zig, Go, C3 e Odin. Nenhuma delas era o que eu queria. Portanto, se não consigo encontrar algo que me sirva, eu mesmo criarei esse algo (mesmo que fique ruim).
+My first approach was to look at the "modern C" languages: Rust, Nim, Zig, Go, C3, and Odin. None of them were really what I wanted. Therefore, if I can't find something that fits my needs, I'll create it myself (even if it turns out bad).
 
 ## Instalação
 ### install.py
-Se você usa Bash ou ZSH, pode executar o script de instalação para instalar automaticamente:
+If you use Bash or ZSH, you can run the installation script for install automatically::
 
 ```
 $ python3 install.py
@@ -30,11 +30,11 @@ by running: sector --init
 ```
 
 ### Manual
-Para instalar manualmente, crie uma pasta no local desejado e mova o arquivo sector.py para ela. Em seguida, adicione o alias ao arquivo de configurações do terminal para poder utilizar o Sector em qualquer lugar.
+To install manually: Create a folder in your desired location. Move the sector.py file into it. Add the alias to your shell configuration file to use Sector from anywhere.
 
 ## Modo de uso
 ### Criando projeto
-Para começar, rode `sector --init project_name` para criar a base de um projeto. Sera criado o `project.py` com as configurações basicas do projeto, a pasta de `src`, para guardar todos os arquivos necessarios, e `builds`, para as builds.
+To get started, run `sector --init project_name` to create the project foundation. This will generate a `project.py` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs.
 
 ```
 $ sector --init "build_test"
@@ -42,7 +42,7 @@ Creating ./src, ./builds and ./builds/tests folders
 Creating project.py and tests.py
 ```
 
-Para verificar que tudo esta configurado como devido, tente compilar e rodar o projeto com:
+To verify everything is properly configured, try compiling and running the project using `sector --build` and `sector --run`:
 
 ```
 $ sector --build
@@ -59,8 +59,8 @@ $ sector --run
 Hello World!!
 ```
 
-### Gerenciado arquivos fontes e compilando
-Para que o Sector possa compilar seu projeto corretamente, é necessário especificar o caminho para cada arquivo `.c` que você esteja utilizando na lista de **sources** em `project.py`. O [project.py](/test/project.py) no projeto de exemplo em [test](/test/) utiliza 3 arquivos externos, que estão listados em `project.py`, junto com as flags a serem passadas ao compilador.
+### Managing Source Files and Compiling
+For Sector to compile your project properly, you need to specify the path to each `.c` file you're using in the sources list within `project.py`. The example project in [test](/test/project.py) uses 3 source files (listed in its `project.py`), along with the compiler flags to be used.
 
 ```Python
 project = "test_project"
@@ -75,7 +75,8 @@ sources = [
 comp_flags = ["-Wall", "-Werror", "-O1"]
 ```
 
-Para compilar e executar o projeto, basta rodar os comandos `sector --build` para compilar o projeto, e `sector --run` para executar o projeto compilado.
+You can compile your project by running `sector --build`, then execute the compiled program using `sector --run`.
+
 ```
 $ sector --build
 Compiling Project test_project.
@@ -96,11 +97,11 @@ Element: 3 = 6
 ```
 
 ### Criando testes
-Testes no Sector são apenas outros arquivos em C. O objetivo é tornar a criação de testes algo simples que não necessite de nada além de um nome e algumas funções. O Sector Seven apenas se encarrega de compilar e executar os testes - ainda não existe uma biblioteca dedicada para ajudar na criação dos testes.
+Testing in Sector is just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a few functions. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself. 
 
-Para criar um teste, primeiro é preciso criar um arquivo que servirá como main, que terá todos os testes que você queira executar. No diretório [structs](/test/src/structs/) foram implementadas duas versões de um array: uma para ints (**array_int.c**) e outra para floats (**array_float.c**). Para realizar os testes, bastou criar um arquivo de teste para array int (**array_int_test.c**) e um para array float (**array_float_test.c**) (PS: Os nomes dos arquivos de testes não precisam terminar com _test, porém é recomendado).
+To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/src/structs/array_int.c) and another for floats [`array_float.c`](/test/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/src/structs/array_int_test.c) and [`array_float_test.c`](/test/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. 
 
-Com os arquivos de teste criados, basta adicioná-los e nomeá-los em `tests.py`.
+Once your test files are ready, add and name them in your [`tests.py`](/test/tests.py) configuration file.
 ```Python
 project = "test_project"
 
@@ -118,8 +119,8 @@ tests = {
 
 test_flags = ["-Wall", "-Wno-unused-variable"]
 ```
+As mentioned earlier, each test is essentially just another executable that gets compiled and run. To work with these tests, you can use the `sector --run-test "test_name"` to execute a specific test, or `sector --run-tests` to automatically run all available tests in sequence.
 
-Como mencionado, cada teste é apenas mais um executável a ser compilado e executado. Para usá-los, basta rodar `sector --run-test "test_name"` para executar um teste específico, ou `sector --run-tests` para executar todos os testes.
 ```
 $ sector --run-test "array_int"
 Compiling Test array_int.
