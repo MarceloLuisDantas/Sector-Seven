@@ -1,6 +1,6 @@
 [:uk:](/README.md)
 
-# Sector Seven
+# Sector Seven v0.1
 Sector Seven é um C Project Builder, feito para ser fácil de utilizar por iniciantes e para a criação de testes.
 PS: Não é recomendado utilizar esta ferramenta para projetos grandes, porém pode ser usada para projetos menores.
 

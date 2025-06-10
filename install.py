@@ -1,5 +1,9 @@
+from pathlib import Path
 from shutil import copy
+import importlib.util
 import os
+
+VERSION = 0.1
 
 sector_dir = os.path.expanduser("~/.sector")
 sector_file = os.path.expanduser("~/.sector/sector.py")
@@ -14,7 +18,7 @@ if not os.path.isfile(sector_file):
     print("Copying sector.py to ~/.sector...")
     copy("sector.py", sector_file)
 else:
-    print("Sector Seven is already installed.")
+    print("Other version fo Sector Seven is already installed.")
     print("Do you want to remove the old version and continue? [y/n]")
     c = input(" > ").lower()
     if (c == "y" or c == "yes") :
@@ -56,6 +60,6 @@ else:
     os.exit(1)
 
 
-print("Sector Seven should now be installed on your machine.") 
+print(f"Sector Seven v{VERSION} should now be installed on your machine.") 
 print("Refresh your terminal and test creating a new project")
-print("by running: sector --init")  
+print("by running: sector --version")  

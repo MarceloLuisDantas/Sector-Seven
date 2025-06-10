@@ -1,6 +1,6 @@
 [:brazil:](/readme_languages/README_pt-br.md)
 
-# Sector Seven
+# Sector Seven 0.1
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but works well for smaller ones.
 
