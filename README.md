@@ -97,7 +97,7 @@ Element: 3 = 6
 ### Criando testes
 Testes em Sector são apenas outros arquivos em C, o intuito é tornar a criação de testes algo simples que não necessite de nada alem de um nome e um algumas funções. O Sector Seven apenas se encarrega de compilar os testes e rodalos, ainda não existe alguma biblioteca dedicada para ajudar na criação dos testes.
 
-Para criar um teste, primeiro é preciso criar um arquivo que sirvira como main, que ira ter todos os testes que você queira executar. No diretorio [structs](/test/src/structs/), foram implementadas duas versões de um array, um para ints(*array_int.c*) e um para floats(*array_float.c*). Para realizar os testes, bastou criar um arquivo de teste para array int(*array_int_test.c*), e um para array float(*array_float_test.c*) (PS: Os nomes dos arquivos de testes não precisam terminar com *_test*, porem é recomendado).
+Para criar um teste, primeiro é preciso criar um arquivo que sirvira como main, que ira ter todos os testes que você queira executar. No diretorio [structs](/test/src/structs/), foram implementadas duas versões de um array, um para ints(**array_int.c**) e um para floats(**array_float.c**). Para realizar os testes, bastou criar um arquivo de teste para array int(**array_int_test.c**), e um para array float(**array_float_test.c**) (PS: Os nomes dos arquivos de testes não precisam terminar com **_test**, porem é recomendado).
 
 Com os arquivos de teste criados, basta adicionar e nomear os testes em `tests.py`.
 ```Python
