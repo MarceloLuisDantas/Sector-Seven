@@ -30,8 +30,15 @@ by running: sector --init
 ### Manual
 Para instalar manualmente, crie uma pasta no local desejado e mova o arquivo sector.py para ela. Em seguida, adicione o alias ao arquivo de configurações do terminal para poder utilizar o Sector em qualquer lugar.
 
-## Criando projeto
+## Modo de uso
+### Criando projeto
 Para começar, rode `sector --init project_name` para criar a base de um projeto. Sera criado o `project.py` com as configurações basicas do projeto, a pasta de `src`, para guardar todos os arquivos necessarios, e `builds`, para as builds.
+
+```
+> sector --init "build_test"
+Creating ./src, ./builds and ./builds/tests folders
+Creating project.py and tests.py
+```
 
 Para verificar que tudo esta configurado como devido, tente compilar e rodar o projeto com:
 
@@ -49,3 +56,6 @@ Compilation finished
 > sector --run
 Hello World!!
 ```
+
+### Gerenciado fontes e compilando
+Para que o Sector possa compilar o seu projeto de forma correta, é preciso especificar o caminho para cada arquivo `.c` que você esteja utilizando na lsita de *sources* em `project.py`. O `project.py`

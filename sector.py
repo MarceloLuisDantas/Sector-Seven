@@ -130,7 +130,7 @@ def init_project(name) :
 # ----------------------------------------------------------------------------------------------
 # TESTES FUNCTIONS -----------------------------------------------------------------------------
 
-def get_flags(tests) :
+def get_flags_tests(tests) :
     flags = None
     if hasattr(tests, "test_flags"):
         flags = tests.test_flags    
@@ -177,7 +177,7 @@ def run_tests(tests) :
     tests_list = None
     if hasattr(tests, "tests"):
         tests_list = tests.tests
-    flags = get_flags(tests)
+    flags = get_flags_tests(tests)
 
     for test_name in tests_list :
         comp_test(test_name, tests_list[test_name], flags)
@@ -189,11 +189,11 @@ def run_tests(tests) :
 def main() :
     parser = argparse.ArgumentParser(description="Sector - C Building Tool")
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--init", type=str, metavar="NAME", help="creates the basic struct of a projetc")
-    group.add_argument("--build", action="store_true", help="builds the project")
-    group.add_argument("--run", action="store_true", help="runs the project")
-    group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="run the named test")
-    group.add_argument("--run-tests", action="store_true", help="run all the tests")
+    group.add_argument("-i", "--init", type=str, metavar="NAME", help="creates the basic struct of a projetc")
+    group.add_argument("-b", "--build", action="store_true", help="builds the project")
+    group.add_argument("-r", "--run", action="store_true", help="runs the project")
+    group.add_argument("-t", "--run-test", type=str, metavar="TEST_NAME", help="run the named test")
+    group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
 
     args = parser.parse_args()
 
