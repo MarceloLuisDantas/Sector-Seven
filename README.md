@@ -4,12 +4,12 @@
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but works well for smaller ones.
 
-## Motivações
+## Motivantion
 I love C and always wanted to use it for my personal projects, but I couldn't adapt to the build tools used by most of the community. They were either over-engineered for my needs or too complicated to use without help from others. I just wanted to create tests easily and avoid dealing with scattered files, but this wasn't possible(in an easy way). Every blog post I read about "Tests with CMake" or "Testing C with Google Test" made me more lazy about learning not C, but the tools to learn C, until I eventually gave up on the idea.
 
 My first approach was to look at the "modern C" languages: Rust, Nim, Zig, Go, C3, and Odin. None of them were really what I wanted. Therefore, if I can't find something that fits my needs, I'll create it myself (even if it turns out bad).
 
-## Instalação
+## Install
 ### install.py
 If you use Bash or ZSH, you can run the installation script for install automatically::
 
@@ -32,8 +32,8 @@ by running: sector --init
 ### Manual
 To install manually: Create a folder in your desired location. Move the sector.py file into it. Add the alias to your shell configuration file to use Sector from anywhere.
 
-## Modo de uso
-### Criando projeto
+## How to Use
+### Creating a project
 To get started, run `sector --init project_name` to create the project foundation. This will generate a `project.py` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs.
 
 ```
@@ -96,7 +96,7 @@ Element: 3 = 6
 2.300000
 ```
 
-### Criando testes
+### Creating tests
 Testing in Sector is just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a few functions. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself. 
 
 To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/src/structs/array_int.c) and another for floats [`array_float.c`](/test/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/src/structs/array_int_test.c) and [`array_float_test.c`](/test/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. 
