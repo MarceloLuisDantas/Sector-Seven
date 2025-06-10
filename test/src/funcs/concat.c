@@ -1,4 +1,4 @@
-#include "../structs/array.h"
+#include "../structs/array_int.h"
 #include <stdlib.h>
 #include <stdint.h>
 

@@ -1,0 +1,15 @@
+project = "test_project"
+
+tests = {
+    "array_int": [
+        "src/structs/array_int_test.c",
+        "src/structs/array_int.c",
+    ],
+
+    "array_float": [
+        "src/structs/array_float_test.c",
+        "src/structs/array_float.c"
+    ]
+}
+
+test_flags = ["-Wall", "-Wno-unused-variable"]

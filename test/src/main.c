@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structs/array.h"
+#include "structs/array_int.h"
 #include "funcs/concat.h"
 
 int main() {
