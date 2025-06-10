@@ -1,9 +1,5 @@
-from pathlib import Path
 from shutil import copy
-import importlib.util
 import os
-
-VERSION = 0.1
 
 sector_dir = os.path.expanduser("~/.sector")
 sector_file = os.path.expanduser("~/.sector/sector.py")
