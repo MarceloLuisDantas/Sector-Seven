@@ -12,7 +12,7 @@ Minha primeira opção foi olhar para linguagens que se propõem a ser versões 
 Se você usa Bash ou ZSH, pode executar o script de instalação para instalar automaticamente:
 
 ```
-> python3 install.py
+$ python3 install.py
 Creating ~/.sector...
 Copying sector.py to ~/.sector...
 sector.py is now installed in "~/.sector"
@@ -35,7 +35,7 @@ Para instalar manualmente, crie uma pasta no local desejado e mova o arquivo sec
 Para começar, rode `sector --init project_name` para criar a base de um projeto. Sera criado o `project.py` com as configurações basicas do projeto, a pasta de `src`, para guardar todos os arquivos necessarios, e `builds`, para as builds.
 
 ```
-> sector --init "build_test"
+$ sector --init "build_test"
 Creating ./src, ./builds and ./builds/tests folders
 Creating project.py and tests.py
 ```
@@ -43,7 +43,7 @@ Creating project.py and tests.py
 Para verificar que tudo esta configurado como devido, tente compilar e rodar o projeto com:
 
 ```
-> sector --build
+$ sector --build
 Compiling project_name.
  > gcc src/main.c -Wall -o builds/kokonoe
 
@@ -53,9 +53,98 @@ None - Compilantion OK
 
 Compilation finished
 
-> sector --run
+$ sector --run
 Hello World!!
 ```
 
-### Gerenciado fontes e compilando
-Para que o Sector possa compilar o seu projeto de forma correta, é preciso especificar o caminho para cada arquivo `.c` que você esteja utilizando na lsita de *sources* em `project.py`. O `project.py`
+### Gerenciado arquivos fontes e compilando
+Para que o Sector possa compilar o seu projeto de forma correta, é preciso especificar o caminho para cada arquivo `.c` que você esteja utilizando na lista de *sources* em `project.py`. O [project.py](/test/project.py) no projeto de exemplo em [test](/test/), é utilizado 3 arquivos externos, que estão listados em `project.py`, junto as flags a serem passadas ao compilador.
+
+```Python
+project = "test_project"
+
+sources = [
+    "src/main.c",
+    "src/funcs/concat.c",
+    "src/structs/array_int.c",
+    "src/structs/array_float.c"
+]
+
+comp_flags = ["-Wall", "-Werror", "-O1"]
+```
+
+Para compilar e rodar o projeto, basta rodar os comandos `sector --build` para buildar o projeto, e `sector --run` para rodar o projeto compilado.
+
+```
+$ sector --build
+Compiling Project test_project.
+ > gcc src/main.c src/funcs/concat.c src/structs/array_int.c src/structs/array_float.c -Wall -Werror -O1 -o builds/test_project
+
+GCC Output: 
+None - Compilation OK
+----------
+
+Compilation finished
+
+$ sector --run
+Element: 0 = 1
+Element: 1 = 2
+Element: 2 = 5
+Element: 3 = 6
+2.300000
+```
+
+### Criando testes
+Testes em Sector são apenas outros arquivos em C, o intuito é tornar a criação de testes algo simples que não necessite de nada alem de um nome e um algumas funções. O Sector Seven apenas se encarrega de compilar os testes e rodalos, ainda não existe alguma biblioteca dedicada para ajudar na criação dos testes.
+
+Para criar um teste, primeiro é preciso criar um arquivo que sirvira como main, que ira ter todos os testes que você queira executar. No diretorio [structs](/test/src/structs/), foram implementadas duas versões de um array, um para ints(*array_int.c*) e um para floats(*array_float.c*). Para realizar os testes, bastou criar um arquivo de teste para array int(*array_int_test.c*), e um para array float(*array_float_test.c*) (PS: Os nomes dos arquivos de testes não precisam terminar com *_test*, porem é recomendado).
+
+Com os arquivos de teste criados, basta adicionar e nomear os testes em `tests.py`.
+```Python
+project = "test_project"
+
+tests = {
+    "array_int": [
+        "src/structs/array_int_test.c",
+        "src/structs/array_int.c"
+    ],
+
+    "array_float": [
+        "src/structs/array_float_test.c",
+        "src/structs/array_float.c"
+    ]
+}
+
+test_flags = ["-Wall", "-Wno-unused-variable"]
+```
+
+Como dito, cada teste é apenas mais um executavel a ser compilado e executado, e para usso basta rodar `sector --run-test "test_name"` para rodar alguma test especifico, ou `sector --run-tests` para rodar todos os testes.
+```
+$ sector --run-test "array_int"
+Compiling Test array_int.
+ > gcc src/structs/array_int_test.c src/structs/array_int.c -Wall -Wno-unused-variable -o builds/tests/array_int
+GCC Output:----------
+None - Compilation OK
+---------------------
+Compilation finished
+
+Running test: 
+Ok int
+
+$ sector --run-tests
+Compiling Test array_int.
+ > gcc src/structs/array_int_test.c src/structs/array_int.c -Wall -Wno-unused-variable -o builds/tests/array_int
+GCC Output:----------
+None - Compilation OK
+---------------------
+Compilation finished
+Ok int
+
+Compiling Test array_float.
+ > gcc src/structs/array_float_test.c src/structs/array_float.c -Wall -Wno-unused-variable -o builds/tests/array_float
+GCC Output:----------
+None - Compilation OK
+---------------------
+Compilation finished
+10.200000
+```

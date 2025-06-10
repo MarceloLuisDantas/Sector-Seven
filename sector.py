@@ -144,18 +144,19 @@ def comp_test(test_name, files, flags) :
     comp_line = ' '.join(comp_line)
 
     print(f"Compiling Test {test_name}.")
-    print(f" > {comp_line}\n")
+    print(f" > {comp_line}")
 
-    print("GCC Output: ")
+    print("GCC Output:----------")
     result = system(comp_line)
 
     if (result == 0) :
         print("None - Compilation OK")
-    print("----------\n")
+    print("---------------------")
 
     if (result != 0) :
         print("Error durign compilation")
         return "err"
+    
     print("Compilation finished")
     return "ok"
 
@@ -165,10 +166,11 @@ def run_test(tests, test_name) :
     if hasattr(tests, "tests"):
         tests_list = tests.tests
 
-    ok = comp_test(test_name, tests_list[test_name], get_flags(tests))
+    ok = comp_test(test_name, tests_list[test_name], get_flags_tests(tests))
     if (ok == "err") :
         sys.exit(1)
     
+    print("\nRunning test: ")
     system(f"./builds/tests/{test_name}")
 
     return "ok"
@@ -182,6 +184,7 @@ def run_tests(tests) :
     for test_name in tests_list :
         comp_test(test_name, tests_list[test_name], flags)
         system(f"./builds/tests/{test_name}")
+        print("")
         
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------

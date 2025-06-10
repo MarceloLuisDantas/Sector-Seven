@@ -7,5 +7,5 @@ int main() {
     int x = add(ai, 10);
 
     if(ai->array[0] == 10)
-        printf("Ok int");
+        printf("Ok int\n");
 }

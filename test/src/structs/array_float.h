@@ -1,5 +1,5 @@
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef ARRAY_FLOAT_H
+#define ARRAY_FLOAT_H
 
 #include <stdint.h>
 
