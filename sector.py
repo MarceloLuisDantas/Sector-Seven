@@ -1,5 +1,5 @@
 from pathlib import Path
-from os import system, makedirs
+from os import system, makedirs, path
 import importlib.util
 import argparse
 import sys
@@ -68,24 +68,65 @@ def build_project(project, name) :
 def run(name) :
     system(f"./builds/{name}")
 
-def init_project(name) :
-    with open("project.py", "w") as f:
-        f.write(f"project = \"{name}\"\n")
-        f.write("sources = [\"src/main.c\"]\n")
-        f.write("comp_flags = [\"-Wall\"]\n")
+# ----------------------------------------------------------------------------------------------
+# PROJECT INITIALIZATION------------------------------------------------------------------------
+
+def init_folders() :
+    makedirs("src", exist_ok=True) # sources
+    makedirs("builds", exist_ok=True) # build target
+    makedirs("builds/tests", exist_ok=True) # tests
+
+def project_files(name) :
+    if path.isfile("./project.py"):
+        print("  project.py already exists. Overwrite? [y/n]")
+        a = input("  > ").lower()
+        if (a == "y" or a == "yes") :
+            with open("project.py", "w") as f:
+                f.write(f"project = \"{name}\"\n")
+                f.write("sources = [\"src/main.c\"]\n")
+                f.write("comp_flags = [\"-Wall\"]\n")
+        else :
+            print("  Skipping project.py creation")
+    else :
+        with open("project.py", "w") as f:
+            f.write(f"project = \"{name}\"\n")
+            f.write("sources = [\"src/main.c\"]\n")
+            f.write("comp_flags = [\"-Wall\"]\n")    
     
-    makedirs("src", exist_ok=True)
+    if path.isfile("./tests.py"):
+        print("  tests.py already exists. Overwrite? [y/n]")
+        a = input("  > ").lower()
+        if (a == "y" or a == "yes") :
+            with open("tests.py", "w") as f:
+                f.write(f"project = \"{name}\"\n")
+                f.write("tests = { }\n")
+                f.write("comp_flags = [\"-Wall\"]\n")
+        else :
+            print("  Skipping tests.py creation")
+    else :
+        with open("tests.py", "w") as f:
+            f.write(f"project = \"{name}\"\n")
+            f.write("tests = { }\n")
+            f.write("comp_flags = [\"-Wall\"]\n") 
+
+def hello_world() :
     with open("src/main.c", "w") as f :
         f.write("""#include <stdio.h>
 
 int main() { 
     printf("Hello World!!\\n");
     return 0;
-}
-                
+}            
 """)
-    makedirs("builds", exist_ok=True)
 
+def init_project(name) :
+    print("Creating ./src, ./builds and ./builds/tests folders")
+    init_folders()
+
+    print("Creating project.py and tests.py")
+    project_files(name)
+    hello_world()
+    
 # ----------------------------------------------------------------------------------------------
 # TESTES FUNCTIONS -----------------------------------------------------------------------------
 
@@ -142,8 +183,6 @@ def run_tests(tests) :
         comp_test(test_name, tests_list[test_name], flags)
         system(f"./builds/tests/{test_name}")
         
-
-
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 
