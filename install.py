@@ -56,6 +56,6 @@ else:
     os.exit(1)
 
 
-print(f"Sector Seven v{VERSION} should now be installed on your machine.") 
+print(f"Sector Seven v0.1 should now be installed on your machine.") 
 print("Refresh your terminal and test creating a new project")
 print("by running: sector --version")  
