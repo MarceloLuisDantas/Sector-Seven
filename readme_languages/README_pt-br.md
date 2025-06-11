@@ -34,12 +34,12 @@ Para instalar manualmente, crie uma pasta no local desejado e mova o arquivo sec
 
 ## Modo de uso
 ### Criando projeto
-Para começar, rode `sector --init project_name` para criar a base de um projeto. Sera criado o `project.py` com as configurações basicas do projeto, a pasta de `src`, para guardar todos os arquivos necessarios, e `builds`, para as builds.
+Para começar, rode `sector --init project_name` para criar a base de um projeto. Sera criado o `project.json` com as configurações basicas do projeto, a pasta de `src`, para guardar todos os arquivos necessarios, e `builds`, para as builds.
 
 ```
 $ sector --init "build_test"
 Creating ./src, ./builds and ./builds/tests folders
-Creating project.py and tests.py
+Creating project.json and tests.json
 ```
 
 Para verificar que tudo esta configurado como devido, tente compilar e rodar o projeto com:
@@ -60,19 +60,19 @@ Hello World!!
 ```
 
 ### Gerenciado arquivos fontes e compilando
-Para que o Sector possa compilar seu projeto corretamente, é necessário especificar o caminho para cada arquivo `.c` que você esteja utilizando na lista de **sources** em `project.py`. O [project.py](/test/project.py) no projeto de exemplo em [test](/test/) utiliza 3 arquivos externos, que estão listados em `project.py`, junto com as flags a serem passadas ao compilador.
+Para que o Sector possa compilar seu projeto corretamente, é necessário especificar o caminho para cada arquivo `.c` que você esteja utilizando na lista de **sources** em `project.json`. O [project.json](/test/project.json) no projeto de exemplo em [test](/test/) utiliza 3 arquivos externos, que estão listados em `project.json`, junto com as flags a serem passadas ao compilador.
 
-```Python
-project = "test_project"
-
-sources = [
-    "src/main.c",
-    "src/funcs/concat.c",
-    "src/structs/array_int.c",
-    "src/structs/array_float.c"
-]
-
-comp_flags = ["-Wall", "-Werror", "-O1"]
+```JSON
+{
+    "project": "test_project",
+    "sources": [
+        "src/main.c",
+        "src/funcs/concat.c",
+        "src/structs/array_int.c",
+        "src/structs/array_float.c"
+    ],
+    "comp_flags": ["-Wall", "-Werror", "-O1"]
+}
 ```
 
 Para compilar e executar o projeto, basta rodar os comandos `sector --build` para compilar o projeto, e `sector --run` para executar o projeto compilado.
@@ -100,22 +100,22 @@ Testes no Sector são apenas outros arquivos em C. O objetivo é tornar a criaç
 
 Para criar um teste, primeiro é preciso criar um arquivo que servirá como main, que terá todos os testes que você queira executar. No diretório [structs](/test/src/structs/) foram implementadas duas versões de um array: uma para ints (**array_int.c**) e outra para floats (**array_float.c**). Para realizar os testes, bastou criar um arquivo de teste para array int (**array_int_test.c**) e um para array float (**array_float_test.c**) (PS: Os nomes dos arquivos de testes não precisam terminar com _test, porém é recomendado).
 
-Com os arquivos de teste criados, basta adicioná-los e nomeá-los em `tests.py`.
-```Python
-project = "test_project"
-
-tests = {
-    "array_int": [
-        "src/structs/array_int_test.c",
-        "src/structs/array_int.c"
-    ],
-
-    "array_float": [
-        "src/structs/array_float_test.c",
-        "src/structs/array_float.c"
-    ]
+Com os arquivos de teste criados, basta adicioná-los e nomeá-los em `tests.json`.
+```JSON
+{
+    "project": "test_project",
+    "tests": {
+        "array_int": [
+            "src/structs/array_int_test.c",
+            "src/structs/array_int.c"
+        ],
+        "array_float": [
+            "src/structs/array_float_test.c",
+            "src/structs/array_float.c"
+        ]
+    },
+    "test_flags": ["-Wall", "-Wno-unused-variable"]
 }
-test_flags = ["-Wall", "-Wno-unused-variable"]
 ```
 
 Como mencionado, cada teste é apenas mais um executável a ser compilado e executado. Para usá-los, basta rodar `sector --run-test "test_name"` para executar um teste específico, ou `sector --run-tests` para executar todos os testes.

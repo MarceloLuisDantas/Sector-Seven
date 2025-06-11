@@ -34,12 +34,12 @@ To install manually: Create a folder in your desired location. Move the sector.p
 
 ## How to Use
 ### Creating a project
-To get started, run `sector --init project_name` to create the project foundation. This will generate a `project.py` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs.
+To get started, run `sector --init project_name` to create the project foundation. This will generate a `project.json` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs.
 
 ```
 $ sector --init "build_test"
 Creating ./src, ./builds and ./builds/tests folders
-Creating project.py and tests.py
+Creating project.json and tests.json
 ```
 
 To verify everything is properly configured, try compiling and running the project using `sector --build` and `sector --run`:
@@ -60,19 +60,19 @@ Hello World!!
 ```
 
 ### Managing Source Files and Compiling
-For Sector to compile your project properly, you need to specify the path to each `.c` file you're using in the sources list within `project.py`. The example project in [test](/test/project.py) uses 3 source files (listed in its `project.py`), along with the compiler flags to be used.
+For Sector to compile your project properly, you need to specify the path to each `.c` file you're using in the sources list within `project.json`. The example project in [test](/test/project.json) uses 3 source files (listed in its `project.json`), along with the compiler flags to be used.
 
-```Python
-project = "test_project"
-
-sources = [
-    "src/main.c",
-    "src/funcs/concat.c",
-    "src/structs/array_int.c",
-    "src/structs/array_float.c"
-]
-
-comp_flags = ["-Wall", "-Werror", "-O1"]
+```JSON
+{
+    "project": "test_project",
+    "sources": [
+        "src/main.c",
+        "src/funcs/concat.c",
+        "src/structs/array_int.c",
+        "src/structs/array_float.c"
+    ],
+    "comp_flags": ["-Wall", "-Werror", "-O1"]
+}
 ```
 
 You can compile your project by running `sector --build`, then execute the compiled program using `sector --run`.
@@ -101,23 +101,22 @@ Testing in Sector is just additional C files. The goal is to make test creation 
 
 To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/src/structs/array_int.c) and another for floats [`array_float.c`](/test/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/src/structs/array_int_test.c) and [`array_float_test.c`](/test/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. 
 
-Once your test files are ready, add and name them in your [`tests.py`](/test/tests.py) configuration file.
-```Python
-project = "test_project"
-
-tests = {
-    "array_int": [
-        "src/structs/array_int_test.c",
-        "src/structs/array_int.c"
-    ],
-
-    "array_float": [
-        "src/structs/array_float_test.c",
-        "src/structs/array_float.c"
-    ]
+Once your test files are ready, add and name them in your [`tests.json`](/test/tests.json) configuration file.
+```JSON
+{
+    "project": "test_project",
+    "tests": {
+        "array_int": [
+            "src/structs/array_int_test.c",
+            "src/structs/array_int.c"
+        ],
+        "array_float": [
+            "src/structs/array_float_test.c",
+            "src/structs/array_float.c"
+        ]
+    },
+    "test_flags": ["-Wall", "-Wno-unused-variable"]
 }
-
-test_flags = ["-Wall", "-Wno-unused-variable"]
 ```
 As mentioned earlier, each test is essentially just another executable that gets compiled and run. To work with these tests, you can use the `sector --run-test "test_name"` to execute a specific test, or `sector --run-tests` to automatically run all available tests in sequence.
 
