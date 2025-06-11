@@ -1,0 +1,5 @@
+{
+    "project": "{name}",
+    "sources": ["src/main.c"],
+    "comp_flags": ["-Wall"] 
+}
