@@ -149,3 +149,10 @@ None - Compilation OK
 Compilation finished
 10.200000
 ```
+
+
+# TODO
+- Generate cache of all files after compiling, to not recompile files without changes. 
+- `--init-lib` to create a lib project. `sector --build` will compile the project to a shared object files (`.o`). 
+- Small library management, creating a `~/.sector/libs`, when you can save libs, and get the lib to your project with `sector --get-lib "lib_name"`. 
+- `sector --update` to update to a new version 
