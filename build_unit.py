@@ -1,5 +1,6 @@
 from os import system
 import sys
+sys.dont_write_bytecode = True
 
 def build_project(project) :
     project_name = project["project"]

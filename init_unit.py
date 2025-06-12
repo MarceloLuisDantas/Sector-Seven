@@ -1,5 +1,7 @@
 from os import makedirs, path
 import json
+import sys
+sys.dont_write_bytecode = True
 
 def create_project_json(name) :
     project_default = {

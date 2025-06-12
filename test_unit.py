@@ -1,6 +1,6 @@
-from pathlib import Path
 from os import system
 import sys
+sys.dont_write_bytecode = True
 
 def comp_test(test_name, files, flags) :
     comp_line = ["gcc"] + files + flags

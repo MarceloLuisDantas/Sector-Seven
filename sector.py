@@ -5,6 +5,8 @@ from os import path
 import argparse
 import json
 import sys
+sys.dont_write_bytecode = True
+
 
 VERSION = 0.1
 
@@ -54,5 +56,4 @@ def main() :
     elif args.run :
         run(name)
     
-sys.dont_write_bytecode = True
 main()
