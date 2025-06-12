@@ -1,6 +1,6 @@
 [:brazil:](/readme_languages/README_pt-br.md)
 
-# Sector Seven v0.1
+# Sector Seven v0.1.1
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but can works well if you are trying to learn C or want to build something small.
 
@@ -14,23 +14,29 @@ My first approach was to look at the "modern C" languages: Rust, Nim, Zig, Go, C
 If you use Bash or ZSH, you can run the installation script for install automatically
 
 ```
-$ python3 install.py
+$ python3 install.py                                                                
 Creating ~/.sector...
+Copying files to ~/.sector...
 Copying sector.py to ~/.sector...
-sector.py is now installed in "~/.sector"
+Copying build_unit.py to ~/.sector...
+Copying test_unit.py to ~/.sector...
+Copying init_unit.py to ~/.sector...
+
+Sector Seven is now installed in ~/.sector
 
 Adding the alias to your shell
 Which terminal do you use?
 [1] Bash
 [2] Zsh
  > 2
-Sector Seven should now be installed on your machine.
+
+Sector Seven v0.1 should now be installed on your machine.
 Refresh your terminal and test creating a new project
-by running: sector --init
+by running: sector --version
 ```
 
 ### Manual
-To install manually: Create a folder named `~/.sector`. Move the sector.py file into it. Add the alias to your shell configuration file to use Sector from anywhere.
+To install manually: Create a folder named `~/.sector`. Move the `sector.py` and all `_unit.py` files into it. Add the alias to your shell configuration file to use Sector from anywhere.
 
 ## How to Use
 ### Creating a project

@@ -8,7 +8,7 @@ import sys
 sys.dont_write_bytecode = True
 
 
-VERSION = 0.1
+VERSION = "0.1.1"
 
 def load_file(file_path) :
     if path.isfile(file_path) :
