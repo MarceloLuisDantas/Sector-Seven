@@ -30,7 +30,7 @@ by running: sector --init
 ```
 
 ### Manual
-To install manually: Create a folder in your desired location. Move the sector.py file into it. Add the alias to your shell configuration file to use Sector from anywhere.
+To install manually: Create a folder named `~/.sector`. Move the sector.py file into it. Add the alias to your shell configuration file to use Sector from anywhere.
 
 ## How to Use
 ### Creating a project
