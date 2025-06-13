@@ -41,9 +41,7 @@ def create_tests_json() :
             json.dump(test_default, f)
 
 def create_cache_json() :
-    test_default = {
-        "files_last_modifer": {}
-    }
+    test_default = {}
 
     if path.isfile("./builds/cache/cache.json"):
         a = input("  cache.json already exists. Overwrite? [y/n]: ").lower()
