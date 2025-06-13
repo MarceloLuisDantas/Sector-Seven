@@ -157,7 +157,6 @@ Compilation finished
 
 
 # TODO
-- Generate cache of all files after compiling, to not recompile files without changes. 
 - Improve the tests visuals 
 - `--init-lib` to create a lib project. `sector --build` will compile the project to a shared object files (`.o`). 
 - Small library management, creating a `~/.sector/libs`, where you can save libs, and get the lib to your project with `sector --get-lib "lib_name"`. 

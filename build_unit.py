@@ -20,7 +20,7 @@ def build_project(project) :
     project_name = project["project"]
     sources = project["sources"]
     for source in sources :
-        result = compile_object(source, modifer_log)
+        result = compile_object(source, modifer_log, project["comp_flags"])
         if (result != 0) :
             compiled_ok = False
 

@@ -8,6 +8,7 @@ sector_file = os.path.expanduser("~/.sector/sector.py")
 build_unit_file = os.path.expanduser("~/.sector/build_unit.py")
 test_unit_file = os.path.expanduser("~/.sector/test_unit.py")
 init_unit_file = os.path.expanduser("~/.sector/init_unit.py")
+cache_file = os.path.expanduser("~/.sector/cache.py")
 
 def remove_and_copy(file_path, file) :
     if os.path.isfile(file_path):
@@ -21,6 +22,7 @@ def copy_all_files() :
     remove_and_copy(build_unit_file, "build_unit.py")
     remove_and_copy(test_unit_file, "test_unit.py")
     remove_and_copy(init_unit_file, "init_unit.py")
+    remove_and_copy(cache_file, "cache.py")
 
 def install_files() :
     if not os.path.isfile(sector_file):
@@ -28,8 +30,7 @@ def install_files() :
         copy_all_files()
     else:
         print(f"Other version fo Sector Seven is already installed.")
-        print("Do you want to remove the old version and continue? [y/n]")
-        c = input(" > ").lower()
+        c = input("Do you want to remove the old version and continue? [y/n]: ").lower()
         print("")
         if (c == "y" or c == "yes") :
             copy_all_files()
@@ -76,6 +77,6 @@ else:
     os.exit(1)
 
 print("")
-print("Sector Seven v0.1 should now be installed on your machine.") 
+print("Sector Seven v0.1.2 should now be installed on your machine.") 
 print("Refresh your terminal and test creating a new project")
 print("by running: sector --version")  
