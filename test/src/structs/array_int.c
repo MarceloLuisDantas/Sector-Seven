@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct {
     int *array;
@@ -16,6 +17,7 @@ Array* newArray(uint16_t len) {
 }
 
 int add(Array *array, int value) {
+    printf("hello new version, but in int\n");
     if (array->len >= array->size)
         return 0;
 

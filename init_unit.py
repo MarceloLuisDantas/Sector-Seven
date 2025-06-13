@@ -11,8 +11,7 @@ def create_project_json(name) :
     }
 
     if path.isfile("./project.json"):
-        print("  project.json already exists. Overwrite? [y/n]")
-        a = input("    > ").lower()
+        a = input("  project.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
             with open("project.json", "w") as f:
                 json.dump(project_default, f)
@@ -31,8 +30,7 @@ def create_tests_json() :
     }
 
     if path.isfile("./tests.json"):
-        print("  tests.json already exists. Overwrite? [y/n]")
-        a = input("    > ").lower()
+        a = input("  tests.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
             with open("tests.json", "w") as f:
                 json.dump(test_default, f)
@@ -40,6 +38,22 @@ def create_tests_json() :
             print("  Skipping tests.json creation")
     else :
         with open("tests.json", "w") as f:
+            json.dump(test_default, f)
+
+def create_cache_json() :
+    test_default = {
+        "files_last_modifer": {}
+    }
+
+    if path.isfile("./builds/cache/cache.json"):
+        a = input("  cache.json already exists. Overwrite? [y/n]: ").lower()
+        if (a == "y" or a == "yes") :
+            with open("./builds/cache/cache.json", "w") as f:
+                json.dump(test_default, f)
+        else :
+            print("  Skipping cache.json creation")
+    else :
+        with open("./builds/cache/cache.json", "w") as f:
             json.dump(test_default, f)
 
 def create_main_c() :
@@ -58,12 +72,18 @@ int main() {
         print("  main.c already exists.")        
 
 def init_project(name) :
-    print("Creating ./src, ./builds and ./builds/tests folders")
+    print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
     makedirs("src", exist_ok=True) # sources
     makedirs("builds", exist_ok=True) # build target
     makedirs("builds/tests", exist_ok=True) # tests
+    makedirs("builds/cache", exist_ok=True) # cache files
 
-    print("Creating project.py and tests.py")
+    print("Creating project.json, tests.json, cache.json and main.c")
     create_project_json(name)
     create_tests_json()
+    create_cache_json()
     create_main_c()
+
+    print("")
+    print(f"Project {name} was started.")
+    print("Run sector --build and sector --run")

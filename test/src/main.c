@@ -15,7 +15,7 @@ int main() {
 
     Array *a3 = concat(a1, a2);
     for (int i = 0; i < a3->len; i++) {
-        printf("Element: %i = %i\n", i, a3->array[i]);
+        printf("Element -plus update: %i = %i\n", i, a3->array[i]);
     }
     
     ArrayFloat *af = newArrayFloat(5);
