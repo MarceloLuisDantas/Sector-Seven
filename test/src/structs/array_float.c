@@ -17,7 +17,6 @@ ArrayFloat* newArrayFloat(uint16_t len) {
 }
 
 int addFloat(ArrayFloat *array, float value) {
-    printf("hello new version, but in float\n");
     if (array->len >= array->size)
         return 0;
 
