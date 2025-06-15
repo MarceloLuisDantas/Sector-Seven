@@ -1,5 +1,7 @@
 {
     "project": "test_project",
+    "_type": "lib",
+    "type": "bin",
     "sources": [
         "src/main.c",
         "src/funcs/concat.c",
