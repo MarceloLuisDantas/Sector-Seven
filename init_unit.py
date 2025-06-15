@@ -14,12 +14,12 @@ def create_project_json(name) :
         a = input("  project.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
             with open("project.json", "w") as f:
-                json.dump(project_default, f)
+                json.dump(project_default, f, indent=4)
         else :
             print("  Skipping project.json creation")
     else :
         with open("project.json", "w") as f:
-            json.dump(project_default, f)
+            json.dump(project_default, f, indent=4)
 
 def create_tests_json() :
     test_default = {
@@ -33,12 +33,12 @@ def create_tests_json() :
         a = input("  tests.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
             with open("tests.json", "w") as f:
-                json.dump(test_default, f)
+                json.dump(test_default, f, indent=4)
         else :
             print("  Skipping tests.json creation")
     else :
         with open("tests.json", "w") as f:
-            json.dump(test_default, f)
+            json.dump(test_default, f, indent=4)
 
 def create_cache_json() :
     test_default = {}

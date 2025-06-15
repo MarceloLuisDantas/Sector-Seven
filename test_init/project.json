@@ -1,1 +1,9 @@
-{"project": "teste", "sources": ["src/main.c"], "comp_flags": ["-Wall"]}
+{
+    "project": "testes",
+    "sources": [
+        "src/main.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ]
+}

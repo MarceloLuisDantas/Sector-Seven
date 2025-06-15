@@ -14,7 +14,7 @@ def create_file_path_cache(dir_path) :
 
 def update_cache(new_cache) :
     with open("./builds/cache/cache.json", "w") as f:
-        json.dump(new_cache, f)
+        json.dump(new_cache, f, indent=4)
 
 def compile_object(file, modifer_log, flags) :
     last_modifed = path.getmtime(Path(file))
