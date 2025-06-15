@@ -3,12 +3,16 @@ import json
 import sys
 sys.dont_write_bytecode = True
 
-def create_project_json(name) :
+def create_project_json(name, is_lib) :
     project_default = {
         "project": name,
+        "type": "bin",
         "sources": ["src/main.c"],
         "comp_flags": ["-Wall"]
     }
+
+    if is_lib :
+        project_default["type"] = "lib"
 
     if path.isfile("./project.json"):
         a = input("  project.json already exists. Overwrite? [y/n]: ").lower()
@@ -69,7 +73,7 @@ int main() {
     else :
         print("  main.c already exists.")        
 
-def init_project(name) :
+def init_project(name, is_lib) :
     print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
     makedirs("src", exist_ok=True) # sources
     makedirs("builds", exist_ok=True) # build target
@@ -77,7 +81,7 @@ def init_project(name) :
     makedirs("builds/cache", exist_ok=True) # cache files
 
     print("Creating project.json, tests.json, cache.json and main.c")
-    create_project_json(name)
+    create_project_json(name, is_lib)
     create_tests_json()
     create_cache_json()
     create_main_c()

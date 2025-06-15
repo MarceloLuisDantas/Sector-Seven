@@ -80,12 +80,24 @@ For Sector Seven to compile your project properly, you need to specify the path 
 }
 ```
 
-After, run `sector --build` and `sector --run` again to compile and run your project.
+After, run `sector --build` and `sector --run` again to compile and run your project. `sector --build` will compile all source files and generate a cache of all `.o` files, so unchanged files won't be recompiled.
 
 ```
 $ sector --build
+Compiling src/main.c:
+GCC Output: 
+None - Compilation OK
+Compiling src/funcs/concat.c:
+GCC Output: 
+None - Compilation OK
+Compiling src/structs/array_int.c:
+GCC Output: 
+None - Compilation OK
+Compiling src/structs/array_float.c:
+GCC Output: 
+None - Compilation OK
 Compiling Project test_project.
- > gcc src/main.c src/funcs/concat.c src/structs/array_int.c src/structs/array_float.c -Wall -Werror -O1 -o builds/test_project
+ > gcc ./builds/cache/src/main.o ./builds/cache/src/funcs/concat.o ./builds/cache/src/structs/array_int.o ./builds/cache/src/structs/array_float.o -Wall -Werror -O1 -o builds/test_project
 
 GCC Output: 
 None - Compilation OK

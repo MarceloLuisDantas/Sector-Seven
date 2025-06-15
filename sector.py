@@ -28,7 +28,12 @@ def main() :
     group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
     group.add_argument("-v", "--version", action="store_true", help="shows the version")
 
+    parser.add_argument("--lib", action="store_true", help="create as a library project (use with --init only)")
+    
     args = parser.parse_args()
+    if args.lib and not args.init:
+        print("--lib can only be used with --init")
+        sys.exit(0)
 
     if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version]):
         parser.print_help()
@@ -39,7 +44,7 @@ def main() :
         sys.exit(0)
 
     if args.init:
-        init_project(args.init)
+        init_project(args.init, args.lib)
         sys.exit(0)
 
     project = load_file("./project.json")
