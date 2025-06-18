@@ -1,9 +1,14 @@
 {
     "project": "kokonoe",
+    "type": "bin",
+    "include_folder": "include",
+    "lib_folder": "lib",
     "sources": [
         "src/main.c"
     ],
     "comp_flags": [
+        "-Iinclude",
+        "-Llibs/",
         "-Wall"
     ]
 }
