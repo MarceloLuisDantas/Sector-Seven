@@ -1,28 +1,20 @@
-from os import system, path
+from os import system
+from utils import *
 from cache import *
-import json
-import sys
 sys.dont_write_bytecode = True
 
-def load_file(file_path) :
-    if path.isfile(file_path) :
-        with open(file_path, "r") as project :
-            v = json.load(project)
-            return v
-    else :
-        print(f"{file_path} not found")
-        sys.exit(1)
-
-def comp_project(sources, project_name, comp_flags) :
-    comp_line = ["gcc"]
+def compile_bin(sources: list[str], project_name: str, comp_flags: list[str]) -> bool :
+    comp_line = "gcc "
     for source in sources :
-        comp_line += [f"./builds/cache/{source[:-2]}.o"]
-    comp_line += comp_flags + [f"-o builds/{project_name}"]
-    comp_line = ' '.join(comp_line)
+        comp_line += f"./builds/cache/{source[:-2]}.o "
+    for flag in comp_flags :
+        comp_line += f"{flag} "
+    comp_line += f"-o builds/{project_name}"
 
+    # TODO: Colors
     print(f"Compiling Project {project_name}.")
-    print(f" > {comp_line}\n")
-
+    print(f" > {comp_line}\n")    
+    
     print("GCC Output: ")
     result = system(comp_line)
 
@@ -32,16 +24,20 @@ def comp_project(sources, project_name, comp_flags) :
 
     if (result != 0) :
         print("Error durign compilation")
-        sys.exit()
+        return False
+    
     print("Compilation finished")
+    return True
 
-def comp_lib(sources, project_name, ar_flags) :
-    comp_line = ["ar"] + ar_flags + [f"builds/lib{project_name}.a"]
+def archive_lib(sources: list[str], project_name: str, ar_flags: list[str]) -> bool :
+    comp_line = "ar " 
+    for flag in ar_flags :
+        comp_line += f"{flag} "
+    comp_line += f"builds/lib{project_name}.a "
     for source in sources :
-        comp_line += [f"./builds/cache/{source[:-2]}.o"]
-    comp_line = ' '.join(comp_line)
+        comp_line += f"./builds/cache/{source[:-2]}.o "
 
-    print(f"Archiving Lib lib{project_name}.")
+    print(f"Archiving Lib lib{project_name}.a")
     print(f" > {comp_line}\n")
 
     print("ar Output: ")
@@ -52,46 +48,57 @@ def comp_lib(sources, project_name, ar_flags) :
     print("----------\n")
 
     if (result != 0) :
-        print("Error durign Archiving")
-        sys.exit()
+        print("Error while Archiving")
+        return False
+    
     print("Archiving finished")
+    return True
 
-def check_files(files) :
-    ok = True
-    for file in files :
-        if not path.isfile(file) :
-            print(f"File: {file} not found")
-            ok = False
-    return ok
+def build_project(project: dict, cache_log: dict) -> bool :
+    if ("type" not in project) :
+        # TODO : Colored text
+        print("ERROR: Key \"Type\" is missing from the Project.json")
+        return False
 
-def build_project(project) :
-    modifer_log = load_file("./builds/cache/cache.json")
+    expected_keys = ["project", "include_folder", 
+                     "lib_folder", "sources", "comp_flags"]
+    
+    ptype = project["type"]
+    if (ptype == "lib") :
+        expected_keys.append("ar_flags")
 
-    compiled_ok = True
+    (ok, keys) = check_json_values(project, expected_keys)
+    if (not ok) :
+        for (exists, key) in keys :
+            if (not exists) :
+                # TODO : Colored text
+                print(f"ERROR: Key \"{key}\" is missing from the project.json")
+        return False
+    
     project_name = project["project"]
     comp_flags = project["comp_flags"]
-    ptype = project["type"]
-
-    # Compiling all .c to .o to cache
     sources = project["sources"]
-    if not check_files(sources) :
-        sys.exit()
 
+    # Check if all the sources files exist 
+    if (not check_files(sources)) :
+        return False
+    
+    # Compiles all sources files to .o to cache
+    error = False
     for source in sources :
-        result = compile_object(source, modifer_log, comp_flags)
-        if (result != 0) :
-            compiled_ok = False
+        if (compile_object(source, cache_log, comp_flags) != 0) :
+            error = True
 
-    if (not compiled_ok) :
-        print("Error during compilantion")
-        sys.exit()
-
-    update_cache(modifer_log)
+    if (error) :
+        # TODO : Colored text
+        print("ERROR: Compilation error")
+        return False
+    update_cache(cache_log)  
 
     if ptype == "bin" :
-        comp_project(sources, project_name, comp_flags)
+        return compile_bin(sources, project_name, comp_flags)
     else :
-        comp_lib(sources, project_name, project["ar_flags"])
+        return archive_lib()
 
 def run(name) :
     system(f"./builds/{name}")
