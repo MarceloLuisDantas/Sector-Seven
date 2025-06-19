@@ -1,23 +1,13 @@
 from init_unit import *
 from test_unit import *
 from build_unit import *
-from os import path
+from utils import *
 import argparse
-import json
 import sys
 sys.dont_write_bytecode = True
 
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
-def load_file(file_path) :
-    if path.isfile(file_path) :
-        with open(file_path, "r") as project :
-            v = json.load(project)
-            return v
-    else :
-        print(f"{file_path} not found")
-        sys.exit(1)
-    
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
     group = parser.add_mutually_exclusive_group()
@@ -49,14 +39,15 @@ def main() :
 
     project = load_file("./project.json")
     tests = load_file("./tests.json")
+    chache_log = load_file("./builds/cache/cache.json")
     name = project["project"]
 
     if args.run_test :
-        run_test(tests, args.run_test)
+        run_test(tests, args.run_test, chache_log)
     elif args.run_tests :
-        run_tests(tests)
+        run_tests(tests, chache_log)
     elif args.build :
-        build_project(project)
+        build_project(project, chache_log)
     elif args.run :
         run(name)
     

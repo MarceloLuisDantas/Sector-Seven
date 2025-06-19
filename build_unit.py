@@ -93,12 +93,13 @@ def build_project(project: dict, cache_log: dict) -> bool :
         # TODO : Colored text
         print("ERROR: Compilation error")
         return False
+        
     update_cache(cache_log)  
 
     if ptype == "bin" :
         return compile_bin(sources, project_name, comp_flags)
     else :
-        return archive_lib()
+        return archive_lib(sources, project_name, project["ar_flags"])
 
 def run(name) :
     system(f"./builds/{name}")

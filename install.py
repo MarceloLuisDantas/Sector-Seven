@@ -3,12 +3,13 @@ import os
 import sys
 sys.dont_write_bytecode = True
 
-sector_dir = os.path.expanduser("~/.sector")
-sector_file = os.path.expanduser("~/.sector/sector.py")
+sector_dir      = os.path.expanduser("~/.sector")
+sector_file     = os.path.expanduser("~/.sector/sector.py")
 build_unit_file = os.path.expanduser("~/.sector/build_unit.py")
-test_unit_file = os.path.expanduser("~/.sector/test_unit.py")
-init_unit_file = os.path.expanduser("~/.sector/init_unit.py")
-cache_file = os.path.expanduser("~/.sector/cache.py")
+test_unit_file  = os.path.expanduser("~/.sector/test_unit.py")
+init_unit_file  = os.path.expanduser("~/.sector/init_unit.py")
+cache_file      = os.path.expanduser("~/.sector/cache.py")
+utils_file      = os.path.expanduser("~/.sector/utils.py")
 
 def remove_and_copy(file_path, file) :
     if os.path.isfile(file_path):
@@ -18,11 +19,12 @@ def remove_and_copy(file_path, file) :
     copy(file, sector_dir)
 
 def copy_all_files() :
-    remove_and_copy(sector_file, "sector.py")
+    remove_and_copy(sector_file,     "sector.py")
     remove_and_copy(build_unit_file, "build_unit.py")
-    remove_and_copy(test_unit_file, "test_unit.py")
-    remove_and_copy(init_unit_file, "init_unit.py")
-    remove_and_copy(cache_file, "cache.py")
+    remove_and_copy(test_unit_file,  "test_unit.py")
+    remove_and_copy(init_unit_file,  "init_unit.py")
+    remove_and_copy(cache_file,      "cache.py")
+    remove_and_copy(utils_file,      "utils.py")
 
 def install_files() :
     if not os.path.isfile(sector_file):
@@ -77,6 +79,6 @@ else:
     os.exit(1)
 
 print("")
-print("Sector Seven v0.1.2 should now be installed on your machine.") 
+print("Sector Seven v0.1.3 should now be installed on your machine.") 
 print("Refresh your terminal and test creating a new project")
 print("by running: sector --version")  

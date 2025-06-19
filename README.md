@@ -1,6 +1,6 @@
 [:brazil:](/readme_languages/README_pt-br.md)
 
-# Sector Seven v0.1.2
+# Sector Seven v0.1.3
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but can works well if you are trying to learn C or want to build something small.
 
@@ -21,6 +21,8 @@ Copying sector.py to ~/.sector...
 Copying build_unit.py to ~/.sector...
 Copying test_unit.py to ~/.sector...
 Copying init_unit.py to ~/.sector...
+Copying cache.py to ~/.sector...
+Copying utils.py to ~/.sector...
 
 Sector Seven is now installed in ~/.sector
 
@@ -30,7 +32,7 @@ Which terminal do you use?
 [2] Zsh
  > 2
 
-Sector Seven v0.1 should now be installed on your machine.
+Sector Seven v0.1.3 should now be installed on your machine.
 Refresh your terminal and test creating a new project
 by running: sector --version
 ```
