@@ -18,11 +18,16 @@ def main() :
     group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
     group.add_argument("-v", "--version", action="store_true", help="shows the version")
 
-    parser.add_argument("--lib", action="store_true", help="create as a library project (use with --init only)")
-    
+    parser.add_argument("-l", "--lib", action="store_true", help="create a library project (use with --init only)")
+    parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --run-test or --run-tests)")
+
     args = parser.parse_args()
     if args.lib and not args.init:
         print("--lib can only be used with --init")
+        sys.exit(0)
+
+    if args.force_build and not (args.build or args.run_test or args.run_tests):
+        print("--force-build can only be used with --build, --run-test and --run-test")
         sys.exit(0)
 
     if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version]):
@@ -43,11 +48,11 @@ def main() :
     name = project["project"]
 
     if args.run_test :
-        run_test(tests, args.run_test, chache_log)
+        run_test(tests, args.run_test, chache_log, args.force_build)
     elif args.run_tests :
-        run_tests(tests, chache_log)
+        run_tests(tests, chache_log, args.force_build)
     elif args.build :
-        build_project(project, chache_log)
+        build_project(project, chache_log, args.force_build)
     elif args.run :
         run(name)
     

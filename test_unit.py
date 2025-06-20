@@ -5,7 +5,7 @@ sys.dont_write_bytecode = True
 
 ERROR = "\033[31mERROR\033[0m"
 
-def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log) -> bool :
+def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool) -> bool :
     if (len(sources) == 0) :
         print(f"No source file specified in {test_name}")
         return False
@@ -17,7 +17,7 @@ def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_l
     print(f"╔ \033[34mCompiling: \033[1m{test_name}\033[0m")
     error = False
     for source in sources :
-        ok = compile_object(source, cache_log, test_flags, hidden=True)
+        ok = compile_object(source, cache_log, test_flags, force_build=force_build, hidden=True)
         # print(ok)
         if (ok != 0) :
             error = True
@@ -53,7 +53,7 @@ def check_test_json_keys(tests: dict) -> bool :
         return False
     return True
 
-def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
+def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool) -> bool :
     if (not check_test_json_keys(tests)) :
         return False
     
@@ -65,7 +65,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
     test_flags = tests["test_flags"]
     sources = tests_list[test_name]
     
-    comp_ok = comp_test(sources, test_name, test_flags, cache_log)
+    comp_ok = comp_test(sources, test_name, test_flags, cache_log, force_build)
     if (not comp_ok) :
         return False
 
@@ -78,7 +78,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
         print(f"╚ \033[1m{test_name}\033[0m: ❌")
     return True
 
-def run_tests(tests: dict, cache_log: dict) -> bool :
+def run_tests(tests: dict, cache_log: dict, force_build: bool) -> bool :
     if (not check_test_json_keys(tests)) :
         return False
     
@@ -94,7 +94,7 @@ def run_tests(tests: dict, cache_log: dict) -> bool :
     test_flags = tests["test_flags"]
     for test_name in tests_list :
         sources = tests_list[test_name]
-        ok = comp_test(sources, test_name, test_flags, cache_log)
+        ok = comp_test(sources, test_name, test_flags, cache_log, force_build)
         if (ok) :
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
             resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)

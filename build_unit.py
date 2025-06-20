@@ -44,7 +44,7 @@ def archive_lib(sources: list[str], project_name: str, ar_flags: list[str]) -> b
     print(f"╚ \033[32m\033[1mProject Archived Successfully\033[0m")
     return True
 
-def build_project(project: dict, cache_log: dict) -> bool :
+def build_project(project: dict, cache_log: dict, force_build: bool) -> bool :
     if ("type" not in project) :
         print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
         return False
@@ -75,7 +75,7 @@ def build_project(project: dict, cache_log: dict) -> bool :
     error = False
     for source in sources :
         # print(source)
-        if (compile_object(source, cache_log, comp_flags) != 0) :
+        if (compile_object(source, cache_log, comp_flags, force_build) != 0) :
             error = True
 
     if (error) :

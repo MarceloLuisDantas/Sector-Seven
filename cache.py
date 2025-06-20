@@ -18,13 +18,13 @@ def update_cache(new_cache) :
     with open("./builds/cache/cache.json", "w") as f:
         json.dump(new_cache, f, indent=4)
 
-def compile_object(file, modifer_log, flags, hidden=False) :
+def compile_object(file, modifer_log, flags, force_build=False, hidden=False) :
     last_modifed = path.getmtime(Path(file))
     if file not in modifer_log.keys() :   
         modifer_log[file] = [last_modifed, flags, "not compiled yet"]
     else :
         (cached, old_flags, comp_status) = modifer_log[file]
-        if (cached == last_modifed and same_flags(old_flags, flags) and comp_status == "ok") :
+        if (cached == last_modifed and same_flags(old_flags, flags) and comp_status == "ok" and not force_build) :
             return 0
         else :
             modifer_log[file] = [last_modifed, flags, comp_status]
