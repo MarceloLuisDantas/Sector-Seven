@@ -2,6 +2,7 @@ from os import system
 from utils import *
 from cache import *
 sys.dont_write_bytecode = True
+ERROR = "\033[31mERROR\033[0m"
 
 def compile_bin(sources: list[str], project_name: str, comp_flags: list[str]) -> bool :
     comp_line = "gcc "
@@ -31,27 +32,21 @@ def archive_lib(sources: list[str], project_name: str, ar_flags: list[str]) -> b
     for source in sources :
         comp_line += f"./builds/cache/{source[:-2]}.o "
 
-    print(f"Archiving Lib lib{project_name}.a")
-    print(f" > {comp_line}\n")
+    print(f"╔ \033[34mArchiving Lib: \033[1mlib{project_name}.a\033[0m")
+    # print("ar Output: ")
 
-    print("ar Output: ")
-    result = system(comp_line)
-
-    if (result == 0) :
-        print("None - Archiving OK")
-    print("----------\n")
-
-    if (result != 0) :
-        print("Error while Archiving")
+    resultado = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+    if (resultado.returncode != 0) :
+        print(resultado.stderr)
+        print(f"╚ \033[1m{project_name}\033[0m: ❌")
         return False
     
-    print("Archiving finished")
+    print(f"╚ \033[32m\033[1mProject Archived Successfully\033[0m")
     return True
 
 def build_project(project: dict, cache_log: dict) -> bool :
     if ("type" not in project) :
-        # TODO : Colored text
-        print("ERROR: Key \"Type\" is missing from the Project.json")
+        print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
         return False
 
     expected_keys = ["project", "include_folder", 
@@ -65,8 +60,7 @@ def build_project(project: dict, cache_log: dict) -> bool :
     if (not ok) :
         for (exists, key) in keys :
             if (not exists) :
-                # TODO : Colored text
-                print(f"ERROR: Key \"{key}\" is missing from the project.json")
+                print(f"{ERROR}: Key \"{key}\" is missing from the project.json")
         return False
     
     project_name = project["project"]
@@ -85,8 +79,7 @@ def build_project(project: dict, cache_log: dict) -> bool :
             error = True
 
     if (error) :
-        # TODO : Colored text
-        print("\033[31mERROR\033[0m: Fail to compile \033[1m.o\033[0m files")
+        print(f"{ERROR}: Fail to compile \033[1m.o\033[0m files")
         return False
     
     update_cache(cache_log)  

@@ -2,6 +2,7 @@ from pathlib import Path
 from os import path
 import json
 import sys
+ERROR = "\033[31mERROR\033[0m"
 
 # Refactory ----------------------------------------------
 def check_file(file) :
@@ -13,14 +14,14 @@ def load_file(file_path) :
             v = json.load(project)
             return v
     else :
-        print(f"ERROR: File {file_path} not found")
+        print(f"{ERROR}: File {file_path} not found")
         sys.exit(1)    
 
 def check_files(files) :
     ok = True
     for file in files :
         if not check_file(file) :
-            print(f"ERROR: File {file} not found")
+            print(f"{ERROR}: File {file} not found")
             ok = False
     return ok
 
