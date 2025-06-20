@@ -30,7 +30,7 @@ Which terminal do you use?
 [2] Zsh
  > 2
 
-Sector Seven v0.1.4 should now be installed on your machine.
+Sector Seven v0.2 should now be installed on your machine.
 Refresh your terminal and test creating a new project
 by running: sector --version
 ```
