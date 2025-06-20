@@ -21,8 +21,7 @@
         1750388942.4298623,
         [
             "-Wall",
-            "-Werror",
-            "-O1"
+            "-Wno-unused-variable"
         ],
         "ok"
     ],
@@ -30,8 +29,7 @@
         1750388928.3306015,
         [
             "-Wall",
-            "-Werror",
-            "-O1"
+            "-Wno-unused-variable"
         ],
         "ok"
     ],
