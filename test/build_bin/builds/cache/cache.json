@@ -1,46 +1,58 @@
 {
-    "src/main.c": [
-        1749842934.7068481,
+    "src/structs/array_int_test.c": [
+        1750386528.9436102,
         [
             "-Wall",
-            "-Werror",
-            "-O1"
-        ]
-    ],
-    "src/funcs/concat.c": [
-        1749508603.273688,
-        [
-            "-Wall",
-            "-Werror",
-            "-O1"
-        ]
+            "-Wno-unused-variable"
+        ],
+        "ok"
     ],
     "src/structs/array_int.c": [
-        1749845110.578276,
+        1750351875.54677,
         [
             "-Wall",
             "-Wno-unused-variable"
-        ]
-    ],
-    "src/structs/array_float.c": [
-        1749845110.578276,
-        [
-            "-Wall",
-            "-Wno-unused-variable"
-        ]
-    ],
-    "src/structs/array_int_test.c": [
-        1749564787.280307,
-        [
-            "-Wall",
-            "-Wno-unused-variable"
-        ]
+        ],
+        "ok"
     ],
     "src/structs/array_float_test.c": [
-        1749564781.4092352,
+        1750385169.688375,
         [
             "-Wall",
             "-Wno-unused-variable"
-        ]
+        ],
+        "ok"
+    ],
+    "src/structs/array_float.c": [
+        1750351875.54677,
+        [
+            "-Wall",
+            "-Wno-unused-variable"
+        ],
+        "ok"
+    ],
+    "src/test_err.c": [
+        1750387485.1904516,
+        [
+            "-Wall",
+            "-Wno-unused-variable"
+        ],
+        "ok"
+    ],
+    "src/test_ok.c": [
+        1750386578.7608716,
+        [
+            "-Wall",
+            "-Wno-unused-variable"
+        ],
+        "ok"
+    ],
+    "src/test_comp_err.c": [
+        1750387487.0819156,
+        [
+            "-Wall",
+            "-Wno-unused-variable"
+        ],
+        "ok"
     ]
 }

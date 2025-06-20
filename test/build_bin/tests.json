@@ -8,6 +8,12 @@
         "array_float": [
             "src/structs/array_float_test.c",
             "src/structs/array_float.c"
+        ],
+        "test_err": [
+            "src/test_err.c"
+        ],
+        "test_comp_err": [
+            "src/test_comp_err.c"
         ]
     },
     "test_flags": ["-Wall", "-Wno-unused-variable"]

@@ -1,7 +1,9 @@
 from utils import *
 from cache import *
-from os import system
+import subprocess
 sys.dont_write_bytecode = True
+
+ERROR = "\033[31mERROR\033[0m"
 
 def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log) -> bool :
     if (len(sources) == 0) :
@@ -12,14 +14,16 @@ def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_l
     if (not check_files(sources)) :
         return False
 
+    print(f"╔ \033[34mCompiling: \033[1m{test_name}\033[0m")
     error = False
     for source in sources :
-        if (compile_object(source, cache_log, test_flags, hidden=True) != 0) :
+        ok = compile_object(source, cache_log, test_flags, hidden=True)
+        # print(ok)
+        if (ok != 0) :
             error = True
 
     if (error) :
-        # TODO : Colored text
-        print("ERROR: Compilation error")
+        print(f"╚ {ERROR} Compilation Error")
         return False
     
     update_cache(cache_log)  
@@ -31,18 +35,12 @@ def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_l
         comp_line += f"{flag} "
     comp_line += f"-o builds/tests/{test_name}"   
     
-    print("GCC Output: ")
-    result = system(comp_line)
-
-    if (result == 0) :
-        print("None - Compilation OK")
-    print("----------\n")
-
-    if (result != 0) :
-        print("Error durign compilation")
+    result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+    if (result.returncode != 0) :
+        print(result.stderr, end="")
+        print(f"╚ {ERROR} Compilation Error ⚠️")
         return False
-    
-    print("Compilation finished")
+        
     return True
 
 def check_test_json_keys(tests: dict) -> bool :
@@ -51,8 +49,7 @@ def check_test_json_keys(tests: dict) -> bool :
     if (not ok) :
         for (exists, key) in keys :
             if (not exists) :
-                # TODO : Colored text
-                print(f"ERROR: Key \"{key}\" is missing from the tests.json")
+                print(f"{ERROR}: Key \"{key}\" is missing from the tests.json")
         return False
     return True
 
@@ -62,8 +59,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
     
     tests_list = tests["tests"]
     if (test_name not in tests_list) :
-        # TODO : Colored text
-        print(f"ERROR: Test {test_name} not found in tests.json")
+        print(f"{ERROR}: Test {test_name} not found in tests.json")
         return False
 
     test_flags = tests["test_flags"]
@@ -73,8 +69,13 @@ def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
     if (not comp_ok) :
         return False
 
-    print("\nRunning test: ")
-    system(f"./builds/tests/{test_name}")
+    print(f"Running test: \033[1m{test_name}\033[0m")
+    resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
+    print(resultado.stdout)
+    if (resultado.returncode == 1) :
+        print(f"\033[1m{test_name}\033[0m: ✅")
+    else :
+        print(f"\033[1m{test_name}\033[0m: ❌")
     return True
 
 def run_tests(tests: dict, cache_log: dict) -> bool :
@@ -86,13 +87,49 @@ def run_tests(tests: dict, cache_log: dict) -> bool :
         print(f"No test specified in tests.json")
         return False
     
+    total_tests = 0
+    comp_erros = []
+    passed_tests = []
+    no_pas_tests = []
     test_flags = tests["test_flags"]
     for test_name in tests_list :
         sources = tests_list[test_name]
         ok = comp_test(sources, test_name, test_flags, cache_log)
-        print(ok)
         if (ok) :
-            print(f"\nRunning test: {test_name}")
-            system(f"./builds/tests/{test_name}")
+            print(f"╠ Running test: \033[1m{test_name}\033[0m")
+            resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
+            print(resultado.stdout)
+            if (resultado.returncode == 1) :
+                print(f"╚ \033[1m{test_name}\033[0m: ✅")
+                passed_tests.append(test_name)
+            else :
+                print(f"╚ \033[1m{test_name}\033[0m: ❌")
+                no_pas_tests.append(test_name)
+        else :
+            comp_erros.append(test_name)
+        total_tests += 1
         print("")
-    
+
+    print(f"\033[34mTotal Tests: {total_tests}\033[0m")
+    if (len(comp_erros) > 0) :
+        print(f"⚠️  \033[33m{len(comp_erros)}\033[0m Total Comp Erros")
+        print(" \033[33m>\033[0m ", end="")
+        for test in comp_erros :
+            print(f"\033[1m{test}\033[0m ", end="")
+        print("")
+
+    if (len(passed_tests) > 0) :
+        print("")
+        print(f"✅ \033[32m{len(passed_tests)}\033[0m Tests That Passed")
+        print(" \033[32m>\033[0m ", end="")
+        for test in passed_tests :
+            print(f"\033[1m{test}\033[0m ", end="")
+        print("")
+
+    if (len(no_pas_tests) > 0) :
+        print("")
+        print(f"❌ \033[31m{len(no_pas_tests)}\033[0m Tests That Not Passed")
+        print(" \033[31m>\033[0m ", end="")
+        for test in no_pas_tests :
+            print(f"\033[1m{test}\033[0m ", end="")
+        print("")
