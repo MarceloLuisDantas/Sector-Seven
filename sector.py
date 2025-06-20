@@ -6,7 +6,7 @@ import argparse
 import sys
 sys.dont_write_bytecode = True
 
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")

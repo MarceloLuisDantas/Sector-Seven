@@ -1,4 +1,4 @@
-# Sector Seven v0.1.4
+# Sector Seven v0.1.5
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but can works well if you are trying to learn C or want to build something small.
 
