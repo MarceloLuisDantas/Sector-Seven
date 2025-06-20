@@ -102,7 +102,7 @@ Element: 3 = 6
 2.300000
 ```
 
-Before Sector Seven compiles your project, `.o` files of all sources files needed are created in the [`cache`](/test/build_bin/builds/cache/) folder, therefore, previously compiled source files will be recompiled if: The file has been modified; The compilation flags have changed; The last compilation attempt resulted in an error, or, --force-build flag is used (in this case, all files will be recompiled, ignoring the previous cache).
+Before Sector Seven compiles your project, `.o` files of all sources files needed are created in the [`cache`](/test/build_bin/builds/cache/) folder, therefore, previously compiled source files will be recompiled if: The file has been modified; The compilation flags have changed; The last compilation attempt resulted in an error, or, `--force-build` flag is used (in this case, all files will be recompiled, ignoring the previous cache).
 
 ### Creating tests
 Tests in Sector is just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a few functions. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself. 
