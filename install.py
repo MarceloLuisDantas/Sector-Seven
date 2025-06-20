@@ -1,6 +1,7 @@
 from shutil import copy
 import os
 import sys
+from sector import VERSION
 sys.dont_write_bytecode = True
 
 sector_dir      = os.path.expanduser("~/.sector")
@@ -79,6 +80,6 @@ else:
     os.exit(1)
 
 print("")
-print("Sector Seven v0.1.3 should now be installed on your machine.") 
+print(f"Sector Seven v{VERSION} should now be installed on your machine.") 
 print("Refresh your terminal and test creating a new project")
 print("by running: sector --version")  
