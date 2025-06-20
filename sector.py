@@ -14,6 +14,7 @@ def main() :
     group.add_argument("-i", "--init", type=str, metavar="NAME", help="creates the basic struct of a projetc")
     group.add_argument("-b", "--build", action="store_true", help="builds the project")
     group.add_argument("-r", "--run", action="store_true", help="runs the project")
+    group.add_argument("-R", "--build-run", action="store_true", help="builds the project and runs the project")
     group.add_argument("-t", "--run-test", type=str, metavar="TEST_NAME", help="run the named test")
     group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
     group.add_argument("-v", "--version", action="store_true", help="shows the version")
@@ -26,11 +27,11 @@ def main() :
         print("--lib can only be used with --init")
         sys.exit(0)
 
-    if args.force_build and not (args.build or args.run_test or args.run_tests):
+    if args.force_build and not (args.build or args.run_test or args.run_tests or args.build_run):
         print("--force-build can only be used with --build, --run-test and --run-test")
         sys.exit(0)
 
-    if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version]):
+    if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version, args.build_run]):
         parser.print_help()
         sys.exit(0) 
 
@@ -53,8 +54,13 @@ def main() :
         run_tests(tests, chache_log, args.force_build)
     elif args.build :
         build_project(project, chache_log, args.force_build)
+    elif args.build_run :
+        ok = build_project(project, chache_log, args.force_build)
+        if (ok) :
+            print("")
+            run(name, project)
     elif args.run :
-        run(name)
+        run(name, project)
     
 if __name__ == "__main__" :
     main()

@@ -3,7 +3,7 @@ import json
 import sys
 sys.dont_write_bytecode = True
 
-def create_project_json(name, is_lib) :
+def create_project_json(name: str, is_lib: bool) -> None :
     project_default = {
         "project": name,
         "type": "bin",
@@ -28,7 +28,7 @@ def create_project_json(name, is_lib) :
         with open("project.json", "w") as f:
             json.dump(project_default, f, indent=4)
 
-def create_tests_json() :
+def create_tests_json() -> None:
     test_default = {
         "tests": {
             "test_main": ["src/main.c"]
@@ -47,7 +47,7 @@ def create_tests_json() :
         with open("tests.json", "w") as f:
             json.dump(test_default, f, indent=4)
 
-def create_cache_json() :
+def create_cache_json() -> None :
     test_default = {}
 
     if path.isfile("./builds/cache/cache.json"):
@@ -61,7 +61,7 @@ def create_cache_json() :
         with open("./builds/cache/cache.json", "w") as f:
             json.dump(test_default, f)
 
-def create_main_c() :
+def create_main_c() -> None :
     hello_world = """#include <stdio.h>
 
 int main() { 
@@ -76,7 +76,7 @@ int main() {
     else :
         print("  main.c already exists.")        
 
-def init_project(name, is_lib) :
+def init_project(name: str, is_lib: bool) -> None :
     print("Creating ./src, ./lib, ./include, ./builds, ./builds/tests and ./builds/cache folders")
     makedirs("src", exist_ok=True) # sources
     makedirs("lib", exist_ok=True) # sources
@@ -93,4 +93,4 @@ def init_project(name, is_lib) :
 
     print("")
     print(f"Project {name} was started.")
-    print("Run sector --build and sector --run")
+    print("Run sector --build-run")

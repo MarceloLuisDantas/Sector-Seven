@@ -48,18 +48,18 @@ Creating ./src, ./lib, ./include, ./builds, ./builds/tests and ./builds/cache fo
 Creating project.json, tests.json, cache.json and main.c
 
 Project test_project was started.
-Run sector --build and sector --run
+Run sector --build-run
 ```
 
-To verify everything is properly configured, try compiling and running the project using `sector --build` and `sector --run`:
+To verify everything is properly configured, try compiling and running the project using `sector --build-run`:
 
 ```
-$ sector --build
+$ sector --build-run
 Compiling: src/main.c -> main.o
-╔ Compiling: test_project
+╔ Compiling: test_init
 ╚ Project Compiled Successfully
 
-$ sector --run
+Running Project: test_init 
 Hello World!!
 ```
 
@@ -83,7 +83,7 @@ For Sector Seven to compile your project properly, you need to specify the path 
 
 ```
 
-After, run `sector --build` and `sector --run` again to compile and run your project. `sector --build` will compile all source files and generate a cache of all `.o` files, so unchanged files won't be recompiled.
+In the [example project](/test/build_bin/), runs `sector --build-run --force-build` to compile and run the example project. `sector --build-run` will compile all source files and generate a cache of all `.o` files, so unchanged files won't be recompiled, `--force-build` (if you want) will ignore all cache, and recompile every source file.
 
 ```
 $ sector --build

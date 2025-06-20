@@ -88,5 +88,16 @@ def build_project(project: dict, cache_log: dict, force_build: bool) -> bool :
     else :
         return archive_lib(sources, project_name, project["ar_flags"])
 
-def run(name) :
+def run(name: str, project: dict) -> bool :
+    if ("type" not in project) :
+        print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
+        return False
+    
+    ptype = project["type"]
+    if (ptype == "lib") :
+        print("Cant run libs projects")
+        return False
+    
+    print(f"\033[1mRunning Project: {project["project"]}\033[0m ")
     system(f"./builds/{name}")
+    return True
