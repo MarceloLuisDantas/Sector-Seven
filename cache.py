@@ -36,7 +36,7 @@ def compile_object(file, modifer_log, flags, hidden=False) :
         comp_line += f" {flag}"
 
     if (not hidden) :
-        print(f"---------\033[34mCompiling: \033[1m{file}\033[0m")
+        print(f"\033[34mCompiling: \033[1m{file}\033[0m -> \033[34m{file_name[:-2]}.o\033[0m")
     
     result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
     if (result.returncode != 0) :

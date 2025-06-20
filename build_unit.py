@@ -11,22 +11,16 @@ def compile_bin(sources: list[str], project_name: str, comp_flags: list[str]) ->
         comp_line += f"{flag} "
     comp_line += f"-o builds/{project_name}"
 
-    # TODO: Colors
-    print(f"Compiling Project {project_name}.")
-    print(f" > {comp_line}\n")    
+    print(f"╔ \033[34mCompiling: \033[1m{project_name}\033[0m")
+    # print(f"╠ {comp_line}")    
     
-    print("GCC Output: ")
-    result = system(comp_line)
-
-    if (result == 0) :
-        print("None - Compilation OK")
-    print("----------\n")
-
-    if (result != 0) :
-        print("Error durign compilation")
+    resultado = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+    if (resultado.returncode != 0) :
+        print(resultado.stderr)
+        print(f"╚ \033[1m{project_name}\033[0m: ❌")
         return False
-    
-    print("Compilation finished")
+
+    print(f"╚ \033[32m\033[1mProject Compiled Successfully\033[0m")
     return True
 
 def archive_lib(sources: list[str], project_name: str, ar_flags: list[str]) -> bool :
@@ -86,16 +80,16 @@ def build_project(project: dict, cache_log: dict) -> bool :
     # Compiles all sources files to .o to cache
     error = False
     for source in sources :
+        # print(source)
         if (compile_object(source, cache_log, comp_flags) != 0) :
             error = True
 
     if (error) :
         # TODO : Colored text
-        print("ERROR: Compilation error")
+        print("\033[31mERROR\033[0m: Fail to compile \033[1m.o\033[0m files")
         return False
-        
+    
     update_cache(cache_log)  
-
     if ptype == "bin" :
         return compile_bin(sources, project_name, comp_flags)
     else :
