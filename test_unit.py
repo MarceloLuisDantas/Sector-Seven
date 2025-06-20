@@ -69,13 +69,13 @@ def run_test(tests: dict, test_name: str, cache_log: dict) -> bool :
     if (not comp_ok) :
         return False
 
-    print(f"Running test: \033[1m{test_name}\033[0m")
+    print(f"╠ Running test: \033[1m{test_name}\033[0m")
     resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
     print(resultado.stdout)
     if (resultado.returncode == 1) :
-        print(f"\033[1m{test_name}\033[0m: ✅")
+        print(f"╚ \033[1m{test_name}\033[0m: ✅")
     else :
-        print(f"\033[1m{test_name}\033[0m: ❌")
+        print(f"╚ \033[1m{test_name}\033[0m: ❌")
     return True
 
 def run_tests(tests: dict, cache_log: dict) -> bool :
