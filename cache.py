@@ -4,7 +4,6 @@ from utils import *
 import json
 import subprocess
 import sys
-sys.dont_write_bytecode = True
 
 def same_flags(flags1: list[str], flags2: list[str]) -> bool :
     if (len(flags1) != len(flags2)) :

@@ -4,7 +4,6 @@ from build_unit import *
 from utils import *
 import argparse
 import sys
-sys.dont_write_bytecode = True
 
 VERSION = "0.1.5"
 

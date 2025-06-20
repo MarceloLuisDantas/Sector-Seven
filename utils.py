@@ -2,6 +2,7 @@ from pathlib import Path
 from os import path
 import json
 import sys
+
 ERROR = "\033[31mERROR\033[0m"
 
 def check_file(file) :

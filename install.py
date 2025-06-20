@@ -2,7 +2,6 @@ from shutil import copy
 import os
 import sys
 from sector import VERSION
-sys.dont_write_bytecode = True
 
 sector_dir      = os.path.expanduser("~/.sector")
 sector_file     = os.path.expanduser("~/.sector/sector.py")

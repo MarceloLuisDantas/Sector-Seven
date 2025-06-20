@@ -1,7 +1,6 @@
 from utils import *
 from cache import *
 import subprocess
-sys.dont_write_bytecode = True
 
 ERROR = "\033[31mERROR\033[0m"
 

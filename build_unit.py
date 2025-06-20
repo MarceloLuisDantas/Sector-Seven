@@ -1,7 +1,6 @@
 from os import system
 from utils import *
 from cache import *
-sys.dont_write_bytecode = True
 ERROR = "\033[31mERROR\033[0m"
 
 def compile_bin(sources: list[str], project_name: str, comp_flags: list[str], verbose=False) -> bool :
