@@ -20,8 +20,8 @@ def main() :
     group.add_argument("-c", "--clean-cache", action="store_true", help="cleans the cache.json")
 
     parser.add_argument("-l", "--lib", action="store_true", help="create a library project (use with --init only)")
-    parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --run-test or --run-tests)")
-    parser.add_argument("-V", "--verbose", action="store_true", help="shows info about the GCC command while compiling")
+    parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --build-run, --run-test or --run-tests)")
+    parser.add_argument("-V", "--verbose", action="store_true", help="shows info about the GCC command while compiling (use with --build, --build-run, --run-test or --run-tests)")
 
     args = parser.parse_args()
     if args.lib and not args.init:
@@ -29,11 +29,11 @@ def main() :
         sys.exit(0)
 
     if args.force_build and not (args.build or args.run_test or args.run_tests or args.build_run):
-        print("--force-build can only be used with --build, --run-test and --run-test")
+        print("--force-build can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
     if args.verbose and not (args.build or args.run_test or args.run_tests or args.build_run):
-        print("--force-build can only be used with --build, --run-test and --run-test")
+        print("--verbose can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
     if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache]):

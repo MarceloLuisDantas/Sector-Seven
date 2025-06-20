@@ -179,3 +179,25 @@ Total Tests: 4
 ❌ 1 Tests That Not Passed
  > test_err 
 ```
+
+## Falgs
+
+| Core Flag                 | Description |
+| ------------------------- | ----------- |
+| -i / --init NAME          | Creates the basic struct of the project |
+| -b / --build              | Compiles the project |
+| -r / --run                | Runs the builded project |
+| -R / --build-run          | Compiles and runs the project |
+| -t / --run-test TEST_NAME | Compiles and runs the named test |
+| -T / --run-tests          | Compiles and runs all tests |
+| -c / --clean-cache        | Cleans the cache.json and remove all .o caches |
+| -h / --help               | Shows the help menu |
+| -v / --version            | Shows the version |
+
+| Options            | Description  |
+| ------------------ | ------------ |
+| -l / --lib         | Use with -i / --init to create a lib project |
+| -B / --force-build | Use with -b/-R/-t/-T. Ignores the cache, recompiles all targets |
+| -V / --verbose     | Use with -b/-R/-t/-T. Shows info about the GCC command while compiling |
+
+         
