@@ -1,6 +1,4 @@
-[:brazil:](/readme_languages/README_pt-br.md)
-
-# Sector Seven v0.1.3
+# Sector Seven v0.1.4
 **Sector Seven** is a C Project Builder designed to be easy to use for beginners and for creating tests.
 **Note**: This tool is not recommended for large projects, but can works well if you are trying to learn C or want to build something small.
 
@@ -179,6 +177,3 @@ Total Tests: 4
 ❌ 1 Tests That Not Passed
  > test_err 
 ```
-
-# TODO
-- Small library management, creating a `~/.sector/libs`, where you can save libs, and get the lib to your project with `sector --get-lib "lib_name"`. 
