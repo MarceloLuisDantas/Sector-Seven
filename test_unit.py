@@ -73,6 +73,8 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
     print(resultado.stdout)
     if (resultado.returncode == 0) :
         print(f"╚ \033[1m{test_name}\033[0m: ✅")
+    elif resultado.returncode == -11 or resultado.returncode == 139 :
+        print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
     else :
         print(f"╚ \033[1m{test_name}\033[0m: ❌")
     return True
@@ -101,6 +103,9 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
             if (resultado.returncode == 0) :
                 print(f"╚ \033[1m{test_name}\033[0m: ✅")
                 passed_tests.append(test_name)
+            elif resultado.returncode == -11 or resultado.returncode == 139 :
+                print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
+                no_pas_tests.append(test_name)
             else :
                 print(f"╚ \033[1m{test_name}\033[0m: ❌")
                 no_pas_tests.append(test_name)

@@ -1,6 +1,5 @@
 from os import makedirs, path
 import json
-import sys
 
 def create_project_json(name: str, is_lib: bool) -> None :
     project_default = {
