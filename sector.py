@@ -5,7 +5,7 @@ from utils import *
 import argparse
 import sys
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
