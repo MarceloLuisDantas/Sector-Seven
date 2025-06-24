@@ -98,7 +98,7 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
             resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
             print(resultado.stdout)
-            if (resultado.returncode == 1) :
+            if (resultado.returncode == 0) :
                 print(f"╚ \033[1m{test_name}\033[0m: ✅")
                 passed_tests.append(test_name)
             else :
