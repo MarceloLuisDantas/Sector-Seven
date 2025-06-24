@@ -1,6 +1,6 @@
 {
     "src/main.c": [
-        1750388355.633931,
+        1750436675.9632375,
         [
             "-Wall",
             "-Werror",
@@ -9,7 +9,7 @@
         "ok"
     ],
     "src/funcs/concat.c": [
-        1750388929.716627,
+        1750436675.9622374,
         [
             "-Wall",
             "-Werror",
@@ -18,7 +18,7 @@
         "ok"
     ],
     "src/structs/array_int.c": [
-        1750388942.4298623,
+        1750436675.9662375,
         [
             "-Wall",
             "-Wno-unused-variable"
@@ -26,7 +26,7 @@
         "ok"
     ],
     "src/structs/array_float.c": [
-        1750388928.3306015,
+        1750436675.9642375,
         [
             "-Wall",
             "-Wno-unused-variable"
@@ -34,7 +34,7 @@
         "ok"
     ],
     "src/structs/array_int_test.c": [
-        1750386528.9436102,
+        1750436675.9672375,
         [
             "-Wall",
             "-Wno-unused-variable"
@@ -42,7 +42,7 @@
         "ok"
     ],
     "src/structs/array_float_test.c": [
-        1750385169.688375,
+        1750436675.9652374,
         [
             "-Wall",
             "-Wno-unused-variable"
@@ -50,7 +50,7 @@
         "ok"
     ],
     "src/test_err.c": [
-        1750387676.473097,
+        1750436675.9682374,
         [
             "-Wall",
             "-Wno-unused-variable"
@@ -58,7 +58,7 @@
         "ok"
     ],
     "src/test_comp_err.c": [
-        1750387487.0819156,
+        1750436675.9672375,
         [
             "-Wall",
             "-Wno-unused-variable"
