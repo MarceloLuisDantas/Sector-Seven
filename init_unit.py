@@ -27,8 +27,9 @@ def create_project_json(name: str, is_lib: bool) -> None :
         with open("project.json", "w") as f:
             json.dump(project_default, f, indent=4)
 
-def create_tests_json() -> None:
+def create_tests_json(name: str) -> None:
     test_default = {
+        "project": name,
         "tests": {
             "test_main": ["src/main.c"]
         },
@@ -86,7 +87,7 @@ def init_project(name: str, is_lib: bool) -> None :
 
     print("Creating project.json, tests.json, cache.json and main.c")
     create_project_json(name, is_lib)
-    create_tests_json()
+    create_tests_json(name)
     create_cache_json()
     create_main_c()
 
