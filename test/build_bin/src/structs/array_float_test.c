@@ -14,9 +14,9 @@ int main() {
 
     if (float_equals(af->array[0], 10.2, 1e-5)) {
         printf("Ok float\n");
-        return 1;
-    } else {
-        printf("%f\n", af->array[0]);
-    }
-    return 0;
+        return 0;
+    } 
+
+    printf("%f\n", af->array[0]);
+    return 1;
 }

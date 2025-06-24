@@ -14,6 +14,9 @@
         ],
         "test_comp_err": [
             "src/test_comp_err.c"
+        ],
+        "test_seg_fault": [
+            "src/seg_fault.c"
         ]
     },
     "test_flags": ["-Wall", "-Wno-unused-variable"]

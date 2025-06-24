@@ -5,7 +5,7 @@ from utils import *
 import argparse
 import sys
 
-VERSION = "0.2.2"
+VERSION = "0.2.3"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
@@ -47,7 +47,6 @@ def main() :
     if args.init:
         init_project(args.init, args.lib)
         sys.exit(0)
-
 
     project = load_file("./project.json")
     tests = load_file("./tests.json")

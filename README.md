@@ -35,13 +35,13 @@ Which terminal do you use?
 [2] Zsh
  > 2
 
-Sector Seven v0.2 should now be installed on your machine.
+Sector Seven v0.2.3 should now be installed on your machine.
 Refresh your terminal and test creating a new project
 by running: sector --version
 ```
 
 ### Manual
-To install manually: Create a folder named `~/.sector`. Move the `sector.py` and all `_unit.py` files into it. Add the alias to your shell configuration file to use Sector from anywhere.
+To install manually: Create a folder named `~/.sector`. Move the `sector.py` and all `.py` files into it. Add the alias to your shell configuration file to use Sector from anywhere.
 
 ## How to Use
 ### Creating a project
@@ -112,7 +112,7 @@ Before Sector Seven compiles your project, `.o` files of all sources files neede
 ### Creating tests
 Tests in Sector is just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a few functions. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself. 
 
-To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/build_bin/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/build_bin/src/structs/array_int.c) and another for floats [`array_float.c`](/test/build_bin/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/build_bin/src/structs/array_int_test.c) and [`array_float_test.c`](/test/build_bin/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. `test_err` and `test_comp_err` is just to show how is the output text to compilations erros, and failured erros. Notice, the return of the `main` functions in the `_test`'s files is important. The function should return 0 if the test pass, and 1 if not.
+To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/build_bin/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/build_bin/src/structs/array_int.c) and another for floats [`array_float.c`](/test/build_bin/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/build_bin/src/structs/array_int_test.c) and [`array_float_test.c`](/test/build_bin/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. `test_err`, `test_comp_err` and `test_seg_fault` is just to show how is the output text to compilations erros, segfaults, and failured. Notice, the return of the `main` functions in the `_test`'s files is important. The function should return 0 if the test pass, and 1 if not.
 
 Once your test files are ready, add and name them in your [`tests.json`](/test/build_bin/tests.json) configuration file.
 ```JSON
@@ -132,6 +132,9 @@ Once your test files are ready, add and name them in your [`tests.json`](/test/b
         ],
         "test_comp_err": [
             "src/test_comp_err.c"
+        ],
+        "test_seg_fault": [
+            "src/seg_fault.c"
         ]
     },
     "test_flags": ["-Wall", "-Wno-unused-variable"]
@@ -142,30 +145,26 @@ As mentioned earlier, each test is essentially just another executable that gets
 
 ```
 $ sector --run-test "array_int"
-Compiling Test array_int.
 ╔ Compiling: array_int
 ╠ Running test: array_int
 Ok int
-
 ╚ array_int: ✅
+
 
 $ sector --run-tests
 ╔ Compiling: array_int
 ╠ Running test: array_int
 Ok int
-
 ╚ array_int: ✅
 
 ╔ Compiling: array_float
 ╠ Running test: array_float
 Ok float
-
 ╚ array_float: ✅
 
 ╔ Compiling: test_err
 ╠ Running test: test_err
 Error
-
 ╚ test_err: ❌
 
 ╔ Compiling: test_comp_err
@@ -174,15 +173,20 @@ test_comp_err.c:(.text+0x18): undefined reference to `print'
 collect2: error: ld returned 1 exit status
 ╚ ERROR Compilation Error ⚠️
 
-Total Tests: 4
+╔ Compiling: test_seg_fault
+╠ Running test: test_seg_fault
+Segmentation fault (core dumped)
+╚ Segmentation Fault (core dumped) in test_seg_fault
+
+Total Tests: 5
 ⚠️  1 Total Comp Erros
  > test_comp_err 
 
 ✅ 2 Tests That Passed
  > array_int array_float 
 
-❌ 1 Tests That Not Passed
- > test_err 
+❌ 2 Tests That Not Passed
+ > test_err test_seg_fault 
 ```
 
 ## Falgs

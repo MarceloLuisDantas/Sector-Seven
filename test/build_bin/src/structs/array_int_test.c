@@ -8,7 +8,7 @@ int main() {
 
     if(ai->array[0] == 10) {
         printf("Ok int\n");
-        return 1;
+        return 0;
     }
-    return ;
+    return 1;
 }

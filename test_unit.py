@@ -1,5 +1,6 @@
 from utils import *
 from cache import *
+import os
 import subprocess
 
 ERROR = "\033[31mERROR\033[0m"
@@ -68,12 +69,13 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
     if (not comp_ok) :
         return False
 
-    print(f"╠ Running test: \033[1m{test_name}\033[0m")
+    print(f"╠ Running test: \033[1m{test_name}\033[0m")    
     resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
-    print(resultado.stdout)
+    print(resultado.stdout, end="")
     if (resultado.returncode == 0) :
         print(f"╚ \033[1m{test_name}\033[0m: ✅")
-    elif resultado.returncode == -11 or resultado.returncode == 139 :
+    elif resultado.returncode == -11 or resultado.returncode == 139 : # segfault
+        os.system(f"./builds/tests/{test_name}")
         print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
     else :
         print(f"╚ \033[1m{test_name}\033[0m: ❌")
@@ -99,11 +101,12 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
         if (ok) :
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
             resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
-            print(resultado.stdout)
+            print(resultado.stdout, end="")
             if (resultado.returncode == 0) :
                 print(f"╚ \033[1m{test_name}\033[0m: ✅")
                 passed_tests.append(test_name)
             elif resultado.returncode == -11 or resultado.returncode == 139 :
+                os.system(f"./builds/tests/{test_name}")
                 print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
                 no_pas_tests.append(test_name)
             else :
