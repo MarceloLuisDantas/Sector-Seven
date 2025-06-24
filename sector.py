@@ -5,7 +5,7 @@ from utils import *
 import argparse
 import sys
 
-VERSION = "0.2"
+VERSION = "0.2.1"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
@@ -57,7 +57,7 @@ def main() :
     if args.clean_cache :
         clean_cache()
     elif args.run_test :
-        run_test(tests, args.run_test, chache_log, args.force_buil, args.verbose)
+        run_test(tests, args.run_test, chache_log, args.force_build, args.verbose)
     elif args.run_tests :
         run_tests(tests, chache_log, args.force_build, args.verbose)
     elif args.build :
