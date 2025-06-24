@@ -35,7 +35,7 @@ Which terminal do you use?
 [2] Zsh
  > 2
 
-Sector Seven v0.2.3 should now be installed on your machine.
+Sector Seven v0.3 should now be installed on your machine.
 Refresh your terminal and test creating a new project
 by running: sector --version
 ```
@@ -190,7 +190,6 @@ Total Tests: 5
 ```
 
 ## Falgs
-
 | Core Flag                 | Description |
 | ------------------------- | ----------- |
 | -i / --init NAME          | Creates the basic struct of the project |
