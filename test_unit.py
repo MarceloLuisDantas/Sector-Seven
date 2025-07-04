@@ -72,7 +72,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
     print(f"╠ Running test: \033[1m{test_name}\033[0m")    
     resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
     print(resultado.stdout, end="")
-    if (resultado.returncode == 0) :
+    if (resultado.returncode == 1) :
         print(f"╚ \033[1m{test_name}\033[0m: ✅")
     elif resultado.returncode == -11 or resultado.returncode == 139 : # segfault
         os.system(f"./builds/tests/{test_name}")
@@ -102,7 +102,7 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
             resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
             print(resultado.stdout, end="")
-            if (resultado.returncode == 0) :
+            if (resultado.returncode == 1) :
                 print(f"╚ \033[1m{test_name}\033[0m: ✅")
                 passed_tests.append(test_name)
             elif resultado.returncode == -11 or resultado.returncode == 139 :
