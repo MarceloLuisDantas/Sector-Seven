@@ -75,8 +75,6 @@ For Sector Seven to compile your project properly, you need to specify the path 
 {
     "project": "test_project",
     "type": "bin",
-    "include_folder": "include",
-    "lib_folder": "lib",
     "sources": [
         "src/main.c",
         "src/funcs/concat.c",

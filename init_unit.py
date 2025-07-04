@@ -5,8 +5,6 @@ def create_project_json(name: str, is_lib: bool) -> None :
     project_default = {
         "project": name,
         "type": "bin",
-        "include_folder": "include",
-        "lib_folder": "lib",
         "sources": ["src/main.c"],
         "comp_flags": ["-Wall"]
     }
@@ -76,10 +74,8 @@ int main() {
         print("  main.c already exists.")        
 
 def init_project(name: str, is_lib: bool) -> None :
-    print("Creating ./src, ./lib, ./include, ./builds, ./builds/tests and ./builds/cache folders")
+    print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
     makedirs("src", exist_ok=True) # sources
-    makedirs("lib", exist_ok=True) # sources
-    makedirs("include", exist_ok=True) # sources
     makedirs("builds", exist_ok=True) # build target
     makedirs("builds/tests", exist_ok=True) # tests
     makedirs("builds/cache", exist_ok=True) # cache files

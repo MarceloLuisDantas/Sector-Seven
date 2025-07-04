@@ -53,8 +53,7 @@ def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bo
         print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
         return False
 
-    expected_keys = ["project", "include_folder", 
-                     "lib_folder", "sources", "comp_flags"]
+    expected_keys = ["project", "sources", "comp_flags"]
     
     ptype = project["type"]
     if (ptype == "lib") :
