@@ -10,8 +10,6 @@ test_unit_file  = os.path.expanduser("~/.sector/test_unit.py")
 init_unit_file  = os.path.expanduser("~/.sector/init_unit.py")
 cache_file      = os.path.expanduser("~/.sector/cache.py")
 utils_file      = os.path.expanduser("~/.sector/utils.py")
-sector_tests    = os.path.expanduser("~/.sector/sectortests.c")
-sector_tests_h  = os.path.expanduser("~/.sector/sectortests.h")
 
 def remove_and_copy(file_path, file) :
     if os.path.isfile(file_path):
@@ -27,8 +25,6 @@ def copy_all_files() :
     remove_and_copy(init_unit_file,  "init_unit.py")
     remove_and_copy(cache_file,      "cache.py")
     remove_and_copy(utils_file,      "utils.py")
-    remove_and_copy(sector_tests,    "sectortest.c")
-    remove_and_copy(sector_tests_h,  "sectortest.h")
 
 def install_files() :
     if not os.path.isfile(sector_file):
