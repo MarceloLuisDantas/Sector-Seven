@@ -115,18 +115,32 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
         ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose)
         if (ok) :
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
-            resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
-            print(resultado.stdout, end="")
-            if (resultado.returncode == 1) :
-                print(f"╚ \033[1m{test_name}\033[0m: ✅")
-                passed_tests.append(test_name)
-            elif resultado.returncode == -11 or resultado.returncode == 139 :
-                os.system(f"./builds/tests/{test_name}")
-                print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
-                no_pas_tests.append(test_name)
-            else :
+            
+            # This value refers to when the C code trys to print random memory, and the value
+            # cant be converted in a UTF character, creating a execption. 
+            unicode_decode_error = False;
+            try :
+                resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
+            except UnicodeDecodeError :
+                unicode_decode_error = True 
+            
+            if (unicode_decode_error) :
+                # Running the test in the local process, so the STDOUT can capture, since trying to 
+                # capture with subprocess results in a UnicodeDecodeError
+                os.system(f"./builds/tests/{test_name}") 
                 print(f"╚ \033[1m{test_name}\033[0m: ❌")
-                no_pas_tests.append(test_name)
+            else :
+                print(resultado.stdout, end="")
+                if (resultado.returncode == 1) :
+                    print(f"╚ \033[1m{test_name}\033[0m: ✅")
+                    passed_tests.append(test_name)
+                elif resultado.returncode == -11 or resultado.returncode == 139 :
+                    os.system(f"./builds/tests/{test_name}")
+                    print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
+                    no_pas_tests.append(test_name)
+                else :
+                    print(f"╚ \033[1m{test_name}\033[0m: ❌")
+                    no_pas_tests.append(test_name)
         else :
             comp_erros.append(test_name)
         total_tests += 1
