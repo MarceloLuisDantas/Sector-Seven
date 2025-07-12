@@ -207,3 +207,5 @@ Total Tests: 5
 | -V / --verbose     | Use with -b/-R/-t/-T. Shows info about the GCC command while compiling |
 
          
+# TODO
+Carregar project.json com variaveis opcionais
