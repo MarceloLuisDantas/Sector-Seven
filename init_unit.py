@@ -30,7 +30,8 @@ def create_tests_json(name: str) -> None:
         "tests": {
             "test_main": ["src/main.c"]
         },
-        "test_flags": ["-Wall"]
+        "test_flags": ["-Wall", "-g"],
+        "valgrind_flags": [""]
     }
 
     if path.isfile("./tests.json"):

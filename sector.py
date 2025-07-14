@@ -5,7 +5,7 @@ from utils import *
 import argparse
 import sys
 
-VERSION = "0.3"
+VERSION = "0.4"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
@@ -18,6 +18,7 @@ def main() :
     group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
     group.add_argument("-v", "--version", action="store_true", help="shows the version")
     group.add_argument("-c", "--clean-cache", action="store_true", help="cleans the cache.json")
+    group.add_argument("--valgrind", type=str, metavar="TEST_NAME_V", help="runs a test with valgrind")
 
     parser.add_argument("-l", "--lib", action="store_true", help="create a library project (use with --init only)")
     parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --build-run, --run-test or --run-tests)")
@@ -32,11 +33,11 @@ def main() :
         print("--force-build can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
-    if args.verbose and not (args.build or args.run_test or args.run_tests or args.build_run):
+    if args.verbose and not (args.build or args.run_test or args.run_tests or args.build_run or args.valgrind):
         print("--verbose can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
-    if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache]):
+    if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind]):
         parser.print_help()
         sys.exit(0) 
 
@@ -59,6 +60,8 @@ def main() :
         run_test(tests, args.run_test, chache_log, args.force_build, args.verbose)
     elif args.run_tests :
         run_tests(tests, chache_log, args.force_build, args.verbose)
+    elif args.valgrind :
+        run_test_valgrind(tests, args.valgrind, chache_log, args.force_build, args.verbose)
     elif args.build :
         build_project(project, chache_log, args.force_build, args.verbose)
     elif args.build_run :

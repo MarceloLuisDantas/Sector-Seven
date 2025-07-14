@@ -35,6 +35,8 @@ def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_l
         comp_line += f"{flag} "
     comp_line += f"-o builds/tests/{test_name}"   
     
+    if verbose :
+        print(f"\033[34mRunning: \033[1m{comp_line}\033[0m")
     result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
     if (result.returncode != 0) :
         print(result.stderr, end="")
@@ -51,6 +53,38 @@ def check_test_json_keys(tests: dict) -> bool :
             if (not exists) :
                 print(f"{ERROR}: Key \"{key}\" is missing from the tests.json")
         return False
+    return True
+
+def run_test_valgrind(tests: dict, test_name: str, cache_log: dict, force_build: bool, verbose: bool) -> bool :
+    if (not check_test_json_keys(tests)) :
+        return False
+    
+    tests_list = tests["tests"]
+    if (test_name not in tests_list) :
+        print(f"{ERROR}: Test {test_name} not found in tests.json")
+        return False
+
+    test_flags = tests["test_flags"]
+    sources = tests_list[test_name]
+    
+    comp_ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose)
+    if (not comp_ok) :
+        return False
+
+    valgrind_line = "valgrind"
+    if ("valgrind_falgs" in tests) :
+        valgrind_flags = tests["valgrind_falgs"]
+        for flag in valgrind_flags :
+            valgrind_line += f" {flag}";
+    valgrind_line += f" ./builds/tests/{test_name}"
+
+    if verbose :
+        print(f"\033[34mRunning: \033[1m{valgrind_line}\033[0m")
+        
+    print(f"╠ Running test with Valgrind: \033[1m{test_name}\033[0m")    
+    os.system(valgrind_line) 
+    print(f"╚ \033[1m{test_name}\033[0m");
+
     return True
 
 def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, verbose: bool) -> bool :
@@ -75,6 +109,8 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
     # cant be converted in a UTF character, creating a execption. 
     unicode_decode_error = False;
     try :
+        if verbose :
+            print(f"\033[34mRunning: \033[1m./builds/tests/{test_name}\033[0m")
         resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
     except UnicodeDecodeError :
         unicode_decode_error = True 
@@ -120,6 +156,8 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
             # cant be converted in a UTF character, creating a execption. 
             unicode_decode_error = False;
             try :
+                if verbose :
+                    print(f"\033[34mRunning: \033[1m./builds/tests/{test_name}\033[0m")
                 resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
             except UnicodeDecodeError :
                 unicode_decode_error = True 
