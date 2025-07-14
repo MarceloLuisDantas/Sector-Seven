@@ -199,6 +199,7 @@ Total Tests: 5
 | -c / --clean-cache        | Cleans the cache.json and remove all .o caches |
 | -h / --help               | Shows the help menu |
 | -v / --version            | Shows the version |
+| --valgrind TEST_NAME      | Runs a test with Valgrind |
 
 | Options            | Description  |
 | ------------------ | ------------ |
