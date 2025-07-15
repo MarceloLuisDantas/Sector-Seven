@@ -5,7 +5,7 @@ from utils import *
 import argparse
 import sys
 
-VERSION = "0.4"
+VERSION = "0.5"
 
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
@@ -24,6 +24,7 @@ def main() :
 
     parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --build-run, --run-test or --run-tests)")
     parser.add_argument("-V", "--verbose", action="store_true", help="shows info about the GCC command while compiling (use with --build, --build-run, --run-test or --run-tests)")
+    parser.add_argument("--stdio", action="store_true", help="shows all the stdio made by the tests (use with --run-tests)")
 
     args = parser.parse_args()
     
@@ -38,6 +39,10 @@ def main() :
     if not any([args.run, args.build, args.init, args.init_lib, args.init_raylib, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind]):
         parser.print_help()
         sys.exit(0) 
+
+    if (args.stdio and not args.run_tests) :
+        print("--stdio can only be used with --run-tests")
+        sys.exit(0)
 
     if args.version:
         print(f"Sector Seven - Version {VERSION}")
@@ -65,7 +70,7 @@ def main() :
     elif args.run_test :
         run_test(tests, args.run_test, chache_log, args.force_build, args.verbose)
     elif args.run_tests :
-        run_tests(tests, chache_log, args.force_build, args.verbose)
+        run_tests(tests, chache_log, args.force_build, args.verbose, args.stdio)
     elif args.valgrind :
         run_test_valgrind(tests, args.valgrind, chache_log, args.force_build, args.verbose)
     elif args.build :

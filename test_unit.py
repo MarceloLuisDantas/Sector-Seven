@@ -5,7 +5,7 @@ import subprocess
 
 ERROR = "\033[31mERROR\033[0m"
 
-def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool, verbose: bool) -> bool :
+def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool, verbose: bool, stdio: bool) -> bool :
     if (len(sources) == 0) :
         print(f"No source file specified in {test_name}")
         return False
@@ -17,7 +17,7 @@ def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_l
     print(f"╔ \033[34mCompiling: \033[1m{test_name}\033[0m")
     error = False
     for source in sources :
-        ok = compile_object(source, cache_log, test_flags, force_build=force_build, verbose=verbose, hidden=True)
+        ok = compile_object(source, cache_log, test_flags, force_build=force_build, verbose=verbose, hidden=True, stdio=stdio)
         # print(ok)
         if (ok != 0) :
             error = True
@@ -132,7 +132,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
 
     return True
 
-def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) -> bool :
+def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, stdio: bool) -> bool :
     if (not check_test_json_keys(tests)) :
         return False
     
@@ -148,7 +148,7 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
     test_flags = tests["test_flags"]
     for test_name in tests_list :
         sources = tests_list[test_name]
-        ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose)
+        ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose, stdio)
         if (ok) :
             print(f"╠ Running test: \033[1m{test_name}\033[0m")
             
@@ -168,12 +168,14 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool) ->
                 os.system(f"./builds/tests/{test_name}") 
                 print(f"╚ \033[1m{test_name}\033[0m: ❌")
             else :
-                print(resultado.stdout, end="")
+                if (stdio or verbose) :
+                    print(resultado.stdout, end="")
                 if (resultado.returncode == 1) :
                     print(f"╚ \033[1m{test_name}\033[0m: ✅")
                     passed_tests.append(test_name)
                 elif resultado.returncode == -11 or resultado.returncode == 139 :
-                    os.system(f"./builds/tests/{test_name}")
+                    if (stdio or verbose) :
+                        os.system(f"./builds/tests/{test_name}")
                     print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
                     no_pas_tests.append(test_name)
                 else :

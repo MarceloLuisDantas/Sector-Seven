@@ -31,7 +31,7 @@ def check_cache_types(cache_line: list) -> bool :
         return False
     return True
 
-def compile_object(file, modifer_log, flags, force_build=False, verbose=False, hidden=False) :
+def compile_object(file, modifer_log, flags, force_build=False, verbose=False, hidden=False, stdio=False) :
     last_modifed = path.getmtime(Path(file))
     if file not in modifer_log.keys() :   
         modifer_log[file] = [last_modifed, flags, "not compiled yet"]
@@ -55,15 +55,16 @@ def compile_object(file, modifer_log, flags, force_build=False, verbose=False, h
 
     if ((not hidden) or verbose) :
         if (verbose) :
-            print(f"\033[34mCompiling: \033[1m{comp_line}\033[0m")
+            print(f"╠ \033[34mCompiling: \033[1m{comp_line}\033[0m")
         else :
-            print(f"\033[34mCompiling: \033[1m{file_name}\033[0m")
+            print(f"╠ \033[34mCompiling: \033[1m{file_name}\033[0m")
     
     result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
     if (result.returncode != 0) :
-        print(f"\033[31mERROR\033[0m Compilation Error: {file}")
-        print(result.stdout)
-        print(result.stderr)
+        print(f"╠ \033[31mERROR\033[0m Compilation Error: {file}")
+        if (stdio) :
+            print("╠ ", result.stdout)
+            print("╠ ", result.stderr)
         modifer_log[file][2] = "error"
         return 1
     
