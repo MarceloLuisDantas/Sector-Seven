@@ -1,0 +1,13 @@
+{
+    "project": "teste",
+    "type": "lib",
+    "sources": [
+        "src/main.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ],
+    "ar_flags": [
+        "rsc"
+    ]
+}
