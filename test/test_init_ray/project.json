@@ -1,0 +1,12 @@
+{
+    "project": "teste",
+    "type": "ray",
+    "sources": [
+        "src/main.c"
+    ],
+    "comp_flags": [
+        "-Wall",
+        "-lraylib",
+        "-lm"
+    ]
+}

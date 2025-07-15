@@ -1,7 +1,7 @@
 from os import makedirs, path
 import json
 
-def create_project_json(name: str, is_lib: bool) -> None :
+def create_project_json(name: str, ptype: bool) -> None :
     project_default = {
         "project": name,
         "type": "bin",
@@ -9,9 +9,14 @@ def create_project_json(name: str, is_lib: bool) -> None :
         "comp_flags": ["-Wall"]
     }
 
-    if is_lib :
+    if ptype == "bin" :
+        project_default["type"] = "bin"
+    elif ptype == "lib" :
         project_default["type"] = "lib"
         project_default["ar_flags"] = ["rsc"]
+    elif ptype == "ray" :
+        project_default["type"] = "ray"
+        project_default["comp_flags"] = ["-Wall", "-lraylib", "-lm"]
 
     if path.isfile("./project.json"):
         a = input("  project.json already exists. Overwrite? [y/n]: ").lower()
@@ -24,7 +29,7 @@ def create_project_json(name: str, is_lib: bool) -> None :
         with open("project.json", "w") as f:
             json.dump(project_default, f, indent=4)
 
-def create_tests_json(name: str) -> None:
+def create_tests_json(name: str, ptype: bool) -> None:
     test_default = {
         "project": name,
         "tests": {
@@ -34,6 +39,9 @@ def create_tests_json(name: str) -> None:
         "valgrind_flags": [""]
     }
 
+    if (ptype == "ray") :
+        test_default["test_flags"] += ["-lraylib", "-lm"]
+    
     if path.isfile("./tests.json"):
         a = input("  tests.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
@@ -59,13 +67,31 @@ def create_cache_json() -> None :
         with open("./builds/cache/cache.json", "w") as f:
             json.dump(test_default, f)
 
-def create_main_c() -> None :
-    hello_world = """#include <stdio.h>
+def create_main_c(ptype: str) -> None :
+    hello_world = "";
+
+    if (ptype == "bin") :
+        hello_world = """#include <stdio.h>
 
 int main() { 
     printf("Hello World!!\\n");
     return 0;
 }            
+"""
+    if (ptype == "ray") :
+        hello_world = """#include <raylib.h>
+
+int main() {
+    InitWindow(800, 450, "Raylib Test");
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        DrawText("Hello, World!!", 190, 200, 20, BLACK);
+        EndDrawing();
+    }
+    CloseWindow();
+    return 0;
+}
 """
 
     if not path.isfile("./src/main.c") :
@@ -74,7 +100,8 @@ int main() {
     else :
         print("  main.c already exists.")        
 
-def init_project(name: str, is_lib: bool) -> None :
+
+def init_project(name: str, ptype: str) -> None :
     print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
     makedirs("src", exist_ok=True) # sources
     makedirs("builds", exist_ok=True) # build target
@@ -82,11 +109,12 @@ def init_project(name: str, is_lib: bool) -> None :
     makedirs("builds/cache", exist_ok=True) # cache files
 
     print("Creating project.json, tests.json, cache.json and main.c")
-    create_project_json(name, is_lib)
-    create_tests_json(name)
+    create_project_json(name, ptype)
+    create_tests_json(name, ptype)
     create_cache_json()
-    create_main_c()
+    create_main_c(ptype)
 
     print("")
     print(f"Project {name} was started.")
-    print("Run sector --build-run")
+    if (ptype != "lib") :
+        print("Run sector --build-run")

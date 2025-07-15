@@ -86,10 +86,10 @@ def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bo
         return False
     
     update_cache(cache_log)  
-    if ptype == "bin" :
-        return compile_bin(sources, project_name, comp_flags, verbose=verbose)
-    else :
+    if ptype == "lib" :
         return archive_lib(sources, project_name, project["ar_flags"], verbose=verbose)
+    else :
+        return compile_bin(sources, project_name, comp_flags, verbose=verbose)
 
 def run(name: str, project: dict) -> bool :
     if ("type" not in project) :

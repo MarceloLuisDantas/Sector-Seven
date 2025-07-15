@@ -19,5 +19,6 @@
             "src/seg_fault.c"
         ]
     },
-    "test_flags": ["-Wall", "-Wno-unused-variable"]
+    "test_flags": ["-Wall", "-Wno-unused-variable"],
+    "valgrind_falgs": ["--verbose"]
 }

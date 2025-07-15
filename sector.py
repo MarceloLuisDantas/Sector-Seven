@@ -10,7 +10,9 @@ VERSION = "0.4"
 def main() :
     parser = argparse.ArgumentParser(description=f"Sector Seven - C Building Tool v{VERSION}")
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-i", "--init", type=str, metavar="NAME", help="creates the basic struct of a projetc")
+    group.add_argument("--init", type=str, metavar="NAME", help="creates the basic struct of a projetc")
+    group.add_argument("--init-lib", type=str, metavar="NAME", help="creates the basic struct of a lib projetc")
+    group.add_argument("--init-raylib", type=str, metavar="NAME", help="creates the basic struct of a raylib projetc")
     group.add_argument("-b", "--build", action="store_true", help="builds the project")
     group.add_argument("-r", "--run", action="store_true", help="runs the project")
     group.add_argument("-R", "--build-run", action="store_true", help="builds the project and runs the project")
@@ -20,15 +22,11 @@ def main() :
     group.add_argument("-c", "--clean-cache", action="store_true", help="cleans the cache.json")
     group.add_argument("--valgrind", type=str, metavar="TEST_NAME_V", help="runs a test with valgrind")
 
-    parser.add_argument("-l", "--lib", action="store_true", help="create a library project (use with --init only)")
     parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --build-run, --run-test or --run-tests)")
     parser.add_argument("-V", "--verbose", action="store_true", help="shows info about the GCC command while compiling (use with --build, --build-run, --run-test or --run-tests)")
 
     args = parser.parse_args()
-    if args.lib and not args.init:
-        print("--lib can only be used with --init")
-        sys.exit(0)
-
+    
     if args.force_build and not (args.build or args.run_test or args.run_tests or args.build_run):
         print("--force-build can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
@@ -37,7 +35,7 @@ def main() :
         print("--verbose can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
-    if not any([args.run, args.build, args.init, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind]):
+    if not any([args.run, args.build, args.init, args.init_lib, args.init_raylib, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind]):
         parser.print_help()
         sys.exit(0) 
 
@@ -46,7 +44,15 @@ def main() :
         sys.exit(0)
 
     if args.init:
-        init_project(args.init, args.lib)
+        init_project(args.init, "bin")
+        sys.exit(0)
+
+    if args.init_lib:
+        init_project(args.init_lib, "lib")
+        sys.exit(0)
+    
+    if args.init_raylib:
+        init_project(args.init_raylib, "ray")
         sys.exit(0)
 
     project = load_file("./project.json")
@@ -65,10 +71,14 @@ def main() :
     elif args.build :
         build_project(project, chache_log, args.force_build, args.verbose)
     elif args.build_run :
-        ok = build_project(project, chache_log, args.force_build, args.verbose)
-        if (ok) :
-            print("")
-            run(name, project)
+        ptype = project["type"]
+        if (ptype == "lib") :
+            print("Cant run libs projects")
+        else :
+            ok = build_project(project, chache_log, args.force_build, args.verbose)
+            if (ok) :
+                print("")
+                run(name, project)
     elif args.run :
         run(name, project)
     
