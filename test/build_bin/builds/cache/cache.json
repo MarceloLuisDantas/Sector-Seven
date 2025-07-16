@@ -11,7 +11,8 @@
         1750765156.9297578,
         [
             "-Wall",
-            "-Wno-unused-variable"
+            "-Werror",
+            "-O1"
         ],
         "ok"
     ],
@@ -27,7 +28,8 @@
         1750765156.9287577,
         [
             "-Wall",
-            "-Wno-unused-variable"
+            "-Werror",
+            "-O1"
         ],
         "ok"
     ],
@@ -52,6 +54,24 @@
         [
             "-Wall",
             "-Wno-unused-variable"
+        ],
+        "ok"
+    ],
+    "src/main.c": [
+        1750765156.9287577,
+        [
+            "-Wall",
+            "-Werror",
+            "-O1"
+        ],
+        "ok"
+    ],
+    "src/funcs/concat.c": [
+        1750765156.9287577,
+        [
+            "-Wall",
+            "-Werror",
+            "-O1"
         ],
         "ok"
     ]

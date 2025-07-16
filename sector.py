@@ -25,6 +25,7 @@ def main() :
     parser.add_argument("-B", "--force-build", action="store_true", help="compiles all target files, ignorening cache (use with --build, --build-run, --run-test or --run-tests)")
     parser.add_argument("-V", "--verbose", action="store_true", help="shows info about the GCC command while compiling (use with --build, --build-run, --run-test or --run-tests)")
     parser.add_argument("--stdio", action="store_true", help="shows all the stdio made by the tests (use with --run-tests)")
+    parser.add_argument("--shared", action="store_true", help="compiles a library to a shared object (use with --build in a lib project)")
 
     args = parser.parse_args()
     
@@ -42,6 +43,10 @@ def main() :
 
     if (args.stdio and not args.run_tests) :
         print("--stdio can only be used with --run-tests")
+        sys.exit(0)
+
+    if (args.shared and not args.build) :
+        print("--shared can only be used with --build")
         sys.exit(0)
 
     if args.version:
@@ -74,7 +79,11 @@ def main() :
     elif args.valgrind :
         run_test_valgrind(tests, args.valgrind, chache_log, args.force_build, args.verbose)
     elif args.build :
-        build_project(project, chache_log, args.force_build, args.verbose)
+        if (args.shared and project["type"] != "lib") :
+            print("Can't use --shared in non lib projects")
+        else :
+            print("alguma coisa")
+            build_project(project, chache_log, args.force_build, args.verbose, args.shared)
     elif args.build_run :
         ptype = project["type"]
         if (ptype == "lib") :

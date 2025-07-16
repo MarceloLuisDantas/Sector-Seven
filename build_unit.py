@@ -37,7 +37,6 @@ def archive_lib(sources: list[str], project_name: str, ar_flags: list[str], verb
         print(f"╔ \033[34mArchiving Lib: \033[1mlib{comp_line}.a\033[0m")
     else :
         print(f"╔ \033[34mArchiving Lib: \033[1mlib{project_name}.a\033[0m")
-    # print("ar Output: ")
 
     resultado = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
     if (resultado.returncode != 0) :
@@ -48,7 +47,27 @@ def archive_lib(sources: list[str], project_name: str, ar_flags: list[str], verb
     print(f"╚ \033[32m\033[1mProject Archived Successfully\033[0m")
     return True
 
-def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bool) -> bool :
+def compile_shared_lib(sources: list[str], project_name: str, verbose=False) -> bool :
+    comp_line = "gcc --shared -o " 
+    comp_line += f"builds/lib{project_name}.so "
+    for source in sources :
+        comp_line += f"./builds/cache/{source[:-2]}.o "
+
+    if (verbose) :
+        print(f"╔ \033[34mCompiling Lib: \033[1mlib{comp_line}.so\033[0m")
+    else :
+        print(f"╔ \033[34mCompiling Lib: \033[1mlib{project_name}.so\033[0m")
+
+    resultado = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+    if (resultado.returncode != 0) :
+        print(resultado.stderr)
+        print(f"╚ \033[1m{project_name}\033[0m: ❌")
+        return False
+    
+    print(f"╚ \033[32m\033[1mProject Compiled Successfully\033[0m")
+    return True
+
+def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bool, shared: bool) -> bool :
     if ("type" not in project) :
         print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
         return False
@@ -87,6 +106,8 @@ def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bo
     
     update_cache(cache_log)  
     if ptype == "lib" :
+        if (shared) :
+            return compile_shared_lib(sources, project_name, verbose=verbose);
         return archive_lib(sources, project_name, project["ar_flags"], verbose=verbose)
     else :
         return compile_bin(sources, project_name, comp_flags, verbose=verbose)

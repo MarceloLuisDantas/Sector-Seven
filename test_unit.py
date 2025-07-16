@@ -5,7 +5,7 @@ import subprocess
 
 ERROR = "\033[31mERROR\033[0m"
 
-def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool, verbose: bool, stdio: bool) -> bool :
+def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool, verbose: bool, stdio: bool=False) -> bool :
     if (len(sources) == 0) :
         print(f"No source file specified in {test_name}")
         return False
