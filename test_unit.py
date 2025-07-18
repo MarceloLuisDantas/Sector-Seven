@@ -116,7 +116,7 @@ def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, ve
         unicode_decode_error = True 
         
     if (unicode_decode_error) :
-        # Running the test in the local process, so the STDOUT can capture, since trying to 
+        # Running the test in the local process, so the STDOUT can be capture, since trying to 
         # capture with subprocess results in a UnicodeDecodeError
         os.system(f"./builds/tests/{test_name}") 
         print(f"╚ \033[1m{test_name}\033[0m: ❌")
@@ -145,6 +145,7 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, st
     comp_erros = []
     passed_tests = []
     no_pas_tests = []
+    seg_faults = []
     test_flags = tests["test_flags"]
     for test_name in tests_list :
         sources = tests_list[test_name]
@@ -177,7 +178,7 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, st
                     if (stdio or verbose) :
                         os.system(f"./builds/tests/{test_name}")
                     print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
-                    no_pas_tests.append(test_name)
+                    seg_faults.append(test_name)
                 else :
                     print(f"╚ \033[1m{test_name}\033[0m: ❌")
                     no_pas_tests.append(test_name)
@@ -187,17 +188,10 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, st
         print("")
 
     print(f"\033[34mTotal Tests: {total_tests}\033[0m")
-    if (len(comp_erros) > 0) :
-        print(f"⚠️  \033[33m{len(comp_erros)}\033[0m Total Comp Erros")
-        print(" \033[33m>\033[0m ", end="")
-        for test in comp_erros :
-            print(f"\033[1m{test}\033[0m ", end="")
-        print("")
-
     if (len(passed_tests) > 0) :
         print("")
         print(f"✅ \033[32m{len(passed_tests)}\033[0m Tests That Passed")
-        print(" \033[32m>\033[0m ", end="")
+        print("   \033[32m>\033[0m ", end="")
         for test in passed_tests :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")
@@ -205,7 +199,23 @@ def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, st
     if (len(no_pas_tests) > 0) :
         print("")
         print(f"❌ \033[31m{len(no_pas_tests)}\033[0m Tests That Not Passed")
-        print(" \033[31m>\033[0m ", end="")
+        print("   \033[31m>\033[0m ", end="")
         for test in no_pas_tests :
+            print(f"\033[1m{test}\033[0m ", end="")
+        print("")
+
+    if (len(comp_erros) > 0) :
+        print("")
+        print(f"⚠️  \033[33m{len(comp_erros)}\033[0m Total Comp Erros")
+        print("   \033[33m>\033[0m ", end="")
+        for test in comp_erros :
+            print(f"\033[1m{test}\033[0m ", end="")
+        print("")
+
+    if (len(seg_faults) > 0) :
+        print("")
+        print(f"💥 \033[38;5;208m{len(no_pas_tests)}\033[0m Tests That Segfault")
+        print("   \033[38;5;208m>\033[0m ", end="")
+        for test in seg_faults :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")

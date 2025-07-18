@@ -1,0 +1,20 @@
+{
+    "project": "test_init_bin",
+    "tests": {
+        "test_sum": [
+            "src/funcs/sum.c",
+            "src/funcs/tests/tsum.c"
+        ],
+        "test_mult": [
+            "src/funcs/mult.c",
+            "src/funcs/tests/tmult.c"
+        ]
+    },
+    "test_flags": [
+        "-Wall",
+        "-g"
+    ],
+    "valgrind_flags": [
+        ""
+    ]
+}

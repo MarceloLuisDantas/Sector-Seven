@@ -1,0 +1,42 @@
+{
+    "src/nums.c": [
+        1752652201.8498285,
+        [
+            "-Wall",
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/tests/passed.c": [
+        1752652153.1679556,
+        [
+            "-Wall",
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/tests/failed.c": [
+        1752652456.7433887,
+        [
+            "-Wall",
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/tests/sintax_err.c": [
+        1752652164.4971588,
+        [
+            "-Wall",
+            "-g"
+        ],
+        "error"
+    ],
+    "src/tests/seg_fault.c": [
+        1752652596.843811,
+        [
+            "-Wall",
+            "-g"
+        ],
+        "ok"
+    ]
+}

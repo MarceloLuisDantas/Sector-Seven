@@ -1,0 +1,14 @@
+{
+    "project": "test_lib",
+    "type": "lib",
+    "sources": [
+        "src/mult.c",
+        "src/sum.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ],
+    "ar_flags": [
+        "rsc"
+    ]
+}

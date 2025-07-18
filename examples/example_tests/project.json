@@ -1,0 +1,10 @@
+{
+    "project": "tests",
+    "type": "bin",
+    "sources": [
+        "src/main.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ]
+}

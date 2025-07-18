@@ -1,0 +1,26 @@
+{
+    "project": "tests",
+    "tests": {
+        "test_passed": [
+            "src/nums.c",
+            "src/tests/passed.c"
+        ],
+        "test_failed": [
+            "src/nums.c",
+            "src/tests/failed.c"
+        ],
+        "test_sintax_err": [
+            "src/tests/sintax_err.c"
+        ],
+        "test_seg_fault": [
+            "src/tests/seg_fault.c"
+        ]
+    },
+    "test_flags": [
+        "-Wall",
+        "-g"
+    ],
+    "valgrind_flags": [
+        ""
+    ]
+}

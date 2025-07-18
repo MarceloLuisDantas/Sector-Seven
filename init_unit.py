@@ -14,10 +14,6 @@ def create_project_json(name: str, ptype: bool) -> None :
     elif ptype == "lib" :
         project_default["type"] = "lib"
         project_default["ar_flags"] = ["rsc"]
-    elif ptype == "ray" :
-        project_default["type"] = "ray"
-        project_default["comp_flags"] = ["-Wall", "-lraylib", "-lm"]
-
     if path.isfile("./project.json"):
         a = input("  project.json already exists. Overwrite? [y/n]: ").lower()
         if (a == "y" or a == "yes") :
@@ -38,9 +34,6 @@ def create_tests_json(name: str, ptype: bool) -> None:
         "test_flags": ["-Wall", "-g"],
         "valgrind_flags": [""]
     }
-
-    if (ptype == "ray") :
-        test_default["test_flags"] += ["-lraylib", "-lm"]
     
     if path.isfile("./tests.json"):
         a = input("  tests.json already exists. Overwrite? [y/n]: ").lower()
@@ -78,21 +71,6 @@ int main() {
     return 0;
 }            
 """
-    if (ptype == "ray") :
-        hello_world = """#include <raylib.h>
-
-int main() {
-    InitWindow(800, 450, "Raylib Test");
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawText("Hello, World!!", 190, 200, 20, BLACK);
-        EndDrawing();
-    }
-    CloseWindow();
-    return 0;
-}
-"""
 
     if not path.isfile("./src/main.c") :
         with open("src/main.c", "w") as f :
@@ -100,21 +78,31 @@ int main() {
     else :
         print("  main.c already exists.")        
 
+def valid_name(name: str) -> bool:
+    invalid_chars = ['\'', '\"', '\\', '/', '~', '.', ',', '\n', '\0']
+    return not any(c in name for c in invalid_chars)
+
+def format_name(name: str) -> str :
+    return "_".join(name.split(" "))
 
 def init_project(name: str, ptype: str) -> None :
-    print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
-    makedirs("src", exist_ok=True) # sources
-    makedirs("builds", exist_ok=True) # build target
-    makedirs("builds/tests", exist_ok=True) # tests
-    makedirs("builds/cache", exist_ok=True) # cache files
+    if (not valid_name(name)) :
+        print("Not a valid name")
+    else :
+        f_name = format_name(name)
+        print("Creating ./src, ./builds, ./builds/tests and ./builds/cache folders")
+        makedirs("src", exist_ok=True) # sources
+        makedirs("builds", exist_ok=True) # build target
+        makedirs("builds/tests", exist_ok=True) # tests
+        makedirs("builds/cache", exist_ok=True) # cache files
 
-    print("Creating project.json, tests.json, cache.json and main.c")
-    create_project_json(name, ptype)
-    create_tests_json(name, ptype)
-    create_cache_json()
-    create_main_c(ptype)
+        print("Creating project.json, tests.json, cache.json and main.c")
+        create_project_json(f_name, ptype)
+        create_tests_json(f_name, ptype)
+        create_cache_json()
+        create_main_c(ptype)
 
-    print("")
-    print(f"Project {name} was started.")
-    if (ptype != "lib") :
-        print("Run sector --build-run")
+        print("")
+        print(f"Project {f_name} was started.")
+        if (ptype != "lib") :
+            print("Run sector --build-run")

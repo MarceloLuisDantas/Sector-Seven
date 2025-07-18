@@ -1,0 +1,12 @@
+{
+    "project": "test_init_bin",
+    "type": "bin",
+    "sources": [
+        "src/main.c",
+        "src/funcs/mult.c",
+        "src/funcs/sum.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ]
+}

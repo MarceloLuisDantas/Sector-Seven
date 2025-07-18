@@ -18,8 +18,6 @@ If you use Bash or ZSH, you can run the installation script for install automati
 
 ```
 $ python3 install.py                                                                
-Creating ~/.sector...
-Copying files to ~/.sector...
 Copying sector.py to ~/.sector...
 Copying build_unit.py to ~/.sector...
 Copying test_unit.py to ~/.sector...
@@ -35,24 +33,24 @@ Which terminal do you use?
 [2] Zsh
  > 2
 
-Sector Seven v0.4 should now be installed on your machine.
+Sector Seven v0.5 should now be installed on your machine.
 Refresh your terminal and test creating a new project
 by running: sector --version
 ```
 
 ### Manual
-To install manually: Create a folder named `~/.sector`. Move the `sector.py` and all `.py` files into it. Add the alias to your shell configuration file to use Sector from anywhere.
+To install manually: Create a folder named `~/.sector`, move `sector.py` and all `.py` files into it. Add add a alias to your shell configuration file to use Sector from anywhere.
 
 ## How to Use
 ### Creating a project
-To get started, run `sector --init "project_name"` to create the project foundation. This will generate a `project.json` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs.
-
+To get started, run `sector --init "project_name"` to create the base project. This will generate a `project.json` file containing the basic project configurations, a `src` folder to store all necessary source files, and a `builds` folder for your compiled outputs. You also can create lib projects with `--init-lib`.
+    
 ```
 $ sector --init "build_test"
-Creating ./src, ./lib, ./include, ./builds, ./builds/tests and ./builds/cache folders
+Creating ./src, ./builds, ./builds/tests and ./builds/cache folders
 Creating project.json, tests.json, cache.json and main.c
 
-Project test_project was started.
+Project "build_test" was started.
 Run sector --build-run
 ```
 
@@ -60,153 +58,188 @@ To verify everything is properly configured, try compiling and running the proje
 
 ```
 $ sector --build-run
-Compiling: src/main.c -> main.o
-╔ Compiling: test_init
+╠ Compiling: main.c
+╔ Compiling: test
 ╚ Project Compiled Successfully
 
-Running Project: test_init 
+Running Project: test 
 Hello World!!
 ```
 
 ### Managing Source Files and Compiling
-For Sector Seven to compile your project properly, you need to specify the path to each `.c` file you're using in the sources list within `project.json`. The example project in [test](/test/build_bin/project.json) uses 3 source files (listed in its `project.json`), along with the compiler flags to be used.
+For Sector Seven to compile your project properly, you need to specify the path to each `.c` file you're using in the sources list within `project.json`. The example project in [`init bin`](/examples/example_init_bin) uses 3 source files (listed in its `project.json`), along with the compiler flags to be used.
+
 
 ```JSON
 {
-    "project": "test_project",
+    "project": "test_init_bin",
     "type": "bin",
     "sources": [
         "src/main.c",
-        "src/funcs/concat.c",
-        "src/structs/array_int.c",
-        "src/structs/array_float.c"
+        "src/funcs/mult.c",
+        "src/funcs/sum.c"
     ],
-    "comp_flags": ["-Wall", "-Werror", "-O1"]
+    "comp_flags": [
+        "-Wall"
+    ]
 }
-
 ```
 
-In the [example project](/test/build_bin/), runs `sector --build-run --force-build` to compile and run the example project. `sector --build-run` will compile all source files and generate a cache of all `.o` files, so unchanged files won't be recompiled, `--force-build` (if you want) will ignore all cache, and recompile every source file.
+In the [`init bin`](/examples/example_init_bin), runs `sector --build-run --force-build` to compile and run the example project. `sector --build-run` will compile all source files and generate a cache of all `.o` files, so unchanged files won't be recompiled, `--force-build` (if you want) will ignore all cache, and recompile every source file.
 
 ```
 $ sector --build
-Compiling: src/main.c -> main.o
-Compiling: src/funcs/concat.c -> concat.o
-Compiling: src/structs/array_int.c -> array_int.o
-Compiling: src/structs/array_float.c -> array_float.o
-╔ Compiling: test_project
+╠ Compiling: main.c
+╠ Compiling: mult.c
+╠ Compiling: sum.c
+╔ Compiling: test_init_bin
 ╚ Project Compiled Successfully
 
-$ sector --run
-Element: 0 = 1
-Element: 1 = 2
-Element: 2 = 5
-Element: 3 = 6
-2.300000
+Running Project: test_init_bin 
+(10 + 20) * 2 = 60
 ```
 
-Before Sector Seven compiles your project, `.o` files of all sources files needed are created in the [`cache`](/test/build_bin/builds/cache/) folder, therefore, previously compiled source files will be recompiled if: The file has been modified; The compilation flags have changed; The last compilation attempt resulted in an error, or, `--force-build` flag is used (in this case, all files will be recompiled, ignoring the previous cache).
+Before Sector Seven compiles your project, `.o` files of all source files needed are created in the [`cache`](/examples/example_init_bin/builds/cache) folder. Therefore, previously compiled source files will be recompiled if the file has been modified, the compilation flags have changed, the last compilation attempt resulted in an error, or, the `--force-build` flag is used (in this case, all files will be recompiled, ignoring the previous cache).
 
 ### Creating tests
-Tests in Sector is just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a few functions. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself. 
+Tests in Sector are just additional C files. The goal is to make test creation as simple as possible, requiring nothing more than a name and a main function. Sector Seven handles only the compilation and execution of tests - there isn't yet a dedicated library to assist with test creation itself.
 
-To create a test, you first need to make a file that will serve as the main test file containing all the test cases you want to run. In the [structs](/test/build_bin/src/structs/) directory, you'll find two array implementations: one for integers [`array_int.c`](/test/build_bin/src/structs/array_int.c) and another for floats [`array_float.c`](/test/build_bin/src/structs/array_float.c). The testing simply required creating corresponding test files for each code you want to test ([`array_int_test.c`](/test/build_bin/src/structs/array_int_test.c) and [`array_float_test.c`](/test/build_bin/src/structs/array_float_test.c) respectively). Note that while test filenames don't need to end with _test, this naming convention is recommended. `test_err`, `test_comp_err` and `test_seg_fault` is just to show how is the output text to compilations erros, segfaults, and failured. Notice, the return of the `main` functions in the `_test`'s files is important. The function should return 0 if the test pass, and 1 if not.
+To create tests with Sector, you need two things: One or more functions that you want to test; A test file with a main function. There are no strict rules for creating tests, locations, or naming conventions, you just need the path to the files you need. All tests are centralized in the `tests.json` file *(in the future, it's an idea to make possible the use of more than one file with tests)*.
 
-Once your test files are ready, add and name them in your [`tests.json`](/test/build_bin/tests.json) configuration file.
+In the [`tests.json`](/examples/example_init_bin/tests.json) in the `example_init_bin`, you can find the test structure. All tests are in the [`tests`](/examples/example_init_bin/src/funcs/tests) folder in this case, but you don't need to use this name if you don't want to, the name of the folder is not important. In the `tests.json` file, are 4 fields: the project name, the tests, the flags, and the Valgrind flags. *(If you need to use Valgrind, just run `--valgrind` "test_name".)* You can create as many tests as you need. You can create as many tests as you need. in this case we have 2 tests, on to test the `sum` function in [`sum.c`](/examples/example_init_bin/src/funcs/sum.c), the other is to test `mult` in [`sum.c`](/examples/example_init_bin/src/funcs/)
 ```JSON
 {
-    "project": "test_project",
+    "project": "test_init_bin",
     "tests": {
-        "array_int": [
-            "src/structs/array_int_test.c",
-            "src/structs/array_int.c"
+        "test_sum": [
+            "src/funcs/sum.c",
+            "src/funcs/tests/tsum.c"
         ],
-        "array_float": [
-            "src/structs/array_float_test.c",
-            "src/structs/array_float.c"
-        ],
-        "test_err": [
-            "src/test_err.c"
-        ],
-        "test_comp_err": [
-            "src/test_comp_err.c"
-        ],
-        "test_seg_fault": [
-            "src/seg_fault.c"
+        "test_mult": [
+            "src/funcs/mult.c",
+            "src/funcs/tests/tmult.c"
         ]
     },
-    "test_flags": ["-Wall", "-Wno-unused-variable"]
+    "test_flags": [
+        "-Wall",
+        "-g"
+    ],
+    "valgrind_flags": [
+        ""
+    ]
 }
 ```
 
-As mentioned earlier, each test is essentially just another executable that gets compiled and run. To work with these tests, you can use the `sector --run-test "test_name"` to execute a specific test, or `sector --run-tests` to automatically run all available tests in sequence.
+To run the tests you just need to be in the root folder of your project, and run `--run-tests`, and, if you need to run a specific test run `--run-test "test_name"`
+```
+$ sector --run-tests
+╔ Compiling: test_sum
+╠ Running test: test_sum
+╚ test_sum: ✅
 
+╔ Compiling: test_mult
+╠ Running test: test_mult
+╚ test_mult: ✅
+
+Total Tests: 2
+
+✅ 2 Tests That Passed
+ > test_sum test_mult 
+$ sector --run-test "test_mult"
+╔ Compiling: test_mult
+╠ Running test: test_mult
+Num Ok - 20
+╚ test_mult: ✅
+```
+
+`--run-tests` have an optional flag, --stdio, notice that when you run `--run-tests` no prints arte visable, but when you run a single test, are prints, this is because `--run-tests` hiddens the stdio, to prevent polution when you have more tests, but you can enable the stdio but using the `--stdio` flag.
+```
+$ sector --run-tests --stdio
+╔ Compiling: test_sum
+╠ Running test: test_sum
+Num Ok - 30
+╚ test_sum: ✅
+
+╔ Compiling: test_mult
+╠ Running test: test_mult
+Num Ok - 20
+╚ test_mult: ✅
+
+Total Tests: 2
+
+✅ 2 Tests That Passed
+ > test_sum test_mult 
+```
+
+The example in [`example_tests`](/examples/example_tests) shows how failed tests, segfaults and comp erros are displayed.
 ```
 $ sector --run-test "array_int"
-╔ Compiling: array_int
-╠ Running test: array_int
-Ok int
-╚ array_int: ✅
+╔ Compiling: test_passed
+╠ Running test: test_passed
+╚ test_passed: ✅
 
+╔ Compiling: test_failed
+╠ Running test: test_failed
+╚ test_failed: ❌
 
-$ sector --run-tests
-╔ Compiling: array_int
-╠ Running test: array_int
-Ok int
-╚ array_int: ✅
-
-╔ Compiling: array_float
-╠ Running test: array_float
-Ok float
-╚ array_float: ✅
-
-╔ Compiling: test_err
-╠ Running test: test_err
-Error
-╚ test_err: ❌
-
-╔ Compiling: test_comp_err
-/usr/bin/ld: ./builds/cache/src/test_comp_err.o: na função "main":
-test_comp_err.c:(.text+0x18): undefined reference to `print'
-collect2: error: ld returned 1 exit status
-╚ ERROR Compilation Error ⚠️
+╔ Compiling: test_sintax_err
+╠ ERROR Compilation Error: src/tests/sintax_err.c
+╚ ERROR Compilation Error
 
 ╔ Compiling: test_seg_fault
 ╠ Running test: test_seg_fault
-Segmentation fault (core dumped)
 ╚ Segmentation Fault (core dumped) in test_seg_fault
 
-Total Tests: 5
-⚠️  1 Total Comp Erros
- > test_comp_err 
+Total Tests: 4
 
-✅ 2 Tests That Passed
- > array_int array_float 
+✅ 1 Tests That Passed
+   > test_passed 
 
-❌ 2 Tests That Not Passed
- > test_err test_seg_fault 
+❌ 1 Tests That Not Passed
+   > test_failed 
+
+⚠️ 1 Total Comp Erros
+   > test_sintax_err 
+
+💥 1 Tests That Segfault
+   > test_seg_fault 
+```
+
+## Creating a library
+You can create a lib project using `--init-lib`. The only difference is that a new field will be added to the `project.json`, the `ar_flags`. The [`Sector Strings`](https://github.com/MarceloLuisDantas/Sector-Strings) is a lib created with Sector Seven (v0.5). By default, Sector Seven compiles your library into a static (`.a`) library, but you can use the `--shared` flag to compile the lib into a shared library `(.so)`.
+```
+$ sector --build --force-build --verbose  
+╠ Compiling: gcc -Wall -c src/sstrings.c -o ./builds/cache/src/sstrings.o
+╔ Archiving Lib: libar rsc builds/libSectorStrings.a ./builds/cache/src/sstrings.o .a
+╚ Project Archived Successfully
+
+$ sector --build --force-build --verbose --shared
+╠ Compiling: gcc -Wall -c src/sstrings.c -o ./builds/cache/src/sstrings.o
+╔ Compiling Lib: libgcc --shared -o builds/libSectorStrings.so ./builds/cache/src/sstrings.o .so
+╚ Project Compiled Successfully
 ```
 
 ## Falgs
 | Core Flag                 | Description |
 | ------------------------- | ----------- |
-| -i / --init NAME          | Creates the basic struct of the project |
+| --init-bin NAME           | Creates the basic struct of a project |
+| --init-lib NAME           | Creates the basic struct of a lib project |
 | -b / --build              | Compiles the project |
 | -r / --run                | Runs the builded project |
-| -R / --build-run          | Compiles and runs the project |
+| -B / --build-run          | Compiles and runs the project |
 | -t / --run-test TEST_NAME | Compiles and runs the named test |
 | -T / --run-tests          | Compiles and runs all tests |
-| -c / --clean-cache        | Cleans the cache.json and remove all .o caches |
-| -h / --help               | Shows the help menu |
-| -v / --version            | Shows the version |
+| --clean-cache             | Cleans cache.json and remove all .o caches |
 | --valgrind TEST_NAME      | Runs a test with Valgrind |
+| --help                    | Shows the help menu |
+| --version                 | Shows the version |
 
 | Options            | Description  |
 | ------------------ | ------------ |
-| -l / --lib         | Use with -i / --init to create a lib project |
-| -B / --force-build | Use with -b/-R/-t/-T. Ignores the cache, recompiles all targets |
-| -V / --verbose     | Use with -b/-R/-t/-T. Shows info about the GCC command while compiling |
-
+| -f / --force-build | Use to build or run tests. Ignores the cache, and recompiles all targets |
+| -v / --verbose     | Use to build or run tests. Shows info about the GCC commands while compiling and all the STDIO |
+| -s / --stdio       | Use to run multiple tests. Shows the STDIO | 
+| --shared           | Use to build a library project. Compiles to a shared library | 
          
 # TODO
-Carregar project.json com variaveis opcionais
+Decentralize tests 
