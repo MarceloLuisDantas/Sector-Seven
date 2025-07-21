@@ -1,0 +1,10 @@
+{
+    "project": "example_decentralized_tests",
+    "type": "bin",
+    "sources": [
+        "src/main.c"
+    ],
+    "comp_flags": [
+        "-Wall"
+    ]
+}

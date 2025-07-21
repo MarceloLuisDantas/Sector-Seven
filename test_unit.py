@@ -5,45 +5,48 @@ import subprocess
 
 ERROR = "\033[31mERROR\033[0m"
 
-def comp_test(sources: list[str], test_name: str, test_flags: list[str], cache_log: dict, force_build: bool, verbose: bool, stdio: bool=False) -> bool :
-    if (len(sources) == 0) :
-        print(f"No source file specified in {test_name}")
-        return False
-    
-     # Check if all the sources files exist 
-    if (not check_files(sources)) :
-        return False
+def new_test_suit(name) :
+    default = {
+        "suit": name,
+        "tests": { },
+    }
 
-    print(f"╔ \033[34mCompiling: \033[1m{test_name}\033[0m")
-    error = False
-    for source in sources :
-        ok = compile_object(source, cache_log, test_flags, force_build=force_build, verbose=verbose, hidden=True, stdio=stdio)
-        # print(ok)
-        if (ok != 0) :
-            error = True
+    if path.isfile(f"./suit_{name}.json"):
+        a = input("  suit_{name}.json already exists. Overwrite? [y/n]: ").lower()
+        if (a == "y" or a == "yes") :
+            with open(f"./suit_{name}.json", "w") as f:
+                json.dump(default, f, indent=4)
+    else :
+        with open(f"./suit_{name}.json", "w") as f:
+            json.dump(default, f, indent=4)
 
-    if (error) :
-        print(f"╚ {ERROR} Compilation Error")
-        return False
-    
-    update_cache(cache_log)  
+# tuple[bool, bool, bool]
+# 1º bool, everthing is ok
+# 2º bool, use default comp flags
+# 3º bool, use default valgrind flags
+def check_test_suit_json_keys(suit: dict) -> tuple[bool, bool, bool] :
+    if ("suit" not in suit) :
+        print(f"{ERROR}: Field 'suit' not found, unnamed suits are not allowed")
+        print("Please, do not use special characters")
+        return (False, False, False)
+    else :
+        name = suit["suit"]
+        if (not valid_name(name)) :
+            print(f"{ERROR}: Suit name \"{name}\" not valid")
+            return (False, False, False)
+            
+    if ("tests" not in suit) :
+        print(f"{ERROR}: Field 'tests' not found")
+        return (False, False, False)
+    else :  
+        for test_name in suit.get('tests', {}).keys():
+            if (not valid_name(test_name)) :
+                print(f"{ERROR}: Test name \"{test_name}\" not valid.")
+                return (False, False, False)
 
-    comp_line = "gcc "
-    for source in sources :
-        comp_line += f"./builds/cache/{source[:-2]}.o "
-    for flag in test_flags :
-        comp_line += f"{flag} "
-    comp_line += f"-o builds/tests/{test_name}"   
-    
-    if verbose :
-        print(f"\033[34mRunning: \033[1m{comp_line}\033[0m")
-    result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
-    if (result.returncode != 0) :
-        print(result.stderr, end="")
-        print(f"╚ {ERROR} Compilation Error ⚠️")
-        return False
-        
-    return True
+    gcc_flags = ("test_flags" in suit);   
+    val_flags = ("valgrind_flags" in suit);
+    return (True, gcc_flags, val_flags)
 
 def check_test_json_keys(tests: dict) -> bool :
     expected_keys = ["project", "tests", "test_flags"]
@@ -55,167 +58,88 @@ def check_test_json_keys(tests: dict) -> bool :
         return False
     return True
 
+def comp_test(sources: list[str], test_name: str, flags: list[str], cache_log: dict, verbose: bool) -> bool :
+    if (not check_files(sources)) :
+        return False
+    
+    error = False
+    for source in sources :
+        ok = compile_object(source, cache_log, flags, verbose=verbose,)
+        if (ok != 0) :
+            error = True
+
+    if (error) :
+        print(f"╚ {ERROR} Compilation Error")
+        return False
+    
+    pass
+
 def run_test_valgrind(tests: dict, test_name: str, cache_log: dict, force_build: bool, verbose: bool) -> bool :
-    if (not check_test_json_keys(tests)) :
-        return False
-    
-    tests_list = tests["tests"]
-    if (test_name not in tests_list) :
-        print(f"{ERROR}: Test {test_name} not found in tests.json")
-        return False
-
-    test_flags = tests["test_flags"]
-    sources = tests_list[test_name]
-    
-    comp_ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose)
-    if (not comp_ok) :
-        return False
-
-    valgrind_line = "valgrind"
-    if ("valgrind_falgs" in tests) :
-        valgrind_flags = tests["valgrind_falgs"]
-        for flag in valgrind_flags :
-            valgrind_line += f" {flag}";
-    valgrind_line += f" ./builds/tests/{test_name}"
-
-    if verbose :
-        print(f"\033[34mRunning: \033[1m{valgrind_line}\033[0m")
-        
-    print(f"╠ Running test with Valgrind: \033[1m{test_name}\033[0m")    
-    os.system(valgrind_line) 
-    print(f"╚ \033[1m{test_name}\033[0m");
-
-    return True
+    pass
 
 def run_test(tests: dict, test_name: str, cache_log: dict, force_build: bool, verbose: bool) -> bool :
-    if (not check_test_json_keys(tests)) :
-        return False
+    pass
+
+def run_suit(tests: dict, suit: str, cache_log: dict, force_build: bool, verbose: bool) -> bool :
+    if (suit not in tests["suits"]) :
+        print(f"{ERROR}: Suit \"{suit}\" not found")
+        return
     
-    tests_list = tests["tests"]
-    if (test_name not in tests_list) :
-        print(f"{ERROR}: Test {test_name} not found in tests.json")
-        return False
-
-    test_flags = tests["test_flags"]
-    sources = tests_list[test_name]
+    suit_path = tests["suits"][suit]
+    suit_json = load_file(suit_path);
+    (ok, gcc, val) = check_test_suit_json_keys(suit_json);
+    if (not ok) :
+        return
     
-    comp_ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose)
-    if (not comp_ok) :
-        return False
+    gcc_flags = tests["test_flags"]
+    if (gcc) :
+        gcc_flags = suit_json["test_falgs"]
 
-    print(f"╠ Running test: \033[1m{test_name}\033[0m")    
+    val_flags = tests["valgrind_flags"]
+    if (val) :
+        val_flags = suit_json["valgrind_flags"]
 
-    # This value refers to when the C code trys to print random memory, and the value
-    # cant be converted in a UTF character, creating a execption. 
-    unicode_decode_error = False;
-    try :
-        if verbose :
-            print(f"\033[34mRunning: \033[1m./builds/tests/{test_name}\033[0m")
-        resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
-    except UnicodeDecodeError :
-        unicode_decode_error = True 
-        
-    if (unicode_decode_error) :
-        # Running the test in the local process, so the STDOUT can be capture, since trying to 
-        # capture with subprocess results in a UnicodeDecodeError
-        os.system(f"./builds/tests/{test_name}") 
-        print(f"╚ \033[1m{test_name}\033[0m: ❌")
-    else :
-        print(resultado.stdout, end="")
-        if (resultado.returncode == 1) :
-            print(f"╚ \033[1m{test_name}\033[0m: ✅")
-        elif resultado.returncode == -11 or resultado.returncode == 139 : # segfault
-            os.system(f"./builds/tests/{test_name}")
-            print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
-        else :
-            print(f"╚ \033[1m{test_name}\033[0m: ❌")
+    p = get_dir_path_file_name(suit_path)
+    for test in suit_json["tests"] :
+        for source in suit_json["tests"][test] :
+            print(f"{p[0]}{source[1:]}")
 
-    return True
+    print(p)
+
+    # print(suit_json)    
 
 def run_tests(tests: dict, cache_log: dict, force_build: bool, verbose: bool, stdio: bool) -> bool :
-    if (not check_test_json_keys(tests)) :
-        return False
-    
-    tests_list = tests["tests"]
-    if (len(tests_list) == 0) :
-        print(f"No test specified in tests.json")
-        return False
-    
-    total_tests = 0
-    comp_erros = []
-    passed_tests = []
-    no_pas_tests = []
-    seg_faults = []
-    test_flags = tests["test_flags"]
-    for test_name in tests_list :
-        sources = tests_list[test_name]
-        ok = comp_test(sources, test_name, test_flags, cache_log, force_build, verbose, stdio)
-        if (ok) :
-            print(f"╠ Running test: \033[1m{test_name}\033[0m")
-            
-            # This value refers to when the C code trys to print random memory, and the value
-            # cant be converted in a UTF character, creating a execption. 
-            unicode_decode_error = False;
-            try :
-                if verbose :
-                    print(f"\033[34mRunning: \033[1m./builds/tests/{test_name}\033[0m")
-                resultado = subprocess.run([f"./builds/tests/{test_name}"], capture_output=True, text=True)
-            except UnicodeDecodeError :
-                unicode_decode_error = True 
-            
-            if (unicode_decode_error) :
-                # Running the test in the local process, so the STDOUT can capture, since trying to 
-                # capture with subprocess results in a UnicodeDecodeError
-                os.system(f"./builds/tests/{test_name}") 
-                print(f"╚ \033[1m{test_name}\033[0m: ❌")
-            else :
-                if (stdio or verbose) :
-                    print(resultado.stdout, end="")
-                if (resultado.returncode == 1) :
-                    print(f"╚ \033[1m{test_name}\033[0m: ✅")
-                    passed_tests.append(test_name)
-                elif resultado.returncode == -11 or resultado.returncode == 139 :
-                    if (stdio or verbose) :
-                        os.system(f"./builds/tests/{test_name}")
-                    print(f"\033[91m╚ Segmentation Fault (core dumped) in {test_name}\033[0m")
-                    seg_faults.append(test_name)
-                else :
-                    print(f"╚ \033[1m{test_name}\033[0m: ❌")
-                    no_pas_tests.append(test_name)
-        else :
-            comp_erros.append(test_name)
-        total_tests += 1
-        print("")
+    pass
 
-    print(f"\033[34mTotal Tests: {total_tests}\033[0m")
-    if (len(passed_tests) > 0) :
+def show_results(pas: list[str], no_pas: list[str], comp: list[str], seg: list[str]) :
+    if (len(pas) > 0) :
         print("")
-        print(f"✅ \033[32m{len(passed_tests)}\033[0m Tests That Passed")
+        print(f"✅ \033[32m{len(pas)}\033[0m Tests That Passed")
         print("   \033[32m>\033[0m ", end="")
-        for test in passed_tests :
+        for test in pas :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")
 
-    if (len(no_pas_tests) > 0) :
+    if (len(no_pas) > 0) :
         print("")
-        print(f"❌ \033[31m{len(no_pas_tests)}\033[0m Tests That Not Passed")
+        print(f"❌ \033[31m{len(no_pas)}\033[0m Tests That Not Passed")
         print("   \033[31m>\033[0m ", end="")
-        for test in no_pas_tests :
+        for test in no_pas :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")
 
-    if (len(comp_erros) > 0) :
+    if (len(comp) > 0) :
         print("")
-        print(f"⚠️  \033[33m{len(comp_erros)}\033[0m Total Comp Erros")
+        print(f"⚠️  \033[33m{len(comp)}\033[0m Total Comp Erros")
         print("   \033[33m>\033[0m ", end="")
-        for test in comp_erros :
+        for test in comp :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")
 
-    if (len(seg_faults) > 0) :
+    if (len(seg) > 0) :
         print("")
-        print(f"💥 \033[38;5;208m{len(no_pas_tests)}\033[0m Tests That Segfault")
+        print(f"💥 \033[38;5;208m{len(seg)}\033[0m Tests That Segfault")
         print("   \033[38;5;208m>\033[0m ", end="")
-        for test in seg_faults :
+        for test in seg :
             print(f"\033[1m{test}\033[0m ", end="")
         print("")

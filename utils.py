@@ -54,3 +54,10 @@ def check_json_values(project: dict, keys: list[str]) -> tuple[bool, list[tuple[
             result.append((False, key))
             ok = False
     return (ok, result)
+
+def valid_name(name: str) -> bool :
+    invalid_chars = [' ', '.', '/', '\\', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '[', ']', '{', '}', ';', ':', '"', "'", '<', '>', ',', '?', '|', '=']    
+    for char in name.lower() :
+        if (char in invalid_chars) :
+            return False
+    return True

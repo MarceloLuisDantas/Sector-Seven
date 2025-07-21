@@ -1,0 +1,19 @@
+{
+    "project": "example_decentralized_tests",
+    "suits": {
+        "suit_array": "src/array/suit_array.json",
+        "suit_sum": "src/math/suit_sum.json"
+    },
+    "tests": {
+        "test_main": [
+            "src/main.c"
+        ]
+    },
+    "test_flags": [
+        "-Wall",
+        "-g"
+    ],
+    "valgrind_flags": [
+        ""
+    ]
+}

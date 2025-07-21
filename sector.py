@@ -16,7 +16,9 @@ def main() :
     group.add_argument("-r", "--run", action="store_true", help="runs the project")
     group.add_argument("-B", "--build-run", action="store_true", help="builds the project and runs the project")
     group.add_argument("-t", "--run-test", type=str, metavar="TEST_NAME", help="run the named test")
+    group.add_argument("--run-suit", type=str, metavar="TEST_NAME", help="run all the tests in a suit")
     group.add_argument("-T", "--run-tests", action="store_true", help="run all the tests")
+    group.add_argument("--new-suit", type=str, metavar="TEST_NAME", help="creates a new test suit file")
     group.add_argument("--clean-cache", action="store_true", help="cleans the cache.json")
     group.add_argument("--version", action="store_true", help="shows the version")
     group.add_argument("--valgrind", type=str, metavar="TEST_NAME_V", help="runs a test with valgrind")
@@ -32,15 +34,15 @@ def main() :
         print("--force-build can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
-    if args.verbose and not (args.build or args.run_test or args.run_tests or args.build_run or args.valgrind):
+    if args.verbose and not (args.build or args.run_test or args.run_tests or args.build_run or args.valgrind or args.run_suit):
         print("--verbose can only be used with --build, --build-run, --run-test and --run-test")
         sys.exit(0)
 
-    if not any([args.run, args.build, args.init, args.init_lib, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind]):
+    if not any([args.run, args.build, args.init, args.init_lib, args.run_test, args.run_tests, args.version, args.build_run, args.clean_cache, args.valgrind, args.new_suit, args.run_suit]):
         parser.print_help()
         sys.exit(0) 
 
-    if (args.stdio and not args.run_tests) :
+    if (args.stdio and not (args.run_tests or args.run_suit)) :
         print("--stdio can only be used with --run-tests")
         sys.exit(0)
 
@@ -60,6 +62,10 @@ def main() :
         init_project(args.init_lib, "lib")
         sys.exit(0)
 
+    if args.new_suit:
+        new_test_suit(args.new_suit)
+        sys.exit(0)
+
     project = load_file("./project.json")
     tests = load_file("./tests.json")
     chache_log = load_file("./builds/cache/cache.json")
@@ -69,6 +75,8 @@ def main() :
         clean_cache()
     elif args.run_test :
         run_test(tests, args.run_test, chache_log, args.force_build, args.verbose)
+    elif args.run_suit :
+        run_suit(tests, args.run_suit, args.force_build, args.verbose, args.stdio)
     elif args.run_tests :
         run_tests(tests, chache_log, args.force_build, args.verbose, args.stdio)
     elif args.valgrind :

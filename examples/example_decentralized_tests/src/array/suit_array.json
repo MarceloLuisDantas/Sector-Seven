@@ -1,0 +1,13 @@
+{
+    "suit": "tests_array",
+    "tests": {
+        "new_array": [
+            "./array.c",
+            "./tests/new_array.c"
+        ],
+        "concat_array": [
+            "./array.c",
+            "./tests/concat.c"
+        ]
+    }
+}
