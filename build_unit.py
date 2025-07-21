@@ -3,7 +3,7 @@ from utils import *
 from cache import *
 ERROR = "\033[31mERROR\033[0m"
 
-def compile_bin(sources: list[str], project_name: str, comp_flags: list[str], verbose=False) -> bool :
+def compile_bin(sources: list[str], project_name: str, comp_flags: list[str], stdio: bool, verbose=False) -> bool :
     comp_line = "gcc "
     for source in sources :
         comp_line += f"./builds/cache/{source[:-2]}.o "
@@ -67,7 +67,7 @@ def compile_shared_lib(sources: list[str], project_name: str, verbose=False) -> 
     print(f"╚ \033[32m\033[1mProject Compiled Successfully\033[0m")
     return True
 
-def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bool, shared: bool) -> bool :
+def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bool, shared: bool, stdio: bool) -> bool :
     if ("type" not in project) :
         print(f"{ERROR}: Key \"Type\" is missing from the Project.json")
         return False
@@ -97,7 +97,7 @@ def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bo
     error = False
     for source in sources :
         # print(source)
-        if (compile_object(source, cache_log, comp_flags, force_build, verbose) != 0) :
+        if (compile_object(source, cache_log, comp_flags, force_build, verbose, stdio=stdio) != 0) :
             error = True
 
     if (error) :
@@ -110,7 +110,7 @@ def build_project(project: dict, cache_log: dict, force_build: bool, verbose: bo
             return compile_shared_lib(sources, project_name, verbose=verbose);
         return archive_lib(sources, project_name, project["ar_flags"], verbose=verbose)
     else :
-        return compile_bin(sources, project_name, comp_flags, verbose=verbose)
+        return compile_bin(sources, project_name, comp_flags, verbose=verbose, stdio=stdio)
 
 def run(name: str, project: dict) -> bool :
     if ("type" not in project) :

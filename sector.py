@@ -40,7 +40,7 @@ def main() :
         parser.print_help()
         sys.exit(0) 
 
-    if (args.stdio and not args.run_tests) :
+    if (args.stdio and not (args.run_tests or args.build or args.build_run)) :
         print("--stdio can only be used with --run-tests")
         sys.exit(0)
 
@@ -77,13 +77,13 @@ def main() :
         if (args.shared and project["type"] != "lib") :
             print("Can't use --shared in non lib projects")
         else :
-            build_project(project, chache_log, args.force_build, args.verbose, args.shared)
+            build_project(project, chache_log, args.force_build, args.verbose, args.shared, args.stdio)
     elif args.build_run :
         ptype = project["type"]
         if (ptype == "lib") :
             print("Cant run libs projects")
         else :
-            ok = build_project(project, chache_log, args.force_build, args.verbose, args.shared)
+            ok = build_project(project, chache_log, args.force_build, args.verbose, args.shared, args.stdio)
             if (ok) :
                 print("")
                 run(name, project)
