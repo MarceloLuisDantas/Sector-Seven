@@ -15,5 +15,5 @@ def init_project(name: str, ptype: str) :
     save_json("./tests.json", tests.to_dict())
 
     create_file("./cache/cache.json")
-    save_json("./cache/tests.json", {})
+    save_json("./cache/cache.json", {})
 

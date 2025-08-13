@@ -2,7 +2,7 @@ from utils import check_keys_on_dicts
 
 class Project:
     def __init__(self, name="", ptype="bin", comp="gcc", 
-                 sources=[], compf=["-wall"], valf=[], gdbf=[]):
+                 sources=[], compf=["-Wall"], valf=[], gdbf=[]):
         self.name    = name
         self.ptype   = ptype
         self.comp    = comp
@@ -26,9 +26,9 @@ class Project:
     
     # -1 = name or sources fields are not not in the json
     # 1 = project loaded
-    def load(self, project_json) -> tuple[int, str] :
-        for key in ["name", "type", "compiler", "source", "compilations_flags", "valgrind_flags", "gdb_flags"] :
-            if key not in dict :
+    def load(self, project_json: dict) -> tuple[int, str] :
+        for key in ["name", "type", "compiler", "sources", "compilations_flags", "valgrind_flags", "gdb_flags"] :
+            if key not in project_json :
                 return (-1, key)
     
         self.name    = project_json["name"]
