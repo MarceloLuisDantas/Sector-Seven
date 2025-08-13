@@ -3,10 +3,12 @@
     "type": "bin",
     "compiler": "gcc",
     "sources": [
-        "main.c"
+        "src/main.c",
+        "src/bar.c",
+        "src/foo/foo.c"
     ],
     "compilations_flags": [
-        "-wall"
+        "-Wall"
     ],
     "valgrind_flags": [],
     "gdb_flags": []
