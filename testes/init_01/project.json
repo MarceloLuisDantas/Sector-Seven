@@ -1,0 +1,13 @@
+{
+    "name": "foo",
+    "type": "bin",
+    "compiler": "gcc",
+    "sources": [
+        "main.c"
+    ],
+    "compilations_flags": [
+        "-wall"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}
