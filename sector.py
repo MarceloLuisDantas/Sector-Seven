@@ -13,19 +13,19 @@ def main() :
     group.add_argument("--new", type=str, metavar="NAME", help="creates the basic struct of a projetc")
     
     # flags to build/run the project
-    group.add_argument("--build", action="store_true", help="builds the project")
-    group.add_argument("--run", action="store_true", help="runs the project")
-    group.add_argument("--build-run", action="store_true", help="builds and runs the project")
+    group.add_argument("--build", action="store_true", help="builds the project")                          
+    group.add_argument("--run", action="store_true", help="runs the project")                    
+    group.add_argument("--build-run", action="store_true", help="builds and runs the project")  
 
     # flags related to tests
-    group.add_argument("--run-tests", actoin="store_true", help="runs all suits and all tests")
-    group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")
-    group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")
-    group.add_argument("--new-suit", type=str, metavar="SUIT_NAME", help="creates a new test suit in the current folder")
+    group.add_argument("--run-tests", actoin="store_true", help="runs all suits and all tests")                            # TODO
+    group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      # TODO
+    group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           # TODO
+    group.add_argument("--new-suit", type=str, metavar="SUIT_NAME", help="creates a new test suit in the current folder")  # TODO
 
     # Miscellaneous
-    group.add_argument("--clean-cache")
-    group.add_argument("--version")
+    group.add_argument("--clean-cache") # TODO
+    group.add_argument("--version")     # TODO
 
     args = parser.parse_args()
     if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.clean_cache, args.version]):
