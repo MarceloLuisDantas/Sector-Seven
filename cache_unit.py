@@ -17,7 +17,7 @@ def check_cache_ok(line: list[str]) :
 def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
     # Checks if the file has being compiler
     if fpath not in cache :
-        return 1
+        return True
 
     file_cache = cache[fpath]
     if not check_cache_ok(file_cache) :
@@ -28,17 +28,17 @@ def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
     # Checks if the file have changes
     last_change = path.getmtime(Path(fpath))
     if last_change != file_cache[0] :
-        return 1
+        return True
     
     # Checks if the flags have changed
     if flags != file_cache[1] :
-        return 1
+        return True
     
     # Checks if the last compilations results in a error
     if file_cache[2] != "ok" :
-        return 1
+        return True
     
-    return 0
+    return False
 
 def update_file_cache(fpath: str, flags: list[str], ok: bool, cache: dict) :
     cache[fpath] = [path.getmtime(Path(fpath)), flags, ("ok" if ok else "err")]

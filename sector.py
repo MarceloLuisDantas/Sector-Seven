@@ -98,6 +98,7 @@ def main() :
     elif args.run_suit :
         tests.run_suit(args.run_suit, cache)
 
-    
+    save_json("./cache/cache.json", cache)
+
 if __name__ == "__main__" :
     main()

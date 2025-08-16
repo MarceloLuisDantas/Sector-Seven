@@ -48,6 +48,8 @@ class Tests:
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
     def run_test(self, test_name: str, test: list[str], cache: dict, prefix: str) -> tuple[int, str | list[str]] :
+        print_running_test(test_name)
+
         # Fixign the path with the prefix
         if (prefix != "") :
             test = list(map(lambda t : prefix + "/" + t, test))
@@ -61,8 +63,8 @@ class Tests:
         if len(files_not_found) != 0 :
             return (-2, files_not_found)
         # ----------------------------------------------------------------
-
-        if need_to_compile(test_name, self.compf, cache) :
+        test_cache_path = f"cache/tests/{test_name}"
+        if need_to_compile(test_cache_path, self.compf, cache) :
             comp_line = f"{self.comp} "
             for flag in self.compf :
                 comp_line += f"{flag} "
@@ -79,10 +81,12 @@ class Tests:
             comp_line += f"-o ./cache/tests/{test_name}"
                 
             # Compiling the test -----------------------------------------
-            # print(comp_line)
+            print_compiling_test(test_name)
             result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
             if result.returncode != 0 :
+                update_file_cache(test_cache_path, self.compf, False, cache)
                 return (-1, result.stderr)
+            update_file_cache(test_cache_path, self.compf, True, cache)
             # ------------------------------------------------------------
         
         # Running the test -----------------------------------------------
@@ -113,7 +117,6 @@ class Tests:
         seg_faults = []
 
         for test in self.tests:
-            print_running_test(test)
             (result, io) = self.run_test(test, self.tests[test], cache, "")
 
             # -2 One or more files are missing
@@ -158,7 +161,6 @@ class Tests:
                 sufix = str(Path(self.suits[suit_name]).parent)
                 tests = suit["tests"]
                 for test in tests:
-                    print_running_test(test, suit_name)
                     (result, io) = self.run_test(test, tests[test], cache, sufix)
 
                     # -2 One or more files are missing

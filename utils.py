@@ -68,10 +68,10 @@ orange = "\033[38;5;208m"
 ERROR = f"{red}ERROR{reset}"
 OK = f"{green}OK{reset}"
 
-def print_compiling(file: str) :
-    print(f"╔ {blue}Compiling:{reset} {file}")
+def print_compiling_test(test: str) :
+    print(f"╠ {blue}Compiling:{reset} {test}")
 
-def print_running_test(test_name: str, suit="") : 
+def print_running_test(test_name: str, start=False, suit="") : 
     print(f"╔ {blue}Running test:{reset} {bold}{suit}{test_name}{reset}")
 
 def print_test_pass(test_name: str) : 

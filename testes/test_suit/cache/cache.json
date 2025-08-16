@@ -1,1 +1,65 @@
-{}
+{
+    "src/suit1/pass/pass.c": [
+        1755369014.5770903,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit1/pass/test_pass.c": [
+        1755369014.5770903,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/test_pass": [
+        1755375700.4886413,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit1/fail/fail.c": [
+        1755369014.5750902,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit1/fail/test_fail.c": [
+        1755369014.5750902,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/test_fail": [
+        1755375700.5346422,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit1/seg/seg.c": [
+        1755369014.5760903,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit1/seg/test_seg.c": [
+        1755369014.5760903,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/test_segfault": [
+        1755375700.585643,
+        [
+            "-g"
+        ],
+        "ok"
+    ]
+}
