@@ -1,13 +1,25 @@
 {
     "suits": [],
     "tests": {
-        "test_sum": [
-            "src/sum.c",
-            "src/test_sum.c"
+        "test_pass": [
+            "src/pass/pass.c",
+            "src/pass/test_pass.c"
         ],
-        "test_mult": [
-            "src/mult.c",
-            "src/test_mult.c"
+        "test_fail": [
+            "src/fail/fail.c",
+            "src/fail/test_fail.c"
+        ],
+        "test_segfault": [
+            "src/seg/seg.c",
+            "src/seg/test_seg.c"
+        ],
+        "test_file_missing": [
+            "src/file_m/file_missing.c",
+            "src/file_m/test_file_missing.c"
+        ],
+        "test_comperr": [
+            "src/comp_e/comperr.c",
+            "src/comp_e/test_comperr.c"
         ]
     },
     "compilation_flags": [

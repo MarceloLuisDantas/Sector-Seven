@@ -50,8 +50,8 @@ def save_json(path: str, dict: dict) -> bool :
     return True
 
 # PRINTS 
-def print_running_test(test_name: str) : ...
-def print_files_missing(files: list[str]) : ...
+def print_running_test(test_name: str) : 
+    print(f"Running test {test_name}")
 
 def     print_test_pass(test_name: str) : print(f"Test Pass - {test_name}\n")
 def     print_test_fail(test_name: str) : print(f"Test Fail - {test_name}\n")
@@ -61,6 +61,11 @@ def  print_test_comperr(test_name: str) : print(f"Test Not compiled - {test_name
 def print_test_list(tests: list[str]) :
     for test in tests :
         print(f"{test} ", end="")
+    print("")
+
+def print_files_missing(files: list[str]) : 
+    print(f"Total of {len(files)} files are missing: ")
+    print_test_list(files)    
     print("")
 
 def print_total_tests_pass(tests: list[str]) : 

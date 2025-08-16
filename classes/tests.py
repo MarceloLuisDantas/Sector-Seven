@@ -47,7 +47,7 @@ class Tests:
     # 4 - unicode_decode_error
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
-    def run_test(self, test_name: str, test: list[str], cache: dict) -> tuple[int, str] :
+    def run_test(self, test_name: str, test: list[str], cache: dict) -> tuple[int, str | list[str]] :
         # Check if all the files exists ----------------------------------
         files_not_found = []
         for file in test :
@@ -55,7 +55,7 @@ class Tests:
                 files_not_found.append(file)
         
         if len(files_not_found) != 0 :
-            return (-2, " ".join(files_not_found))
+            return (-2, files_not_found)
         # ----------------------------------------------------------------
 
         if need_to_compile(test_name, self.compf, cache) :
@@ -109,24 +109,29 @@ class Tests:
         seg_faults = []
 
         for test in self.tests:
-            print(f"Running: {test}")
-            (result, err) = self.run_test(test, self.tests[test], cache)
+            print_running_test(test)
+            (result, io) = self.run_test(test, self.tests[test], cache)
 
             # -2 One or more files are missing
+            if result == -2 :
+                print_files_missing(io)
+                comp_erros.append(test)
+
             # -1 Compilation error
-            if result == -2 or result == -1:
-                print(err)
+            elif result == -1 :
+                print(io)
                 print_test_comperr(test)
                 comp_erros.append(test)
 
             # Teste passed
             elif result == 1 :
+                print(io)
                 print_test_pass(test)
                 passed_tests.append(test)
 
             # Teste failed
             elif result == 2 :
-                print(err)
+                print(io)
                 print_test_fail(test)
                 failed_tests.append(test)
 
@@ -140,7 +145,7 @@ class Tests:
                 os.system(f"./cache/tests/{test}")
                 print_test_fail(test)
                 failed_tests.append(test)
-                
+
         print_total_tests_pass(passed_tests)
         print_total_tests_fail(failed_tests)
         print_total_tests_comperr(comp_erros)
