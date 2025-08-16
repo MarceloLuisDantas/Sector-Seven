@@ -29,7 +29,13 @@ def create_folder(path: str) -> bool :
     if os.path.isdir(folder_path) :
         return False
     
-    os.mkdir(folder_path)
+    sub_folders = str(folder_path).split("/")
+    steps = ""
+    for sub in sub_folders :
+        steps += sub + "/"
+        if not os.path.isdir(steps) :
+            os.mkdir(steps)
+
     return True
 
 def load_json(path: str) -> dict :
@@ -50,13 +56,35 @@ def save_json(path: str, dict: dict) -> bool :
     return True
 
 # PRINTS 
-def print_running_test(test_name: str) : 
-    print(f"Running test {test_name}")
+reset = "\033[0m"
+bold  = "\033[1m"
 
-def     print_test_pass(test_name: str) : print(f"Test Pass - {test_name}\n")
-def     print_test_fail(test_name: str) : print(f"Test Fail - {test_name}\n")
-def print_test_segfault(test_name: str) : print(f"Test Sefgault - {test_name}\n")
-def  print_test_comperr(test_name: str) : print(f"Test Not compiled - {test_name}\n")
+red    = "\033[31m"
+green  = "\033[32m"
+yellow = "\033[33m"
+blue   = "\033[34m"
+orange = "\033[38;5;208m"
+
+ERROR = f"{red}ERROR{reset}"
+OK = f"{green}OK{reset}"
+
+def print_compiling(file: str) :
+    print(f"╔ {blue}Compiling:{reset} {file}")
+
+def print_running_test(test_name: str, suit="") : 
+    print(f"╔ {blue}Running test:{reset} {bold}{suit}{test_name}{reset}")
+
+def print_test_pass(test_name: str) : 
+    print(f"╚ {OK} - ✅ {green}Pass{reset}\n")
+
+def print_test_fail(test_name: str) : 
+    print(f"╚ {ERROR} - ❌ {red}Fail{reset}\n")
+
+def print_test_comperr(test_name: str) : 
+    print(f"╚ {ERROR} - ⚠️  {yellow}Compilation error{reset}\n ")
+
+def print_test_segfault(test_name: str) : 
+    print(f"╚ {ERROR} - 💥 {orange}Segfault{reset}\n")
 
 def print_test_list(tests: list[str]) :
     for test in tests :
@@ -66,28 +94,40 @@ def print_test_list(tests: list[str]) :
 def print_files_missing(files: list[str]) : 
     print(f"Total of {len(files)} files are missing: ")
     print_test_list(files)    
-    print("")
+    print(f"╚ {ERROR} - ❓ {yellow}Files missing{reset}\n")
 
 def print_total_tests_pass(tests: list[str]) : 
     if len(tests) > 0 :
-        print(f"{len(tests)} Total that Passed")
-        print_test_list(tests)
+        print("")
+        print(f"✅ {green}{len(tests)} Tests That Passed{reset}")
+        print(f"   {green}>{reset} ", end="")
+        for test in tests :
+            print(f"{bold}{test}{reset} ", end="")
         print("")
 
 def print_total_tests_fail(tests: list[str]) : 
     if len(tests) > 0 :
-        print(f"{len(tests)} Total that Failed")
-        print_test_list(tests)
         print("")
-
-def print_total_tests_segfault(tests: list[str]) : 
-    if len(tests) > 0 :
-        print(f"{len(tests)} Total that Segfault")
-        print_test_list(tests)
+        print(f"❌ {red}{len(tests)} Tests That Not Passed{reset}")
+        print(f"   {red}>{reset} ", end="")
+        for test in tests :
+            print(f"{bold}{test}{reset} ", end="")
         print("")
 
 def print_total_tests_comperr(tests: list[str]) : 
     if len(tests) > 0 :
-        print(f"{len(tests)} Total that didn't Compile")
-        print_test_list(tests)
+        print("")
+        print(f"⚠️  {yellow}{len(tests)} Total Comp Erros{reset}")
+        print(f"   {yellow}>{reset} ", end="")
+        for test in tests :
+            print(f"{bold}{test}{reset} ", end="")
+        print("")
+
+def print_total_tests_segfault(tests: list[str]) : 
+    if len(tests) > 0 :
+        print("")
+        print(f"💥 {orange}{len(tests)} Tests That Segfault{reset}")
+        print(f"   {orange}>{reset} ", end="")
+        for test in tests :
+            print(f"{bold}{test}{reset} ", end="")
         print("")

@@ -1,0 +1,24 @@
+{
+    "tests": {
+        "test_pass": [
+            "pass/pass.c",
+            "pass/test_pass.c"
+        ],
+        "test_fail": [
+            "fail/fail.c",
+            "fail/test_fail.c"
+        ],
+        "test_segfault": [
+            "seg/seg.c",
+            "seg/test_seg.c"
+        ],
+        "test_file_missing": [
+            "file_m/file_missing.c",
+            "file_m/test_file_missing.c"
+        ],
+        "test_comperr": [
+            "comp_e/comperr.c",
+            "comp_e/test_comperr.c"
+        ]
+    }
+}

@@ -11,7 +11,7 @@ def init_project(name: str, ptype: str) :
     create_file("./project.json")
     save_json("./project.json", project.to_dict())
 
-    tests = Tests(name=name)
+    tests = Tests()
     create_file("./tests.json")
     save_json("./tests.json", tests.to_dict())
 

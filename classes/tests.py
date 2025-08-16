@@ -47,7 +47,11 @@ class Tests:
     # 4 - unicode_decode_error
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
-    def run_test(self, test_name: str, test: list[str], cache: dict) -> tuple[int, str | list[str]] :
+    def run_test(self, test_name: str, test: list[str], cache: dict, prefix: str) -> tuple[int, str | list[str]] :
+        # Fixign the path with the prefix
+        if (prefix != "") :
+            test = list(map(lambda t : prefix + "/" + t, test))
+
         # Check if all the files exists ----------------------------------
         files_not_found = []
         for file in test :
@@ -110,7 +114,7 @@ class Tests:
 
         for test in self.tests:
             print_running_test(test)
-            (result, io) = self.run_test(test, self.tests[test], cache)
+            (result, io) = self.run_test(test, self.tests[test], cache, "")
 
             # -2 One or more files are missing
             if result == -2 :
@@ -119,19 +123,19 @@ class Tests:
 
             # -1 Compilation error
             elif result == -1 :
-                print(io)
+                print(io, end="")
                 print_test_comperr(test)
                 comp_erros.append(test)
 
             # Teste passed
             elif result == 1 :
-                print(io)
+                print(io, end="")
                 print_test_pass(test)
                 passed_tests.append(test)
 
             # Teste failed
             elif result == 2 :
-                print(io)
+                print(io, end="")
                 print_test_fail(test)
                 failed_tests.append(test)
 
@@ -145,6 +149,51 @@ class Tests:
                 os.system(f"./cache/tests/{test}")
                 print_test_fail(test)
                 failed_tests.append(test)
+
+        for suit_name in self.suits :
+            suit = load_json(self.suits[suit_name])
+            if suit == None :
+                print(f"Suit {self.suits[suit_name]} not found")
+            else :
+                sufix = str(Path(self.suits[suit_name]).parent)
+                tests = suit["tests"]
+                for test in tests:
+                    print_running_test(test, suit_name)
+                    (result, io) = self.run_test(test, tests[test], cache, sufix)
+
+                    # -2 One or more files are missing
+                    if result == -2 :
+                        print_files_missing(io)
+                        comp_erros.append(suit_name + "/" + test)
+
+                    # -1 Compilation error
+                    elif result == -1 :
+                        print(io, end="")
+                        print_test_comperr(test)
+                        comp_erros.append(suit_name + "/" + test)
+
+                    # Teste passed
+                    elif result == 1 :
+                        print(io, end="")
+                        print_test_pass(test)
+                        passed_tests.append(suit_name + "/" + test)
+
+                    # Teste failed
+                    elif result == 2 :
+                        print(io, end="")
+                        print_test_fail(test)
+                        failed_tests.append(suit_name + "/" + test)
+
+                    # Segfault
+                    elif result == 3 :
+                        os.system(f"./cache/tests/{test}")
+                        print_test_segfault(test)
+                        seg_faults.append(suit_name + "/" + test)
+                    
+                    elif result == 4  :
+                        os.system(f"./cache/tests/{test}")
+                        print_test_fail(test)
+                        failed_tests.append(suit_name + "/" + test)
 
         print_total_tests_pass(passed_tests)
         print_total_tests_fail(failed_tests)
