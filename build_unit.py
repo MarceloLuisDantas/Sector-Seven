@@ -7,8 +7,9 @@ from pathlib import Path
 from utils import *
 import subprocess
 
+# tuple[bool, str], bool if the file was compiled correctly, str is the possible err
 # Compiles the file to object file in the cache folder
-def comp_cache(source: str, comp: str, flags: list[str]) -> bool :
+def comp_cache(source: str, comp: str, flags: list[str]) -> tuple[bool, str] :
     source_path = Path(source)
     create_folder(f"./cache/{source_path.parent}")
     
@@ -17,12 +18,11 @@ def comp_cache(source: str, comp: str, flags: list[str]) -> bool :
         comp_line += f" {flag}"
     comp_line += f" {source} -o ./cache/{source[0:-2]}.o"
 
-    print(comp_line)
+    # print(comp_line)
     result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
     if result.returncode != 0 :
-        print(result.stderr)
-        return False
-    return True
+        return (False, result.stderr)
+    return (True, "")
     
 # Caches all .o files from all sources files, and compiles the project
 def build_project(project: Project, cache: dict) -> bool :
@@ -36,11 +36,12 @@ def build_project(project: Project, cache: dict) -> bool :
             return
         
         if (need_to_compile(file, flags, cache)) :
-            ok = comp_cache(file, project.comp, flags)
+            (ok, err) = comp_cache(file, project.comp, flags)
             if ok :
                 print(f"Compiled ok - {file}")
             else :
                 print(f"Compilation error - {file}")
+                print(f"{err}")
                 ok = False
             update_file_cache(file, flags, ok, cache)
 

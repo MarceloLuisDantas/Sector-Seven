@@ -40,5 +40,5 @@ def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
     
     return 0
 
-def update_file_cache(fpath: str, flags: list[str], err: bool, cache: dict) :
-    cache[fpath] = [path.getmtime(Path(fpath)), flags, ("ok" if err else "err")]
+def update_file_cache(fpath: str, flags: list[str], ok: bool, cache: dict) :
+    cache[fpath] = [path.getmtime(Path(fpath)), flags, ("ok" if ok else "err")]

@@ -18,10 +18,10 @@ def main() :
     group.add_argument("--build-run", action="store_true", help="builds and runs the project")  
 
     # flags related to tests
-    group.add_argument("--run-tests", actoin="store_true", help="runs all suits and all tests")                            # TODO
+    group.add_argument("--run-tests", action="store_true", help="runs all suits and all tests")                            # TODO
     group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      # TODO
     group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           # TODO
-    group.add_argument("--new-suit", type=str, metavar="SUIT_NAME", help="creates a new test suit in the current folder")  # TODO
+    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current folder")  # TODO
 
     # Miscellaneous
     group.add_argument("--clean-cache") # TODO
@@ -50,6 +50,19 @@ def main() :
         sys.exit(0)
     # ---------------------------------------------------------
 
+    # Loading tests.json --------------------------------------
+    tests_json = load_json("./tests.json")
+    if (tests_json == None) :
+        print("tests.json not found")
+        sys(0)
+
+    tests = Tests()
+    (ok, key) = tests.load(project.comp, tests_json)
+    if (ok == -1) :
+        print(f"Key {key} not found in tests.json")
+        sys.exit(0)
+    # ---------------------------------------------------------
+    
     # Loading cache.json --------------------------------------
     cache = load_json("./cache/cache.json")
     if (cache == None) :
@@ -67,12 +80,24 @@ def main() :
             result = subprocess.run(f"./builds/{project.name}")
             if result.returncode != 0 :
                 print(result.stderr)
+        else :
+            print("Project binary not found")
 
     elif args.build_run :
         if build_project(project, cache) :
             result = subprocess.run(f"./builds/{project.name}")
             if result.returncode != 0 :
                 print(result.stderr)
+
+    elif args.run_tests :
+        tests.run_tests(cache)
+
+    elif args.run_test :
+        tests.run_test(args.run_test, cache)
+
+    elif args.run_suit :
+        tests.run_suit(args.run_suit, cache)
+
     
 if __name__ == "__main__" :
     main()

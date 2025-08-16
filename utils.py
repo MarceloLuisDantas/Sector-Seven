@@ -48,3 +48,41 @@ def save_json(path: str, dict: dict) -> bool :
     with open(path, "w") as file :
         json.dump(dict, file, indent=4)
     return True
+
+# PRINTS 
+def print_running_test(test_name: str) : ...
+def print_files_missing(files: list[str]) : ...
+
+def     print_test_pass(test_name: str) : print(f"Test Pass - {test_name}\n")
+def     print_test_fail(test_name: str) : print(f"Test Fail - {test_name}\n")
+def print_test_segfault(test_name: str) : print(f"Test Sefgault - {test_name}\n")
+def  print_test_comperr(test_name: str) : print(f"Test Not compiled - {test_name}\n")
+
+def print_test_list(tests: list[str]) :
+    for test in tests :
+        print(f"{test} ", end="")
+    print("")
+
+def print_total_tests_pass(tests: list[str]) : 
+    if len(tests) > 0 :
+        print(f"{len(tests)} Total that Passed")
+        print_test_list(tests)
+        print("")
+
+def print_total_tests_fail(tests: list[str]) : 
+    if len(tests) > 0 :
+        print(f"{len(tests)} Total that Failed")
+        print_test_list(tests)
+        print("")
+
+def print_total_tests_segfault(tests: list[str]) : 
+    if len(tests) > 0 :
+        print(f"{len(tests)} Total that Segfault")
+        print_test_list(tests)
+        print("")
+
+def print_total_tests_comperr(tests: list[str]) : 
+    if len(tests) > 0 :
+        print(f"{len(tests)} Total that didn't Compile")
+        print_test_list(tests)
+        print("")

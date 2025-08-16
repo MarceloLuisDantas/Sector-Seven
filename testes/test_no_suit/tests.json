@@ -1,0 +1,18 @@
+{
+    "suits": [],
+    "tests": {
+        "test_sum": [
+            "src/sum.c",
+            "src/test_sum.c"
+        ],
+        "test_mult": [
+            "src/mult.c",
+            "src/test_mult.c"
+        ]
+    },
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}

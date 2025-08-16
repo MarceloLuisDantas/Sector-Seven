@@ -5,6 +5,7 @@ from utils import save_json, create_folder, create_file
 def init_project(name: str, ptype: str) :
     create_folder("./builds")
     create_folder("./cache")
+    create_folder("./cache/tests")
 
     project = Project(name=name, ptype=ptype) 
     create_file("./project.json")
