@@ -130,7 +130,7 @@ def main() :
         tests.run_tests(cache, args.stdio, args.verbose)
 
     elif args.run_test :
-        tests.run_one_test(args.run_test, cache, args.stdio, args.verbose)
+        tests.run_one_test(args.run_test, cache, True, args.verbose)
 
     elif args.run_suit :
         tests.run_suit(args.run_suit, cache, args.stdio, args.verbose)
