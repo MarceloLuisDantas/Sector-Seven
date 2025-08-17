@@ -37,7 +37,7 @@ class Tests:
         self.gdbf  = tests_json["gdb_flags"]
 
         return (1, "")
-       
+
     # -> (int, str), the frist is the result code, the str is the output
     # -2 - File not found
     # -1 - Comp Err
@@ -216,3 +216,4 @@ class Tests:
         print_total_tests_comperr(comp_erros)
         print_total_tests_segfault(seg_faults)
         
+    

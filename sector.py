@@ -104,8 +104,43 @@ def main() :
     elif args.run_suit :
         tests.run_suit(args.run_suit, cache)
 
-    # elif args.valgrind :
-    #     if args.valgrind = "."
+    elif args.valgrind :
+        val_line = "valgrind "
+        for flag in project.valf :
+            val_line += f"{flag} "
+        
+        if args.valgrind == "." :
+            if not file_exist(f"./builds/{project.name}"):
+                print("The projecs need to be compiled before tested with Valgrind")
+            else :
+                val_line += f"./builds/{project.name}"
+                os.system(val_line)
+
+        elif file_exist(f"./cache/tests/{args.valgrind}") :
+            val_line += f"./cache/tests/{args.valgrind}"
+            os.system(val_line)
+        else :
+            print(f"Binarie {args.valgrind} not found in ./cache/tests")
+            print("Please, try running the test before running with Valgrind or GDB")
+
+    elif args.gdb :
+        gdb_line = "gdb "
+        for flag in project.valf :
+            gdb_line += f"{flag} "
+        
+        if args.gdb == "." :
+            if not file_exist(f"./builds/{project.name}"):
+                print("The projecs need to be compiled before tested with GDB")
+            else :
+                gdb_line += f"./builds/{project.name}"
+                os.system(gdb_line)
+
+        elif file_exist(f"./cache/tests/{args.gdb}") :
+            gdb_line += f"./cache/tests/{args.gdb}"
+            os.system(gdb_line)
+        else :
+            print(f"Binarie {args.gdb} not found in ./cache/tests")
+            print("Please, try running the test before running with Valgrind or GDB")
 
     save_json("./cache/cache.json", cache)
 
