@@ -61,5 +61,26 @@
             "-g"
         ],
         "ok"
+    ],
+    "src/suit2/pass/pass.c": [
+        1755369026.9826415,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit2/pass/test_pass.c": [
+        1755369026.9826415,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_2:test_pass": [
+        1755405336.720376,
+        [
+            "-g"
+        ],
+        "ok"
     ]
 }
