@@ -11,10 +11,7 @@ def check_cache_ok(line: list[str]) :
         (type(line[2]) is str)
     )
 
-# Returns 1 if the file needs to be recompiled
-# Returns 0 if not
-# Returns -1 if the cache history is inconsistent
-def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
+def need_to_compile(fpath: str, flags: list[str], cache: dict) -> bool :
     # Checks if the file has being compiler
     if fpath not in cache :
         return True
@@ -41,6 +38,12 @@ def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
     if file_cache[2] != "ok" :
         return True
     
+    return False
+
+def test_need_to_compiled(test: list[str], flags: list[str], cache: dict) -> int :
+    for file in test :
+        if need_to_compile(file, flags, cache) :
+            return True
     return False
 
 def update_file_cache(fpath: str, flags: list[str], ok: bool, cache: dict) :

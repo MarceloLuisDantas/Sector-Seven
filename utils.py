@@ -2,6 +2,13 @@ from pathlib import Path
 import json
 import os
 
+def valid_name(name: str) -> bool :
+    valid_chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890_"
+    for char in name :
+        if char not in valid_chars :
+            return False
+    return True 
+
 def check_keys_on_dicts(keys: list[str], dict: dict) -> bool :
     for key in keys :
         if key not in dict :

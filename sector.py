@@ -21,29 +21,48 @@ def main() :
     group.add_argument("--run-tests", action="store_true", help="runs all suits and all tests")                            
     group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      
     group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           
-    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current folder") # TODO
+    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current director") # TODO
 
     # Debug
-    group.add_argument("--valgrind", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with valgrind." + 
-                                                                            "To run the project, run the command a \".\" for the name.")                      
-    group.add_argument("--gdb", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with gdb." +
-                                                                       "To run the project, run the command a \".\" for the name.")                      
+    # TODO - Make --valgrind and --gdb compile the test/project if not compiled
+    group.add_argument("--valgrind", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with valgrind.\nTo run the project, run the command a \".\" for the name.")                      
+    group.add_argument("--gdb", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with gdb.\nTo run the project, run the command a \".\" for the name.")                      
 
     # Miscellaneous
-    group.add_argument("--clean-cache") # TODO
-    group.add_argument("--version")     # TODO
+    group.add_argument("--clean-cache", action="store_true", help="cleans the cache file in /cache/cache.json") 
+    group.add_argument("--version", action="store_true", help="shows the version")     
 
     args = parser.parse_args()
-    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.clean_cache, args.version, args.valgrind, args.gdb]):
+    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.new_suit, args.clean_cache, args.version, args.valgrind, args.gdb]):
         parser.print_help()
         sys.exit(0) 
 
+    # Project independent commands --------------------------------------------------------
     # Creates a new project
     if args.new:
         init_project(args.new, "bin")
         sys.exit(0)
+
+    # Creates a new suit
+    if args.new_suit :
+        if not valid_name(args.new_suit) :
+            print(f"{args.new_suit} is not a valid name")
+        else :
+            suit = {"tests": {}}
+            if not create_file(f"suit_{args.new_suit}.json") :
+                print(f"Suit with name {args.new_suit} already exist in this director.")
+            else :
+                save_json(f"./suit_{args.new_suit}.json", suit)
+                print(f"Suit craeted ./suit_{args.new_suit}.json")
+        sys.exit(0)
     
-    # Loading project.json ------------------------------------
+    # Shos the version
+    if args.version :
+        print(f"Sector Seven - v{VERSION}")
+        sys.exit(0)
+    # -------------------------------------------------------------------------------------
+
+    # Loading project.json ----------------------------------------------------------------
     project_json = load_json("./project.json")
     if (project_json == None):
         print("project.json not found")
@@ -54,9 +73,9 @@ def main() :
     if (ok == -1) :
         print(f"Key {key} not found in project.json")
         sys.exit(0)
-    # ---------------------------------------------------------
+    # -------------------------------------------------------------------------------------
 
-    # Loading tests.json --------------------------------------
+    # Loading tests.json ------------------------------------------------------------------
     tests_json = load_json("./tests.json")
     if (tests_json == None) :
         print("tests.json not found")
@@ -67,16 +86,16 @@ def main() :
     if (ok == -1) :
         print(f"Key {key} not found in tests.json")
         sys.exit(0)
-    # ---------------------------------------------------------
+    # -------------------------------------------------------------------------------------
     
-    # Loading cache.json --------------------------------------
+    # Loading cache.json ------------------------------------------------------------------
     cache = load_json("./cache/cache.json")
     if (cache == None) :
         print("./cache/cache.json not found")
         print("Creating a new cache.json in ./cache")
         create_file("./cache/cache.json")
         save_json("./cache/tests.json", {})
-    # ---------------------------------------------------------
+    # -------------------------------------------------------------------------------------
 
     if args.build :
         build_project(project, cache)
@@ -141,6 +160,10 @@ def main() :
         else :
             print(f"Binarie {args.gdb} not found in ./cache/tests")
             print("Please, try running the test before running with Valgrind or GDB")
+
+    elif args.clean_cache :
+        empty_cache = {}
+        save_json("./cache/cache.json", empty_cache)
 
     save_json("./cache/cache.json", cache)
 

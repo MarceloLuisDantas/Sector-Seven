@@ -68,7 +68,8 @@ class Tests:
         if suit != "" : test_cache_path = f"cache/tests/{suit}:{test_name}"
         else :          test_cache_path = f"cache/tests/{test_name}"
 
-        if need_to_compile(test_cache_path, self.compf, cache) :
+        # TODO - Optmize this part
+        if (test_need_to_compiled(test, self.compf, cache)) :
             comp_line = f"{self.comp} "
             for flag in self.compf :
                 comp_line += f"{flag} "
@@ -85,17 +86,17 @@ class Tests:
                 comp_line += (f"./cache/{file[0:-2]}.o ")
             # ------------------------------------------------------------
             comp_line += f"-o ./{test_cache_path}"
-        
-            # Compiling the test -----------------------------------------
-            print_compiling_test(test_name)
-            result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
-            if result.returncode != 0 :
-                update_file_cache(test_cache_path, self.compf, False, cache)
-                print(result.stderr, end="")
-                print_test_comperr(test_name)
-                return (-1, result.stderr)
-            update_file_cache(test_cache_path, self.compf, True, cache)
-            # ------------------------------------------------------------
+    
+        # Compiling the test -----------------------------------------
+        print_compiling_test(test_name)
+        result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+        if result.returncode != 0 :
+            update_file_cache(test_cache_path, self.compf, False, cache)
+            print(result.stderr, end="")
+            print_test_comperr(test_name)
+            return (-1, result.stderr)
+        update_file_cache(test_cache_path, self.compf, True, cache)
+        # ------------------------------------------------------------
         
         # Running the test -----------------------------------------------
         try :
