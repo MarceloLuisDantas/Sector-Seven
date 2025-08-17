@@ -75,11 +75,42 @@ orange = "\033[38;5;208m"
 ERROR = f"{red}ERROR{reset}"
 OK = f"{green}OK{reset}"
 
-def print_running_test(test_name: str, suit="") : 
-    print(f"╔ {blue}Running test:{reset} {bold}{suit}:{test_name}{reset}")
+def print_build_project(name: str) :
+    print(f"╔ Building Project: {bold}{name}{reset}")
 
-def print_compiling_test(test: str) :
-    print(f"╠ {blue}Compiling:{reset} {test}")
+def print_project_not_compiled() :
+    print(f"╚ {red}Fail to compile the project.{reset}")
+
+def print_project_compiled() :
+    print(f"╚ {green}Project Compiled{reset}")
+
+def print_source_not_found(name: str) :
+    print(f"╠ {red}Source File Not Found: {reset}{bold}{name}{reset}")
+
+def print_creating_directory(dir_name: str) :
+    print(f"╠══ {green}Creating Directory: {bold}{dir_name}{reset}")
+
+def print_running_test(test_name: str, suit="") : 
+    if suit == "" :
+        print(f"╔ {blue}Running test:{reset} {bold}{suit}{test_name}{reset}")
+    else :
+        print(f"╔ {blue}Running test:{reset} {bold}{suit}:{test_name}{reset}")
+
+def print_compiling_line(comp_line: str) :
+    print(f"╠ {blue}Running: {bold}{comp_line}{reset}")
+
+def print_compiled_ok(file: str) :
+    print(f"╠══ {green}Source Compiled Successfully: {reset}{bold}{file}{reset}")
+
+def print_compiled_err(file: str) :
+    print(f"╠══ {red}Source Didn't Compiled: {reset}{bold}{file}{reset}")
+
+def print_compiling_test(test: str, comp_line) :
+    print(f"╠ {blue}Compiling Test: {reset}{bold}{test}{reset}")
+    print_compiling_line(comp_line)
+
+def print_caching() :
+    print(f"╠ {blue}Caching files{reset}")
 
 def print_test_pass(test_name: str) : 
     print(f"╚ {OK} - ✅ {green}Pass{reset}\n")
@@ -101,6 +132,8 @@ def print_test_list(tests: list[str]) :
 def print_files_missing(files: list[str]) : 
     print(f"Total of {len(files)} files are missing: ")
     print_test_list(files)    
+
+def file_missing() :
     print(f"╚ {ERROR} - ❓ {yellow}Files missing{reset}\n")
 
 def print_total_tests_pass(tests: list[str]) : 

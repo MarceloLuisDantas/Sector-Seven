@@ -25,16 +25,28 @@ def main() :
 
     # Debug
     # TODO - Make --valgrind and --gdb compile the test/project if not compiled
-    group.add_argument("--valgrind", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with valgrind.\nTo run the project, run the command a \".\" for the name.")                      
-    group.add_argument("--gdb", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with gdb.\nTo run the project, run the command a \".\" for the name.")                      
+    group.add_argument("--valgrind", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with valgrind. To run the project, run the command a \".\" for the name.")                      
+    group.add_argument("--gdb", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with gdb. To run the project, run the command a \".\" for the name.")                      
 
     # Miscellaneous
-    group.add_argument("--clean-cache", action="store_true", help="cleans the cache file in /cache/cache.json") 
-    group.add_argument("--version", action="store_true", help="shows the version")     
+    group.add_argument("--clean-cache", action="store_true", help="cleans the cache file in /cache/cache.json.") 
+    group.add_argument("--version", action="store_true", help="shows the version.")     
+
+    # Optinial flags
+    parser.add_argument("--verbose", action="store_true", help="show more information while running tests. Use with --run-tests, --run-test or --run-suit.")
+    parser.add_argument("--stdio", action="store_true", help="shows the stdio of the tests. Use with --run-tests or --run-suit.")
 
     args = parser.parse_args()
     if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.new_suit, args.clean_cache, args.version, args.valgrind, args.gdb]):
         parser.print_help()
+        sys.exit(0) 
+
+    if args.verbose and not (args.run_tests or args.run_test or args.run_suit) :
+        print("--verbose can only be used with --run-tests, --run-test or --run-suit")
+        sys.exit(0) 
+
+    if args.stdio and not (args.run_tests or args.run_suit) :
+        print("--stdio can only be used with --run-tests or --run-suit")
         sys.exit(0) 
 
     # Project independent commands --------------------------------------------------------
@@ -115,13 +127,13 @@ def main() :
                 print(result.stderr)
 
     elif args.run_tests :
-        tests.run_tests(cache)
+        tests.run_tests(cache, args.stdio, args.verbose)
 
     elif args.run_test :
-        tests.run_one_test(args.run_test, cache)
+        tests.run_one_test(args.run_test, cache, args.stdio, args.verbose)
 
     elif args.run_suit :
-        tests.run_suit(args.run_suit, cache)
+        tests.run_suit(args.run_suit, cache, args.stdio, args.verbose)
 
     elif args.valgrind :
         val_line = "valgrind "
@@ -162,8 +174,10 @@ def main() :
             print("Please, try running the test before running with Valgrind or GDB")
 
     elif args.clean_cache :
+        print("Cleaning cache")
         empty_cache = {}
         save_json("./cache/cache.json", empty_cache)
+        sys.exit(0)
 
     save_json("./cache/cache.json", cache)
 

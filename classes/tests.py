@@ -47,7 +47,7 @@ class Tests:
     # 4 - unicode_decode_error
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
-    def run_test(self, test_name: str, test: list[str], cache: dict, suit="", prefix="") -> int :
+    def run_test(self, test_name: str, test: list[str], cache: dict, stdio: bool, verbose: bool, suit="", prefix="") -> int :
         print_running_test(test_name, suit=suit)
 
         # Fixign the path with the prefix
@@ -61,24 +61,29 @@ class Tests:
                 files_not_found.append(file)
         
         if len(files_not_found) != 0 :
-            print_files_missing(files_not_found)
+            if (stdio) :
+                print_files_missing(files_not_found)
+            file_missing()
             return -2
         # ----------------------------------------------------------------
         test_cache_path = ""
         if suit != "" : test_cache_path = f"cache/tests/{suit}:{test_name}"
         else :          test_cache_path = f"cache/tests/{test_name}"
-
+        
         # TODO - Optmize this part
         if (test_need_to_compiled(test, self.compf, cache)) :
             comp_line = f"{self.comp} "
             for flag in self.compf :
                 comp_line += f"{flag} "
             # Chaching ---------------------------------------------------
+            if verbose :
+                print_caching()
             for file in test :
                 if need_to_compile(file, self.compf, cache) :
-                    (ok, err) = comp_cache(file, self.comp, self.compf)
+                    (ok, err) = comp_cache(file, self.comp, self.compf, verbose)
                     if not ok :
-                        print(err, end="")
+                        if (stdio) :
+                            print(err, end="")
                         print_test_comperr(test)
                         return (-1, err)
                     
@@ -87,45 +92,56 @@ class Tests:
             # ------------------------------------------------------------
             comp_line += f"-o ./{test_cache_path}"
     
-        # Compiling the test -----------------------------------------
-        print_compiling_test(test_name)
-        result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
-        if result.returncode != 0 :
-            update_file_cache(test_cache_path, self.compf, False, cache)
-            print(result.stderr, end="")
-            print_test_comperr(test_name)
-            return (-1, result.stderr)
-        update_file_cache(test_cache_path, self.compf, True, cache)
-        # ------------------------------------------------------------
-        
+            # Compiling the test -----------------------------------------
+            if verbose :
+                print_compiling_test(test_name, comp_line)
+            result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+            if result.returncode != 0 :
+                update_file_cache(test_cache_path, self.compf, False, cache)
+                if (stdio) :
+                    print(result.stderr, end="")
+                print_test_comperr(test_name)
+                return -1
+            update_file_cache(test_cache_path, self.compf, True, cache)
+            # ------------------------------------------------------------
         # Running the test -----------------------------------------------
+        
         try :
+            if suit != "" :
+                test_name = f"{suit}:{test_name}"
+
+            if verbose :
+                print_compiling_line(f"./cache/tests/{test_name}")
             result = subprocess.run(f"./cache/tests/{test_name}", shell=True, capture_output=True, text=True)
         except UnicodeDecodeError :
-            os.system(f"./cache/tests/{test_name}")
+            if (stdio) :
+                os.system(f"./cache/tests/{test_name}")
             print_test_fail(test_name)
             return 4
-
+        
         # The test has passed
         if result.returncode == 1 :
-            print(result.stdout, end="")
+            if (stdio) :
+                print(result.stdout, end="")
             print_test_pass(test_name)
             return 1
         
         # The test has failed
         elif result.returncode == 0 :
-            print(result.stdout, end="")
+            if (stdio) :
+                print(result.stdout, end="")
             print_test_fail(test_name)
             return 2
         
         # Values of segmentation fault
         elif result.returncode == -11 or result.returncode == 139 :
-            os.system(f"./cache/tests/{test_name}")
+            if (stdio) :
+                os.system(f"./cache/tests/{test_name}")
             print_test_segfault(test_name)
             return 3
         # ----------------------------------------------------------------
 
-    def run_one_test(self, test: str, cache: dict) :
+    def run_one_test(self, test: str, cache: dict, stdio: bool, verbose: bool) :
         # Check if the test is in a suit
         if len(test.split(":")) == 2 :
             suit_name = test.split(":")[0]
@@ -141,15 +157,15 @@ class Tests:
                 print(f"Test {test_name} not found in suit {suit_name}")
                 return
 
-            self.run_test(test_name, suit["tests"][test_name], cache, suit_name, str(Path(suit_path).parent))
+            self.run_test(test_name, suit["tests"][test_name], cache, stdio, verbose, suit=suit_name, prefix=str(Path(suit_path).parent))
         else :
             if test not in self.tests :
                 print(f"Test {test} not found in tests.json")
                 return
             
-            self.run_test(test, self.tests[test], cache)
+            self.run_test(test, self.tests[test], cache, stdio, verbose)
 
-    def run_suit(self, suit_name: str, cache: dict) :
+    def run_suit(self, suit_name: str, cache: dict, stdio: bool, verbose: bool) :
         if suit_name not in self.suits :
             print(f"Suit {suit_name} not found in tests.json")
             return
@@ -167,7 +183,7 @@ class Tests:
             sufix = str(Path(self.suits[suit_name]).parent)
             tests = suit["tests"]
             for test in tests:
-                result = self.run_test(test, tests[test], cache, suit_name, sufix)
+                result = self.run_test(test, tests[test], cache, stdio, verbose, suit_name, sufix)
                 if   result == -2 : comp_erros.append(suit_name + "/" + test)
                 elif result == -1 : comp_erros.append(suit_name + "/" + test)
                 elif result ==  1 : passed_tests.append(suit_name + "/" + test)
@@ -181,14 +197,14 @@ class Tests:
             print_total_tests_segfault(seg_faults)
 
      # Run all tests and suits
-    def run_tests(self, cache: dict) :
+    def run_tests(self, cache: dict, stdio: bool, verbose: bool) :
         passed_tests = []
         failed_tests = []
         comp_erros = []
         seg_faults = []
 
         for test in self.tests:
-            result = self.run_test(test, self.tests[test], cache)
+            result = self.run_test(test, self.tests[test], cache, stdio, verbose)
             if   result == -2 : comp_erros.append(test)
             elif result == -1 : comp_erros.append(test)
             elif result ==  1 : passed_tests.append(test)
@@ -204,7 +220,7 @@ class Tests:
                 sufix = str(Path(self.suits[suit_name]).parent)
                 tests = suit["tests"]
                 for test in tests:
-                    result = self.run_test(test, tests[test], cache, suit_name, sufix)
+                    result = self.run_test(test, tests[test], cache, stdio, verbose, suit_name, sufix)
                     if   result == -2 : comp_erros.append(suit_name + "/" + test)
                     elif result == -1 : comp_erros.append(suit_name + "/" + test)
                     elif result ==  1 : passed_tests.append(suit_name + "/" + test)
