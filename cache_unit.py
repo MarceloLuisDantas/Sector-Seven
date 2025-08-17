@@ -25,6 +25,9 @@ def need_to_compile(fpath: str, flags: list[str], cache: dict) -> int :
         print("Please, run --clean-cache to clean the cache history.")
         exit(0)
     
+    if not file_exist(fpath) :
+        return True
+
     # Checks if the file have changes
     last_change = path.getmtime(Path(fpath))
     if last_change != file_cache[0] :

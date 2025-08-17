@@ -47,8 +47,8 @@ class Tests:
     # 4 - unicode_decode_error
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
-    def run_test(self, test_name: str, test: list[str], cache: dict, prefix: str) -> tuple[int, str | list[str]] :
-        print_running_test(test_name)
+    def run_test(self, test_name: str, test: list[str], cache: dict, suit="", prefix="") -> int :
+        print_running_test(test_name, suit=suit)
 
         # Fixign the path with the prefix
         if (prefix != "") :
@@ -61,9 +61,13 @@ class Tests:
                 files_not_found.append(file)
         
         if len(files_not_found) != 0 :
-            return (-2, files_not_found)
+            print_files_missing(files_not_found)
+            return -2
         # ----------------------------------------------------------------
-        test_cache_path = f"cache/tests/{test_name}"
+        test_cache_path = ""
+        if suit != "" : test_cache_path = f"cache/tests/{suit}:{test_name}"
+        else :          test_cache_path = f"cache/tests/{test_name}"
+
         if need_to_compile(test_cache_path, self.compf, cache) :
             comp_line = f"{self.comp} "
             for flag in self.compf :
@@ -73,18 +77,22 @@ class Tests:
                 if need_to_compile(file, self.compf, cache) :
                     (ok, err) = comp_cache(file, self.comp, self.compf)
                     if not ok :
+                        print(err, end="")
+                        print_test_comperr(test)
                         return (-1, err)
                     
                     update_file_cache(file, self.compf, True, cache)
-                    comp_line += (f"./cache/{file[0:-2]}.o ")
+                comp_line += (f"./cache/{file[0:-2]}.o ")
             # ------------------------------------------------------------
-            comp_line += f"-o ./cache/tests/{test_name}"
-                
+            comp_line += f"-o ./{test_cache_path}"
+        
             # Compiling the test -----------------------------------------
             print_compiling_test(test_name)
             result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
             if result.returncode != 0 :
                 update_file_cache(test_cache_path, self.compf, False, cache)
+                print(result.stderr, end="")
+                print_test_comperr(test_name)
                 return (-1, result.stderr)
             update_file_cache(test_cache_path, self.compf, True, cache)
             # ------------------------------------------------------------
@@ -93,23 +101,85 @@ class Tests:
         try :
             result = subprocess.run(f"./cache/tests/{test_name}", shell=True, capture_output=True, text=True)
         except UnicodeDecodeError :
-            return (4, "")
+            os.system(f"./cache/tests/{test_name}")
+            print_test_fail(test_name)
+            return 4
 
         # The test has passed
         if result.returncode == 1 :
-            return (1, result.stdout)
+            print(result.stdout, end="")
+            print_test_pass(test_name)
+            return 1
         
         # The test has failed
         elif result.returncode == 0 :
-            return (2, result.stdout)
+            print(result.stdout, end="")
+            print_test_fail(test_name)
+            return 2
         
         # Values of segmentation fault
         elif result.returncode == -11 or result.returncode == 139 :
-            return (3, "")
+            os.system(f"./cache/tests/{test_name}")
+            print_test_segfault(test_name)
+            return 3
         # ----------------------------------------------------------------
 
+    def run_one_test(self, test: str, cache: dict) :
+        # Check if the test is in a suit
+        if len(test.split(":")) == 2 :
+            suit_name = test.split(":")[0]
+            test_name = test.split(":")[1]
 
-    # Run all tests and suits
+            if suit_name not in self.suits :
+                print(f"Suit {suit_name} not found in tests.json")
+                return
+            
+            suit_path = self.suits[suit_name]
+            suit = load_json(suit_path)
+            if test_name not in suit["tests"] :
+                print(f"Test {test_name} not found in suit {suit_name}")
+                return
+
+            self.run_test(test_name, suit["tests"][test_name], cache, suit_name, str(Path(suit_path).parent))
+        else :
+            if test not in self.tests :
+                print(f"Test {test} not found in tests.json")
+                return
+            
+            self.run_test(test, self.tests[test], cache)
+
+    def run_suit(self, suit_name: str, cache: dict) :
+        if suit_name not in self.suits :
+            print(f"Suit {suit_name} not found in tests.json")
+            return
+        
+        suit_path = self.suits[suit_name]
+        suit = load_json(suit_path)
+        if suit == None :
+            print(f"Suit {self.suits[suit_name]} not found")
+        else :
+            passed_tests = []
+            failed_tests = []
+            comp_erros = []
+            seg_faults = []
+
+            sufix = str(Path(self.suits[suit_name]).parent)
+            tests = suit["tests"]
+            for test in tests:
+                result = self.run_test(test, tests[test], cache, suit_name, sufix)
+                if   result == -2 : comp_erros.append(suit_name + "/" + test)
+                elif result == -1 : comp_erros.append(suit_name + "/" + test)
+                elif result ==  1 : passed_tests.append(suit_name + "/" + test)
+                elif result ==  2 : failed_tests.append(suit_name + "/" + test)
+                elif result ==  3 : seg_faults.append(suit_name + "/" + test)
+                elif result ==  4 : failed_tests.append(suit_name + "/" + test)
+
+            print_total_tests_pass(passed_tests)
+            print_total_tests_fail(failed_tests)
+            print_total_tests_comperr(comp_erros)
+            print_total_tests_segfault(seg_faults)
+
+     # Run all tests and suits
     def run_tests(self, cache: dict) :
         passed_tests = []
         failed_tests = []
@@ -117,41 +187,13 @@ class Tests:
         seg_faults = []
 
         for test in self.tests:
-            (result, io) = self.run_test(test, self.tests[test], cache, "")
-
-            # -2 One or more files are missing
-            if result == -2 :
-                print_files_missing(io)
-                comp_erros.append(test)
-
-            # -1 Compilation error
-            elif result == -1 :
-                print(io, end="")
-                print_test_comperr(test)
-                comp_erros.append(test)
-
-            # Teste passed
-            elif result == 1 :
-                print(io, end="")
-                print_test_pass(test)
-                passed_tests.append(test)
-
-            # Teste failed
-            elif result == 2 :
-                print(io, end="")
-                print_test_fail(test)
-                failed_tests.append(test)
-
-            # Segfault
-            elif result == 3 :
-                os.system(f"./cache/tests/{test}")
-                print_test_segfault(test)
-                seg_faults.append(test)
-            
-            elif result == 4  :
-                os.system(f"./cache/tests/{test}")
-                print_test_fail(test)
-                failed_tests.append(test)
+            result = self.run_test(test, self.tests[test], cache)
+            if   result == -2 : comp_erros.append(test)
+            elif result == -1 : comp_erros.append(test)
+            elif result ==  1 : passed_tests.append(test)
+            elif result ==  2 : failed_tests.append(test)
+            elif result ==  3 : seg_faults.append(test)
+            elif result ==  4 : failed_tests.append(test)
 
         for suit_name in self.suits :
             suit = load_json(self.suits[suit_name])
@@ -161,50 +203,16 @@ class Tests:
                 sufix = str(Path(self.suits[suit_name]).parent)
                 tests = suit["tests"]
                 for test in tests:
-                    (result, io) = self.run_test(test, tests[test], cache, sufix)
-
-                    # -2 One or more files are missing
-                    if result == -2 :
-                        print_files_missing(io)
-                        comp_erros.append(suit_name + "/" + test)
-
-                    # -1 Compilation error
-                    elif result == -1 :
-                        print(io, end="")
-                        print_test_comperr(test)
-                        comp_erros.append(suit_name + "/" + test)
-
-                    # Teste passed
-                    elif result == 1 :
-                        print(io, end="")
-                        print_test_pass(test)
-                        passed_tests.append(suit_name + "/" + test)
-
-                    # Teste failed
-                    elif result == 2 :
-                        print(io, end="")
-                        print_test_fail(test)
-                        failed_tests.append(suit_name + "/" + test)
-
-                    # Segfault
-                    elif result == 3 :
-                        os.system(f"./cache/tests/{test}")
-                        print_test_segfault(test)
-                        seg_faults.append(suit_name + "/" + test)
-                    
-                    elif result == 4  :
-                        os.system(f"./cache/tests/{test}")
-                        print_test_fail(test)
-                        failed_tests.append(suit_name + "/" + test)
+                    result = self.run_test(test, tests[test], cache, suit_name, sufix)
+                    if   result == -2 : comp_erros.append(suit_name + "/" + test)
+                    elif result == -1 : comp_erros.append(suit_name + "/" + test)
+                    elif result ==  1 : passed_tests.append(suit_name + "/" + test)
+                    elif result ==  2 : failed_tests.append(suit_name + "/" + test)
+                    elif result ==  3 : seg_faults.append(suit_name + "/" + test)
+                    elif result ==  4 : failed_tests.append(suit_name + "/" + test)
 
         print_total_tests_pass(passed_tests)
         print_total_tests_fail(failed_tests)
         print_total_tests_comperr(comp_erros)
         print_total_tests_segfault(seg_faults)
         
-
-    def run_one_test(self, test_name: str, cache: dict) :
-        ...
-
-    def run_suit(self, suit_name: str, cache: dict) :
-        ...

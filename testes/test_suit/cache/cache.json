@@ -82,5 +82,68 @@
             "-g"
         ],
         "ok"
+    ],
+    "src/suit2/fail/fail.c": [
+        1755369026.9816413,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit2/fail/test_fail.c": [
+        1755369026.9816413,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_2:test_fail": [
+        1755407162.6179338,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit2/seg/seg.c": [
+        1755369026.9826415,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/suit2/seg/test_seg.c": [
+        1755369026.9826415,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_2:test_segfault": [
+        1755406855.593006,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_1:test_pass": [
+        1755407170.0321162,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_1:test_fail": [
+        1755407170.0511165,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "cache/tests/suit_1:test_segfault": [
+        1755407170.068117,
+        [
+            "-g"
+        ],
+        "ok"
     ]
 }

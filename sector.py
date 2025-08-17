@@ -18,17 +18,23 @@ def main() :
     group.add_argument("--build-run", action="store_true", help="builds and runs the project")  
 
     # flags related to tests
-    group.add_argument("--run-tests", action="store_true", help="runs all suits and all tests")                            # TODO
-    group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      # TODO
-    group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           # TODO
-    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current folder")  # TODO
+    group.add_argument("--run-tests", action="store_true", help="runs all suits and all tests")                            
+    group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      
+    group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           
+    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current folder") # TODO
+
+    # Debug
+    group.add_argument("--valgrind", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with valgrind." + 
+                                                                            "To run the project, run the command a \".\" for the name.")                      
+    group.add_argument("--gdb", type=str, metavar="BINARIE_NAME", help="runs a binarie (test or the project) with gdb." +
+                                                                       "To run the project, run the command a \".\" for the name.")                      
 
     # Miscellaneous
     group.add_argument("--clean-cache") # TODO
     group.add_argument("--version")     # TODO
 
     args = parser.parse_args()
-    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.clean_cache, args.version]):
+    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.clean_cache, args.version, args.valgrind, args.gdb]):
         parser.print_help()
         sys.exit(0) 
 
@@ -93,10 +99,13 @@ def main() :
         tests.run_tests(cache)
 
     elif args.run_test :
-        tests.run_test(args.run_test, cache)
+        tests.run_one_test(args.run_test, cache)
 
     elif args.run_suit :
         tests.run_suit(args.run_suit, cache)
+
+    # elif args.valgrind :
+    #     if args.valgrind = "."
 
     save_json("./cache/cache.json", cache)
 
