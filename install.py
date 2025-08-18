@@ -35,7 +35,7 @@ def detect_shell():
     return shell if shell else 'other'
 
 def main() :
-    print(f"Sector Seve v{VERSION}")
+    print(f"Sector Seven v{VERSION}")
     print("Este script ira criar ~/.sector, e ira adicionar alias ao seu arquivo de configuração do seu terminal.")
     choice = input("Deseja continuar? [y/n]: ")
     if (choice == "n") :
@@ -48,7 +48,18 @@ def main() :
     print("Adding the alias to your shell")
     
     shell = detect_shell()
-    if (shell == "bash") :
+    correct = input(f"Are you using {shell}? [y/n] ")
+    if not correct :
+        print("The script was unable to detect what your shell is.")
+        print("Are you ussing: ")
+        print(" [1] Bash")
+        print(" [2] ZSH")
+        print(" [3] Other")
+        shell = input(" > ")
+        if   shell == "1" : shell = "bash"
+        elif shell == "2" : shell = "zsh"
+
+    if shell == "bash" :
         bashrc = os.path.expanduser("~/.bashrc")
         with open(bashrc, 'r') as bash :
             for line in bash:
@@ -66,8 +77,11 @@ def main() :
             else:  
                 with open(zshrc, 'a') as zsh:
                     zsh.write("\nalias sector=\"python3 ~/.sector/sector.py\"\n")  
-    else:
-        print(f"'{t}' is not a valid option. Please install manually.")  
+    elif shell == "3":
+        print(f"Sorry, but {shell} is not suported yet. Please install manually.")  
+        os.exit(1)
+    else :
+        print(f"{shell} is not a option")
         os.exit(1)
 
     print("")
