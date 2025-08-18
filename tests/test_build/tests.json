@@ -1,0 +1,9 @@
+{
+    "tests": {},
+    "suites": {},
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}

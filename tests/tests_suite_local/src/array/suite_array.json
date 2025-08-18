@@ -1,0 +1,12 @@
+{
+    "tests": {
+        "test_add": [
+            "array.c",
+            "tests_array/test_add.c"
+        ],
+        "test_concat": [
+            "array.c",
+            "tests_array/test_concat.c"
+        ]
+    }
+}

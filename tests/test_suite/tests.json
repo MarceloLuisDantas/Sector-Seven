@@ -1,0 +1,12 @@
+{
+    "tests": {},
+    "suites": {
+        "test_math": "src/math/suite_math.json",
+        "test_array": "src/array/suite_array.json"
+    },
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}

@@ -1,0 +1,12 @@
+{
+    "tests": {
+        "sum": [
+            "math.c",
+            "tests_math/test_sum.c"
+        ],
+        "mult": [
+            "math.c",
+            "tests_math/test_mult.c"
+        ]
+    }
+}

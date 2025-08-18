@@ -1,0 +1,9 @@
+{
+    "name": "test_init",
+    "type": "bin",
+    "compiler": "gcc",
+    "sources": [],
+    "compilations_flags": [
+        "-Wall"
+    ]
+}

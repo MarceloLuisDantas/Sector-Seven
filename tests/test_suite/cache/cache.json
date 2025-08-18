@@ -1,0 +1,44 @@
+{
+    "src/math/math.c": [
+        1755499590.5641367,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/math/tests_math/test_sum.c": [
+        1755499682.771727,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/math/tests_math/test_mult.c": [
+        1755499669.5634992,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/array/array.c": [
+        1755500955.8328264,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/array/tests_array/test_add.c": [
+        1755500589.431446,
+        [
+            "-g"
+        ],
+        "ok"
+    ],
+    "src/array/tests_array/test_concat.c": [
+        1755500752.7632906,
+        [
+            "-g"
+        ],
+        "ok"
+    ]
+}

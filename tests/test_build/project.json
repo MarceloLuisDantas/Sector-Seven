@@ -1,0 +1,13 @@
+{
+    "name": "test_build",
+    "type": "bin",
+    "compiler": "gcc",
+    "sources": [
+        "src/main.c",
+        "src/math.c",
+        "src/foo/foo.c"
+    ],
+    "compilations_flags": [
+        "-Wall"
+    ]
+}

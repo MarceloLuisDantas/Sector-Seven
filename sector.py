@@ -131,7 +131,7 @@ def main() :
         tests.run_tests(cache, args.stdio, args.verbose)
 
     elif args.run_test :
-        tests.run_one_test(args.run_test, cache, True, args.verbose)
+        tests.run_one_test(args.run_test, cache, True, True)
 
     elif args.run_suite :
         tests.run_suite(args.run_suite, cache, args.stdio, args.verbose)
@@ -176,8 +176,9 @@ def main() :
 
     elif args.clean_cache :
         print("Cleaning cache")
-        empty_cache = {}
-        save_json("./cache/cache.json", empty_cache)
+        for object in cache.keys() :
+            os.remove(f"./cache/{object[0:-2]}.o")
+        save_json("./cache/cache.json", {})
         sys.exit(0)
 
     save_json("./cache/cache.json", cache)

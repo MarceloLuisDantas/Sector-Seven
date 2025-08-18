@@ -1,0 +1,28 @@
+{
+    "tests": {
+        "test_pass": [
+            "src/test_pass.c"
+        ],
+        "test_fail": [
+            "src/test_fail.c"
+        ],
+        "test_seg": [
+            "src/test_seg.c"
+        ],
+        "test_comperr": [
+            "src/test_comperr.c"
+        ],
+        "test_missing_file": [
+            "src/test_missing_file.c"
+        ]
+    },
+    "suites": {
+        "test_math": "src/math/suite_math.json",
+        "test_array": "src/array/suite_array.json"
+    },
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}

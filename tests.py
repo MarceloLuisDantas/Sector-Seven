@@ -13,14 +13,14 @@ class Tests:
         self.valf  = valf
         self.gdbf  = gdbf
 
-    def to_dict(self) :
+    def to_dict(self) : 
         dic = {}
         if self.tests != None :
             dic["tests"] = self.tests
 
-        dic["suites"] = self.suites,
-        dic["compilation_flags"] = self.compf,
-        dic["valgrind_flags"] = self.valf,
+        dic["suites"] = self.suites
+        dic["compilation_flags"] = self.compf
+        dic["valgrind_flags"] = self.valf   
         dic["gdb_flags"] = self.gdbf
         
         return dic
@@ -90,7 +90,7 @@ class Tests:
                         if (stdio) :
                             print(err, end="")
                         print_test_comperr(test)
-                        return (-1, err)
+                        return -1
                     
                     update_file_cache(file, self.compf, True, cache)
                 comp_line += (f"./cache/{file[0:-2]}.o ")
@@ -102,12 +102,12 @@ class Tests:
                 print_compiling_test(test_name, comp_line)
             result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
             if result.returncode != 0 :
-                update_file_cache(test_cache_path, self.compf, False, cache)
+                # update_file_cache(test_cache_path, self.compf, False, cache)
                 if (stdio) :
                     print(result.stderr, end="")
                 print_test_comperr(test_name)
                 return -1
-            update_file_cache(test_cache_path, self.compf, True, cache)
+            # update_file_cache(test_cache_path, self.compf, True, cache)
             # ------------------------------------------------------------
         # Running the test -----------------------------------------------
         
@@ -170,7 +170,8 @@ class Tests:
                     return
                 
                 self.run_test(test, self.tests[test], cache, stdio, verbose)
-            print(f"Test {test} not found in tests.json")
+            else :
+                print(f"Field test not found in tests.json")
             
 
     def run_suite(self, suite_name: str, cache: dict, stdio: bool, verbose: bool) :

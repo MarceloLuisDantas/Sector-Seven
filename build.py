@@ -26,6 +26,10 @@ def comp_cache(source: str, comp: str, flags: list[str], verbose: bool) -> tuple
     return (True, "")
     
 def build_project(project: Project, cache: dict) -> bool :
+    if len(project.sources) == 0 :
+        print("No source file given in \"sources\" at \"project.json\".")
+        return False
+    
     print_build_project(project.name)
     files = project.sources 
     flags = project.compf

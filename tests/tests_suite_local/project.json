@@ -1,0 +1,9 @@
+{
+    "name": "test_suite_local",
+    "type": "bin",
+    "compiler": "gcc",
+    "sources": [],
+    "compilations_flags": [
+        "-Wall"
+    ]
+}
