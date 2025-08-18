@@ -17,14 +17,34 @@ My first approach was to look at the "modern C" languages: Rust, Nim, Zig, Go, C
 If you use Bash or ZSH, you can run the installation script for install automatically
 
 ```
+$ Sector-Seven ❯ python install.py
+Sector Seven v0.5
+This script will create ~/.sector and add aliases to your terminal configuration file..
+Do you want to continue? [y/n]: y
+Copying build.py to ~/.sector/
+Copying cache.py to ~/.sector/
+Copying init.py to ~/.sector/
+Copying project.py to ~/.sector/
+Copying sector.py to ~/.sector/
+Copying tests.py to ~/.sector/
+Copying utils.py to ~/.sector/
 
-refazer
- 
+Adding the alias to your shell
+Are you using zsh? [y/n] y
+
+Sector Seven v0.5 should now be installed on your machine.
+Refresh your terminal and test creating a new project
+by running: sector --version
+
+$ Sector-Seven ❯ sector --version
+Sector Seve - v0.5
 ```
 
 ### Manual
-refazer
-
+If you don't use Bash or ZSH, manual installation can be done by moving the `.py` files (except `install.py`) to some directory. To access Sector Seven from anywhere in your terminal, add the alias to your configuration file.
+```
+alias sector="python3 {directory_path}/sector.py"
+```
 
 ## Project, Tests and Cache
 The most important file in your project, is the `./project.json`, is when you tell Sector Seven the project name, if it's a binarie or a library project, the compiler, sources files and the flags.
@@ -44,7 +64,7 @@ The most important file in your project, is the `./project.json`, is when you te
 The second most important file is `./tests.json`. This is where you'll specify the location of your test suites. If you don't want to use test suites, you can create tests directly here. (You can remove the `tests` fild if you want to use only Suits)
 ```JSON
 {
-    "suits": {},
+    "suites": {},
     "tests": {},
     "compilation_flags": [
         "-g"
@@ -85,27 +105,25 @@ Creating ./cache/cache.json
 Project test_project initialized
 ```
 
-A estrutura do projeto é composta pelos diretorios de build e cache, e os arquivos json para armazenar as informações do projeto, dos testes e de cache.
+The project structure is composed of the build and cache directories, and the json files to store the project, test and cache information.
 
 ## Creating tests
 ### What is a Test in Sector Seven?
-O principal motivo para eu ter criado o Sector Seven, é facilitar a criação e utilização de testes unitarios. E a forma mais facil de se fazer um teste em C, é com um arquivo C. Em [Example Suit](./examples/example_suit/), temos 2 arquivos em [./src/math](./examples/example_suit/src/math/) que queros testar, [sum.c](./examples/example_suit/src/math/sum.c) e [mult.c](./examples/example_suit/src/math/mult.c). Para testar criamos 2 arquivos que contenha os tests [test_sum.c](./examples/example_suit/src/math/test_sum.c) e [test_mult.c](./examples/example_suit/src/math/test_mult.c). Um teste é apenas um arquivo com uma função main, que retorna 1 caso o teste seja bem sucedido, ou 0 caso o teste falhe. (Pontos sobre isso seram tratados melhor no final desta seção)
+The main reason I created Sector Seven was to simplify the creation and use of unit tests. The easiest way to write tests in C is with more C. In the [Example Suite](./examples/example_suite/), we have two files to test in [./src/math](./examples/example_suite/src/math/), [sum.c](./examples/example_suite/src/math/sum.c) and [mult.c](./examples/example_suite/src/math/mult.c). To test them, we create two test files: [test_sum.c](./examples/example_suite/src/math/test_sum.c) and [test_mult.c](./examples/example_suite/src/math/test_mult.c). A test is simply a source file with a `main()` function that returns, 1 if the test passes, or 0 if the test fails. ***(Note: This approach will be discussed in more detail at the end of this section.)***. After creating the tests, to make them available to Sector Seven you have two options,local tests, within the `tests.json`, and with test suites.
 
-Apos criar os testes, para tornalos acessivel ao Sector Seven, e para isso temos 2 opções, criando testes locais, ou suits.
-
-### Creating Suits - Recommended
-Suits é a forma recomendada de criar testes, para criar uma nova Suit, use o `sector --new-suit "suit_name"` em qualquer direito que você queira. 
+### Creating Suites - Recommended
+Test suites are the recommended way to create tests. To create a new suite, use `sector --new-suite "suite_name"` in any directory you want. 
 
 ```
-example_suit/src/math ❯ py sector --new-suit "math"   
-Suit craeted ./suit_math.json
-example_suit/src/math ❯ cat suit_math.json 
+example_suite/src/math ❯ py sector --new-suite "math"   
+Suite craeted ./suite_math.json
+example_suite/src/math ❯ cat suite_math.json 
 {
     "tests": {}
 }
 ```
 
-Dentro da suit, o campo de `"testes"`, sera onde iremos registrar nossos testes. Basta dar um nome ao teste, e os arquivos que ele depende.
+Inside the suite, the `"testes"` field is where we'll save our tests. Just give the test a name and specify the files it depends on. 
 ```JSON
 {
     "tests": {
@@ -115,11 +133,11 @@ Dentro da suit, o campo de `"testes"`, sera onde iremos registrar nossos testes.
 }
 ```
 
-Para tornar essa suit acessivel, é preciso adicionar o nome da suit (não precisa ser o mesmo nome usado para criar a suit), junto ao caminho para a suit ao `project.json` na base do projeto.
+To make this suite accessible, add the suite to `tests.json` at the project root, with a name (it doesn't need to match the name used when creating the suite) along with the path to the suite in. 
 ```JSON
 {
-    "suits": {
-        "math": "./src/math/suit_math.json"
+    "suites": {
+        "math": "./src/math/suite_math.json"
     },
     "tests": {},
     "compilation_flags": [
@@ -130,9 +148,9 @@ Para tornar essa suit acessivel, é preciso adicionar o nome da suit (não preci
 }
 ```
 
-Para rodar os seus testes: `sector --run-tests --stdio`. (stdio é uma flag para indicar que o stdio dos teste devem ser exibidos, eles são escondidos por padrão para poupar espaço quando muitos testes são rodados)
+To run your tests: `sector --run-tests --stdio`. (stdio is a flag to indicate that the test stdio should be displayed - it's hidden by default to save space when running many tests.)
 ```
-/examples/example_suit ❯ sector --run-tests                  
+/examples/example_suite ❯ sector --run-tests                  
 ╔ Running test: math:test_sum
 ╚ OK - ✅ Pass
 
@@ -143,11 +161,11 @@ Para rodar os seus testes: `sector --run-tests --stdio`. (stdio é uma flag para
    > math/test_sum math/test_mult 
 ```
 
-### Without Suits
-Caso você não queira criar suits, seja porque você tem poucas coisas para testar ou qualquer que seja o motivo, é possivel criar testes locais no `tests.json` na base do projeto. Aque esta como seria o mesmo teste da Suit, sem utilizar suit.
+### Without Suites
+If you don't want to create test suites, whether because you have few things to test or you just don't want to, you can create local tests directly in `tests.json` at the project root. Here's how the same test from the Suite would look without using a suite.
 ```JSON
 {
-    "suits": {},
+    "suites": {},
     "tests": {
         "test_sum": [
             "src/math/sum.c",
@@ -165,7 +183,7 @@ Caso você não queira criar suits, seja porque você tem poucas coisas para tes
     "gdb_flags": []
 }
 ```
-Note que o caminho para os arquivos precisa ser absoluto partindo do base do projeto. Por isso utilizar suits é recomendado, alem de manter mais organizado, não é necessario lembrar do camiho absoluto de cada arquivo, apenas do caminho para a suit.
+Note that file paths must be absolute from the project root. This is why using test suites is recommended - besides keeping things more organized, you don't need to remember each file's absolute path, just the path to the suite.
 
 ## Everthing
 
@@ -176,10 +194,10 @@ Note que o caminho para os arquivos precisa ser absoluto partindo do base do pro
 | --build           | Compiles the project |
 | --run             | Runs the builded project |
 | --build-run       | Compiles and runs the project |
-| --run-tests       | Run all tests and all suits |
-| --run-test [TEST]/[SUIT:TEST] | Run the named test |
-| --run-suit [SUIT] | Runs the named suit |
-| --new-suit [SUIT] | Creates a new `suit.json` in the current directory |
+| --run-tests       | Run all tests and all suites |
+| --run-test [TEST]/[SUITE:TEST] | Run the named test |
+| --run-suite [SUITE] | Runs the named suite |
+| --new-suite [SUITE] | Creates a new `suite.json` in the current directory |
 | --clean-cache     | Cleans `cache.json` and remove all .o caches |
 | --valgrind [TEST]/[.] | Run the named test through `Valgrind`. Can run the <br> project by passing '.' instead of a test name |
 | --gdb      [TEST]/[.] | Run the named test through `GDB`. Can run the project <br> by passing '.' instead of a test name |

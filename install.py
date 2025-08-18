@@ -1,8 +1,6 @@
 from sector import VERSION
-from pathlib import Path
 from shutil import copy
 from utils import *
-import sys
 import os
 
 sector_directory = os.path.expanduser("~/.sector")
@@ -36,58 +34,56 @@ def detect_shell():
 
 def main() :
     print(f"Sector Seven v{VERSION}")
-    print("Este script ira criar ~/.sector, e ira adicionar alias ao seu arquivo de configuração do seu terminal.")
-    choice = input("Deseja continuar? [y/n]: ")
-    if (choice == "n") :
-        return
-    
-    create_folder(sector_directory)
-    copy_all_files()
+    print("This script will create ~/.sector and add aliases to your terminal configuration file..")
+    choice = input("Do you want to continue? [y/n]: ")
+    if (choice == "y") :
+        create_folder(sector_directory)
+        copy_all_files()
 
-    print("") 
-    print("Adding the alias to your shell")
-    
-    shell = detect_shell()
-    correct = input(f"Are you using {shell}? [y/n] ")
-    if not correct :
-        print("The script was unable to detect what your shell is.")
-        print("Are you ussing: ")
-        print(" [1] Bash")
-        print(" [2] ZSH")
-        print(" [3] Other")
-        shell = input(" > ")
-        if   shell == "1" : shell = "bash"
-        elif shell == "2" : shell = "zsh"
+        print("") 
+        print("Adding the alias to your shell")
+        
+        shell = detect_shell()
+        correct = input(f"Are you using {shell}? [y/n] ")
+        if not correct :
+            print("The script was unable to detect what your shell is.")
+            print("Are you ussing: ")
+            print(" [1] Bash")
+            print(" [2] ZSH")
+            print(" [3] Other")
+            shell = input(" > ")
+            if   shell == "1" : shell = "bash"
+            elif shell == "2" : shell = "zsh"
 
-    if shell == "bash" :
-        bashrc = os.path.expanduser("~/.bashrc")
-        with open(bashrc, 'r') as bash :
-            for line in bash:
-                if line.strip() == "alias sector='python3 ~/.sector/sector.py'":  
-                    break
-            else: 
-                with open(bashrc, 'a') as bash:
-                    bash.write("\nalias sector='python3 ~/.sector/sector.py'\n") 
-    elif shell == "zsh":
-        zshrc = os.path.expanduser("~/.zshrc")
-        with open(zshrc, 'r') as zsh:
-            for line in zsh: 
-                if line.strip() == "alias sector=\"python3 ~/.sector/sector.py\"":
-                    break
-            else:  
-                with open(zshrc, 'a') as zsh:
-                    zsh.write("\nalias sector=\"python3 ~/.sector/sector.py\"\n")  
-    elif shell == "3":
-        print(f"Sorry, but {shell} is not suported yet. Please install manually.")  
-        os.exit(1)
-    else :
-        print(f"{shell} is not a option")
-        os.exit(1)
+        if shell == "bash" :
+            bashrc = os.path.expanduser("~/.bashrc")
+            with open(bashrc, 'r') as bash :
+                for line in bash:
+                    if line.strip() == "alias sector='python3 ~/.sector/sector.py'":  
+                        break
+                else: 
+                    with open(bashrc, 'a') as bash:
+                        bash.write("\nalias sector='python3 ~/.sector/sector.py'\n") 
+        elif shell == "zsh":
+            zshrc = os.path.expanduser("~/.zshrc")
+            with open(zshrc, 'r') as zsh:
+                for line in zsh: 
+                    if line.strip() == "alias sector=\"python3 ~/.sector/sector.py\"":
+                        break
+                else:  
+                    with open(zshrc, 'a') as zsh:
+                        zsh.write("\nalias sector=\"python3 ~/.sector/sector.py\"\n")  
+        elif shell == "3":
+            print(f"Sorry, but {shell} is not suported yet. Please install manually.")  
+            os.exit(1)
+        else :
+            print(f"{shell} is not a option")
+            os.exit(1)
 
-    print("")
-    print(f"Sector Seven v{VERSION} should now be installed on your machine.") 
-    print("Refresh your terminal and test creating a new project")
-    print("by running: sector --version")  
+        print("")
+        print(f"Sector Seven v{VERSION} should now be installed on your machine.") 
+        print("Refresh your terminal and test creating a new project")
+        print("by running: sector --version")  
 
 if __name__ == '__main__' :
     main()

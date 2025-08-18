@@ -18,10 +18,10 @@ def main() :
     group.add_argument("--build-run", action="store_true", help="builds and runs the project")  
 
     # flags related to tests
-    group.add_argument("--run-tests", action="store_true", help="runs all suits and all tests")                            
-    group.add_argument("--run-suit", type=str, metavar="SUIT_NAME", help="runs a specific test suit")                      
+    group.add_argument("--run-tests", action="store_true", help="runs all suites and all tests")                            
+    group.add_argument("--run-suite", type=str, metavar="suite_NAME", help="runs a specific test suite")                      
     group.add_argument("--run-test", type=str, metavar="TEST_NAME", help="runs a specific test")                           
-    group.add_argument("--new-suit", type=str, metavar="NEW_SUIT_NAME", help="creates a new test suit in the current director") # TODO
+    group.add_argument("--new-suite", type=str, metavar="NEW_suite_NAME", help="creates a new test suite in the current director") # TODO
 
     # Debug
     # TODO - Make --valgrind and --gdb compile the test/project if not compiled
@@ -33,21 +33,21 @@ def main() :
     group.add_argument("--version", action="store_true", help="shows the version.")     
 
     # Optinial flags
-    parser.add_argument("--verbose", action="store_true", help="show more information while running tests. Use with --run-tests, --run-test or --run-suit.")
-    parser.add_argument("--stdio", action="store_true", help="shows the stdio of the tests. Use with --run-tests or --run-suit.")
+    parser.add_argument("--verbose", action="store_true", help="show more information while running tests. Use with --run-tests, --run-test or --run-suite.")
+    parser.add_argument("--stdio", action="store_true", help="shows the stdio of the tests. Use with --run-tests or --run-suite.")
 
 
     args = parser.parse_args()
-    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.new_suit, args.clean_cache, args.version, args.valgrind, args.gdb]):
+    if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suite, args.run_test, args.new_suite, args.clean_cache, args.version, args.valgrind, args.gdb]):
         parser.print_help()
         sys.exit(0) 
 
-    if args.verbose and not (args.run_tests or args.run_test or args.run_suit) :
-        print("--verbose can only be used with --run-tests, --run-test or --run-suit")
+    if args.verbose and not (args.run_tests or args.run_test or args.run_suite) :
+        print("--verbose can only be used with --run-tests, --run-test or --run-suite")
         sys.exit(0) 
 
-    if args.stdio and not (args.run_tests or args.run_suit) :
-        print("--stdio can only be used with --run-tests or --run-suit")
+    if args.stdio and not (args.run_tests or args.run_suite) :
+        print("--stdio can only be used with --run-tests or --run-suite")
         sys.exit(0) 
 
     # Project independent commands --------------------------------------------------------
@@ -56,17 +56,17 @@ def main() :
         init_project(args.new, "bin")
         sys.exit(0)
 
-    # Creates a new suit
-    if args.new_suit :
-        if not valid_name(args.new_suit) :
-            print(f"{args.new_suit} is not a valid name")
+    # Creates a new suite
+    if args.new_suite :
+        if not valid_name(args.new_suite) :
+            print(f"{args.new_suite} is not a valid name")
         else :
-            suit = {"tests": {}}
-            if not create_file(f"suit_{args.new_suit}.json") :
-                print(f"Suit with name {args.new_suit} already exist in this director.")
+            suite = {"tests": {}}
+            if not create_file(f"suite_{args.new_suite}.json") :
+                print(f"suite with name {args.new_suite} already exist in this director.")
             else :
-                save_json(f"./suit_{args.new_suit}.json", suit)
-                print(f"Suit craeted ./suit_{args.new_suit}.json")
+                save_json(f"./suite_{args.new_suite}.json", suite)
+                print(f"suite craeted ./suite_{args.new_suite}.json")
         sys.exit(0)
     
     # Shos the version
@@ -133,8 +133,8 @@ def main() :
     elif args.run_test :
         tests.run_one_test(args.run_test, cache, True, args.verbose)
 
-    elif args.run_suit :
-        tests.run_suit(args.run_suit, cache, args.stdio, args.verbose)
+    elif args.run_suite :
+        tests.run_suite(args.run_suite, cache, args.stdio, args.verbose)
 
     elif args.valgrind :
         val_line = "valgrind "

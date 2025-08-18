@@ -4,9 +4,9 @@ from cache import *
 import subprocess
 
 class Tests:
-    def __init__(self, suits={}, tests={}, comp="gcc",
+    def __init__(self, suites={}, tests={}, comp="gcc",
                  compf=["-g"], valf=[], gdbf=[]):
-        self.suits = suits
+        self.suites = suites
         self.tests = tests
         self.comp  = comp
         self.compf = compf
@@ -18,7 +18,7 @@ class Tests:
         if self.tests != None :
             dic["tests"] = self.tests
 
-        dic["suits"] = self.suits,
+        dic["suites"] = self.suites,
         dic["compilation_flags"] = self.compf,
         dic["valgrind_flags"] = self.valf,
         dic["gdb_flags"] = self.gdbf
@@ -26,11 +26,11 @@ class Tests:
         return dic
 
     def load(self, comp: str, tests_json: dict) -> tuple[int, str]:
-        for key in ["suits", "compilation_flags", "valgrind_flags", "gdb_flags"] :
+        for key in ["suites", "compilation_flags", "valgrind_flags", "gdb_flags"] :
             if key not in tests_json :
                 return (-1, key)
          
-        self.suits = tests_json["suits"]
+        self.suites = tests_json["suites"]
         self.comp  = comp
         self.compf = tests_json["compilation_flags"]
         self.valf  = tests_json["valgrind_flags"]
@@ -52,8 +52,8 @@ class Tests:
     # 4 - unicode_decode_error
     # This value refers to when the C code trys to print random memory, and
     # the value cant be converted in a UTF character, creating a execption. 
-    def run_test(self, test_name: str, test: list[str], cache: dict, stdio: bool, verbose: bool, suit="", prefix="") -> int :
-        print_running_test(test_name, suit=suit)
+    def run_test(self, test_name: str, test: list[str], cache: dict, stdio: bool, verbose: bool, suite="", prefix="") -> int :
+        print_running_test(test_name, suite=suite)
         # Fixign the path with the prefix
         if (prefix != "") :
             test = list(map(lambda t : prefix + "/" + t, test))
@@ -72,7 +72,7 @@ class Tests:
         # ----------------------------------------------------------------
 
         test_cache_path = ""
-        if suit != "" : test_cache_path = f"cache/tests/{suit}:{test_name}"
+        if suite != "" : test_cache_path = f"cache/tests/{suite}:{test_name}"
         else :          test_cache_path = f"cache/tests/{test_name}"
         
         # TODO - Optmize this part
@@ -112,8 +112,8 @@ class Tests:
         # Running the test -----------------------------------------------
         
         try :
-            if suit != "" :
-                test_name = f"{suit}:{test_name}"
+            if suite != "" :
+                test_name = f"{suite}:{test_name}"
 
             if verbose :
                 print_compiling_line(f"./cache/tests/{test_name}")
@@ -147,22 +147,22 @@ class Tests:
         # ----------------------------------------------------------------
 
     def run_one_test(self, test: str, cache: dict, stdio: bool, verbose: bool) :
-        # Check if the test is in a suit
+        # Check if the test is in a suite
         if len(test.split(":")) == 2 :
-            suit_name = test.split(":")[0]
+            suite_name = test.split(":")[0]
             test_name = test.split(":")[1]
 
-            if suit_name not in self.suits :
-                print(f"Suit {suit_name} not found in tests.json")
+            if suite_name not in self.suites :
+                print(f"suite {suite_name} not found in tests.json")
                 return
             
-            suit_path = self.suits[suit_name]
-            suit = load_json(suit_path)
-            if test_name not in suit["tests"] :
-                print(f"Test {test_name} not found in suit {suit_name}")
+            suite_path = self.suites[suite_name]
+            suite = load_json(suite_path)
+            if test_name not in suite["tests"] :
+                print(f"Test {test_name} not found in suite {suite_name}")
                 return
 
-            self.run_test(test_name, suit["tests"][test_name], cache, stdio, verbose, suit=suit_name, prefix=str(Path(suit_path).parent))
+            self.run_test(test_name, suite["tests"][test_name], cache, stdio, verbose, suite=suite_name, prefix=str(Path(suite_path).parent))
         else :
             if self.tests != None :
                 if test not in self.tests :
@@ -173,38 +173,38 @@ class Tests:
             print(f"Test {test} not found in tests.json")
             
 
-    def run_suit(self, suit_name: str, cache: dict, stdio: bool, verbose: bool) :
-        if suit_name not in self.suits :
-            print(f"Suit {suit_name} not found in tests.json")
+    def run_suite(self, suite_name: str, cache: dict, stdio: bool, verbose: bool) :
+        if suite_name not in self.suites :
+            print(f"suite {suite_name} not found in tests.json")
             return
         
-        suit_path = self.suits[suit_name]
-        suit = load_json(suit_path)
-        if suit == None :
-            print(f"Suit {self.suits[suit_name]} not found")
+        suite_path = self.suites[suite_name]
+        suite = load_json(suite_path)
+        if suite == None :
+            print(f"suite {self.suites[suite_name]} not found")
         else :
             passed_tests = []
             failed_tests = []
             comp_erros = []
             seg_faults = []
 
-            sufix = str(Path(self.suits[suit_name]).parent)
-            tests = suit["tests"]
+            sufix = str(Path(self.suites[suite_name]).parent)
+            tests = suite["tests"]
             for test in tests:
-                result = self.run_test(test, tests[test], cache, stdio, verbose, suit_name, sufix)
-                if   result == -2 : comp_erros.append(suit_name + "/" + test)
-                elif result == -1 : comp_erros.append(suit_name + "/" + test)
-                elif result ==  1 : passed_tests.append(suit_name + "/" + test)
-                elif result ==  2 : failed_tests.append(suit_name + "/" + test)
-                elif result ==  3 : seg_faults.append(suit_name + "/" + test)
-                elif result ==  4 : failed_tests.append(suit_name + "/" + test)
+                result = self.run_test(test, tests[test], cache, stdio, verbose, suite_name, sufix)
+                if   result == -2 : comp_erros.append(suite_name + "/" + test)
+                elif result == -1 : comp_erros.append(suite_name + "/" + test)
+                elif result ==  1 : passed_tests.append(suite_name + "/" + test)
+                elif result ==  2 : failed_tests.append(suite_name + "/" + test)
+                elif result ==  3 : seg_faults.append(suite_name + "/" + test)
+                elif result ==  4 : failed_tests.append(suite_name + "/" + test)
 
             print_total_tests_pass(passed_tests)
             print_total_tests_fail(failed_tests)
             print_total_tests_comperr(comp_erros)
             print_total_tests_segfault(seg_faults)
 
-     # Run all tests and suits
+     # Run all tests and suites
     def run_tests(self, cache: dict, stdio: bool, verbose: bool) :
         passed_tests = []
         failed_tests = []
@@ -221,21 +221,21 @@ class Tests:
                 elif result ==  3 : seg_faults.append(test)
                 elif result ==  4 : failed_tests.append(test)
 
-        for suit_name in self.suits :
-            suit = load_json(self.suits[suit_name])
-            if suit == None :
-                print(f"Suit {self.suits[suit_name]} not found")
+        for suite_name in self.suites :
+            suite = load_json(self.suites[suite_name])
+            if suite == None :
+                print(f"suite {self.suites[suite_name]} not found")
             else :
-                sufix = str(Path(self.suits[suit_name]).parent)
-                tests = suit["tests"]
+                sufix = str(Path(self.suites[suite_name]).parent)
+                tests = suite["tests"]
                 for test in tests:
-                    result = self.run_test(test, tests[test], cache, stdio, verbose, suit_name, sufix)
-                    if   result == -2 : comp_erros.append(suit_name + "/" + test)
-                    elif result == -1 : comp_erros.append(suit_name + "/" + test)
-                    elif result ==  1 : passed_tests.append(suit_name + "/" + test)
-                    elif result ==  2 : failed_tests.append(suit_name + "/" + test)
-                    elif result ==  3 : seg_faults.append(suit_name + "/" + test)
-                    elif result ==  4 : failed_tests.append(suit_name + "/" + test)
+                    result = self.run_test(test, tests[test], cache, stdio, verbose, suite_name, sufix)
+                    if   result == -2 : comp_erros.append(suite_name + "/" + test)
+                    elif result == -1 : comp_erros.append(suite_name + "/" + test)
+                    elif result ==  1 : passed_tests.append(suite_name + "/" + test)
+                    elif result ==  2 : failed_tests.append(suite_name + "/" + test)
+                    elif result ==  3 : seg_faults.append(suite_name + "/" + test)
+                    elif result ==  4 : failed_tests.append(suite_name + "/" + test)
 
         print_total_tests_pass(passed_tests)
         print_total_tests_fail(failed_tests)

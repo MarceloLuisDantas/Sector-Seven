@@ -1,11 +1,9 @@
 {
-    "name": "test",
+    "name": "example_suite",
     "type": "bin",
     "compiler": "gcc",
     "sources": [],
     "compilations_flags": [
         "-Wall"
-    ],
-    "valgrind_flags": [],
-    "gdb_flags": []
+    ]
 }

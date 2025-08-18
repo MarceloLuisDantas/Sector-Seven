@@ -1,5 +1,5 @@
 {
-    "suits": {},
+    "suites": {},
     "tests": {},
     "compilation_flags": [
         "-g"

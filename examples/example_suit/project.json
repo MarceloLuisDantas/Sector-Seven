@@ -1,9 +1,0 @@
-{
-    "name": "example_suit",
-    "type": "bin",
-    "compiler": "gcc",
-    "sources": [],
-    "compilations_flags": [
-        "-Wall"
-    ]
-}

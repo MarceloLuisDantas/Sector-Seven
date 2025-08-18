@@ -90,11 +90,11 @@ def print_source_not_found(name: str) :
 def print_creating_directory(dir_name: str) :
     print(f"╠══ {green}Creating Directory: {bold}{dir_name}{reset}")
 
-def print_running_test(test_name: str, suit="") : 
-    if suit == "" :
-        print(f"╔ {blue}Running test:{reset} {bold}{suit}{test_name}{reset}")
+def print_running_test(test_name: str, suite="") : 
+    if suite == "" :
+        print(f"╔ {blue}Running test:{reset} {bold}{suite}{test_name}{reset}")
     else :
-        print(f"╔ {blue}Running test:{reset} {bold}{suit}:{test_name}{reset}")
+        print(f"╔ {blue}Running test:{reset} {bold}{suite}:{test_name}{reset}")
 
 def print_compiling_line(comp_line: str) :
     print(f"╠ {blue}Running: {bold}{comp_line}{reset}")

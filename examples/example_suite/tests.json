@@ -1,6 +1,7 @@
 {
-    "name": "x",
-    "suits": [],
+    "suites": {
+        "math": "./src/math/suite_math.json"
+    },
     "tests": {},
     "compilation_flags": [
         "-g"
