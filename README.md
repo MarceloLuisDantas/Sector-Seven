@@ -202,7 +202,7 @@ Note that file paths must be absolute from the project root. This is why using t
 | --valgrind [TEST]/[.] | Run the named test through `Valgrind`. Can run the <br> project by passing '.' instead of a test name |
 | --gdb      [TEST]/[.] | Run the named test through `GDB`. Can run the project <br> by passing '.' instead of a test name |
 | --version         | Shows the version |
+```
 
 ## TODO
-- Mudar o layout de exibição dos testes
-- Rodar apenas o testes que falharam, segmentaram, comperro... anteriormente.
+- Change tests run layout
