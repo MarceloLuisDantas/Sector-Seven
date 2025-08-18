@@ -21,7 +21,6 @@ $ Sector-Seven ❯ python install.py
 Sector Seven v0.5
 This script will create ~/.sector and add aliases to your terminal configuration file..
 Do you want to continue? [y/n]: y
-Copying build.py to ~/.sector/
 Copying cache.py to ~/.sector/
 Copying init.py to ~/.sector/
 Copying project.py to ~/.sector/
