@@ -204,5 +204,13 @@ Note that file paths must be absolute from the project root. This is why using t
 | --version         | Shows the version |
 ```
 
+```
+| Options    | Description |
+| ---------- | ----------- |
+| --stdio    | Shows the STDIO of all tests. <br> Use with `--run-tests` or `--run-suit` |
+| --verbose  | Shows more info durring compilation. <br> Use with `--run-tests`, `--run-suit`, `--run-test` |
+
+```
+
 ## TODO
 - Change tests run layout
