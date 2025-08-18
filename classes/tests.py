@@ -36,7 +36,7 @@ class Tests:
         self.valf  = tests_json["valgrind_flags"]
         self.gdbf  = tests_json["gdb_flags"]
 
-        if "test" in tests_json :
+        if "tests" in tests_json :
             self.tests = tests_json["tests"]
         else :
             self.tests = None
@@ -54,7 +54,6 @@ class Tests:
     # the value cant be converted in a UTF character, creating a execption. 
     def run_test(self, test_name: str, test: list[str], cache: dict, stdio: bool, verbose: bool, suit="", prefix="") -> int :
         print_running_test(test_name, suit=suit)
-
         # Fixign the path with the prefix
         if (prefix != "") :
             test = list(map(lambda t : prefix + "/" + t, test))
@@ -71,6 +70,7 @@ class Tests:
             file_missing()
             return -2
         # ----------------------------------------------------------------
+
         test_cache_path = ""
         if suit != "" : test_cache_path = f"cache/tests/{suit}:{test_name}"
         else :          test_cache_path = f"cache/tests/{test_name}"

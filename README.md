@@ -85,6 +85,8 @@ Creating ./cache/cache.json
 Project test_project initialized
 ```
 
+A estrutura do projeto é composta pelos diretorios de build e cache, e os arquivos json para armazenar as informações do projeto, dos testes e de cache.
+
 ## Creating tests
 ### What is a Test in Sector Seven?
 O principal motivo para eu ter criado o Sector Seven, é facilitar a criação e utilização de testes unitarios. E a forma mais facil de se fazer um teste em C, é com um arquivo C. Em [Example Suit](./examples/example_suit/), temos 2 arquivos em [./src/math](./examples/example_suit/src/math/) que queros testar, [sum.c](./examples/example_suit/src/math/sum.c) e [mult.c](./examples/example_suit/src/math/mult.c). Para testar criamos 2 arquivos que contenha os tests [test_sum.c](./examples/example_suit/src/math/test_sum.c) e [test_mult.c](./examples/example_suit/src/math/test_mult.c). Um teste é apenas um arquivo com uma função main, que retorna 1 caso o teste seja bem sucedido, ou 0 caso o teste falhe. (Pontos sobre isso seram tratados melhor no final desta seção)
@@ -128,7 +130,7 @@ Para tornar essa suit acessivel, é preciso adicionar o nome da suit (não preci
 }
 ```
 
-Para rodar os seus testes: `sector --run-tests`.
+Para rodar os seus testes: `sector --run-tests --stdio`. (stdio é uma flag para indicar que o stdio dos teste devem ser exibidos, eles são escondidos por padrão para poupar espaço quando muitos testes são rodados)
 ```
 /examples/example_suit ❯ sector --run-tests                  
 ╔ Running test: math:test_sum
@@ -142,26 +144,32 @@ Para rodar os seus testes: `sector --run-tests`.
 ```
 
 ### Without Suits
-
-
-
-## Craeting
-
-## Creating a library
-You can create a lib project using `--init-lib`. The only difference is that a new field will be added to the `project.json`, the `ar_flags`. The [`Sector Strings`](https://github.com/MarceloLuisDantas/Sector-Strings) is a lib created with Sector Seven (v0.5). By default, Sector Seven compiles your library into a static (`.a`) library, but you can use the `--shared` flag to compile the lib into a shared library `(.so)`.
+Caso você não queira criar suits, seja porque você tem poucas coisas para testar ou qualquer que seja o motivo, é possivel criar testes locais no `tests.json` na base do projeto. Aque esta como seria o mesmo teste da Suit, sem utilizar suit.
+```JSON
+{
+    "suits": {},
+    "tests": {
+        "test_sum": [
+            "src/math/sum.c",
+            "src/math/test_sum.c"
+        ],
+        "test_mult": [
+            "src/math/mult.c",
+            "src/math/test_mult.c"
+        ]
+    },
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}
 ```
-$ sector --build --force-build --verbose  
-╠ Compiling: gcc -Wall -c src/sstrings.c -o ./builds/cache/src/sstrings.o
-╔ Archiving Lib: libar rsc builds/libSectorStrings.a ./builds/cache/src/sstrings.o .a
-╚ Project Archived Successfully
+Note que o caminho para os arquivos precisa ser absoluto partindo do base do projeto. Por isso utilizar suits é recomendado, alem de manter mais organizado, não é necessario lembrar do camiho absoluto de cada arquivo, apenas do caminho para a suit.
 
-$ sector --build --force-build --verbose --shared
-╠ Compiling: gcc -Wall -c src/sstrings.c -o ./builds/cache/src/sstrings.o
-╔ Compiling Lib: libgcc --shared -o builds/libSectorStrings.so ./builds/cache/src/sstrings.o .so
-╚ Project Compiled Successfully
+## Everthing
+
 ```
-
-## Falgs
 | Core Flag         | Description |
 | ----------------- | ----------- |
 | --new      [NAME] | Creates the basic struct of a project |
@@ -176,3 +184,7 @@ $ sector --build --force-build --verbose --shared
 | --valgrind [TEST]/[.] | Run the named test through `Valgrind`. Can run the <br> project by passing '.' instead of a test name |
 | --gdb      [TEST]/[.] | Run the named test through `GDB`. Can run the project <br> by passing '.' instead of a test name |
 | --version         | Shows the version |
+
+## TODO
+- Mudar o layout de exibição dos testes
+- Rodar apenas o testes que falharam, segmentaram, comperro... anteriormente.

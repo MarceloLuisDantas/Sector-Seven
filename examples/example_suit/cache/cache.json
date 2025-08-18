@@ -13,8 +13,8 @@
         ],
         "ok"
     ],
-    "cache/tests/math:test_sum": [
-        1755481716.090761,
+    "cache/tests/test_sum": [
+        1755484308.721476,
         [
             "-g"
         ],
@@ -34,8 +34,8 @@
         ],
         "ok"
     ],
-    "cache/tests/math:test_mult": [
-        1755481716.136762,
+    "cache/tests/test_mult": [
+        1755484308.772477,
         [
             "-g"
         ],

@@ -36,6 +36,7 @@ def main() :
     parser.add_argument("--verbose", action="store_true", help="show more information while running tests. Use with --run-tests, --run-test or --run-suit.")
     parser.add_argument("--stdio", action="store_true", help="shows the stdio of the tests. Use with --run-tests or --run-suit.")
 
+
     args = parser.parse_args()
     if not any([args.new, args.build, args.run, args.build_run, args.run_tests, args.run_suit, args.run_test, args.new_suit, args.clean_cache, args.version, args.valgrind, args.gdb]):
         parser.print_help()
