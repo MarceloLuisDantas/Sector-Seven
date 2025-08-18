@@ -187,7 +187,6 @@ Note that file paths must be absolute from the project root. This is why using t
 
 ## Everthing
 
-```
 | Core Flag         | Description |
 | ----------------- | ----------- |
 | --new      [NAME] | Creates the basic struct of a project |
@@ -202,15 +201,11 @@ Note that file paths must be absolute from the project root. This is why using t
 | --valgrind [TEST]/[.] | Run the named test through `Valgrind`. Can run the <br> project by passing '.' instead of a test name |
 | --gdb      [TEST]/[.] | Run the named test through `GDB`. Can run the project <br> by passing '.' instead of a test name |
 | --version         | Shows the version |
-```
 
-```
 | Options    | Description |
 | ---------- | ----------- |
-| --stdio    | Shows the STDIO of all tests. <br> Use with `--run-tests` or `--run-suit` |
-| --verbose  | Shows more info durring compilation. <br> Use with `--run-tests`, `--run-suit`, `--run-test` |
-
-```
+| --stdio    | Shows the STDIO of all tests. <br>Use with `--run-tests` or `--run-suit` |
+| --verbose  | Shows more info durring compilation. <br>Use with `--run-tests`, `--run-suit`, `--run-test` |
 
 ## TODO
 - Change tests run layout
