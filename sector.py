@@ -137,7 +137,7 @@ def main() :
 
     elif args.valgrind :
         val_line = "valgrind "
-        for flag in project.valf :
+        for flag in tests.valf :
             val_line += f"{flag} "
         
         if args.valgrind == "." :
@@ -156,7 +156,7 @@ def main() :
 
     elif args.gdb :
         gdb_line = "gdb "
-        for flag in project.valf :
+        for flag in tests.valf :
             gdb_line += f"{flag} "
         
         if args.gdb == "." :

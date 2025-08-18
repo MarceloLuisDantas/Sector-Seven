@@ -4,7 +4,7 @@ from cache_unit import *
 import subprocess
 
 class Tests:
-    def __init__(self, suits=[], tests={}, comp="gcc",
+    def __init__(self, suits={}, tests={}, comp="gcc",
                  compf=["-g"], valf=[], gdbf=[]):
         self.suits = suits
         self.tests = tests
@@ -14,27 +14,32 @@ class Tests:
         self.gdbf  = gdbf
 
     def to_dict(self) :
-        dic = {
-            "suits": self.suits,
-            "tests": self.tests,
-            "compilation_flags": self.compf,
-            "valgrind_flags": self.valf,
-            "gdb_flags": self.gdbf
-        }
+        dic = {}
+        if self.tests != None :
+            dic["tests"] = self.tests
 
+        dic["suits"] = self.suits,
+        dic["compilation_flags"] = self.compf,
+        dic["valgrind_flags"] = self.valf,
+        dic["gdb_flags"] = self.gdbf
+        
         return dic
 
     def load(self, comp: str, tests_json: dict) -> tuple[int, str]:
-        for key in ["suits", "tests", "compilation_flags", "valgrind_flags", "gdb_flags"] :
+        for key in ["suits", "compilation_flags", "valgrind_flags", "gdb_flags"] :
             if key not in tests_json :
                 return (-1, key)
          
         self.suits = tests_json["suits"]
-        self.tests = tests_json["tests"]
         self.comp  = comp
         self.compf = tests_json["compilation_flags"]
         self.valf  = tests_json["valgrind_flags"]
         self.gdbf  = tests_json["gdb_flags"]
+
+        if "test" in tests_json :
+            self.tests = tests_json["tests"]
+        else :
+            self.tests = None
 
         return (1, "")
 
@@ -159,11 +164,14 @@ class Tests:
 
             self.run_test(test_name, suit["tests"][test_name], cache, stdio, verbose, suit=suit_name, prefix=str(Path(suit_path).parent))
         else :
-            if test not in self.tests :
-                print(f"Test {test} not found in tests.json")
-                return
+            if self.tests != None :
+                if test not in self.tests :
+                    print(f"Test {test} not found in tests.json")
+                    return
+                
+                self.run_test(test, self.tests[test], cache, stdio, verbose)
+            print(f"Test {test} not found in tests.json")
             
-            self.run_test(test, self.tests[test], cache, stdio, verbose)
 
     def run_suit(self, suit_name: str, cache: dict, stdio: bool, verbose: bool) :
         if suit_name not in self.suits :
@@ -203,14 +211,15 @@ class Tests:
         comp_erros = []
         seg_faults = []
 
-        for test in self.tests:
-            result = self.run_test(test, self.tests[test], cache, stdio, verbose)
-            if   result == -2 : comp_erros.append(test)
-            elif result == -1 : comp_erros.append(test)
-            elif result ==  1 : passed_tests.append(test)
-            elif result ==  2 : failed_tests.append(test)
-            elif result ==  3 : seg_faults.append(test)
-            elif result ==  4 : failed_tests.append(test)
+        if self.tests != None :
+            for test in self.tests:
+                result = self.run_test(test, self.tests[test], cache, stdio, verbose)
+                if   result == -2 : comp_erros.append(test)
+                elif result == -1 : comp_erros.append(test)
+                elif result ==  1 : passed_tests.append(test)
+                elif result ==  2 : failed_tests.append(test)
+                elif result ==  3 : seg_faults.append(test)
+                elif result ==  4 : failed_tests.append(test)
 
         for suit_name in self.suits :
             suit = load_json(self.suits[suit_name])

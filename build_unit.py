@@ -1,6 +1,5 @@
 from classes.project import *
 from classes.tests import *
-from classes.test_suit import *
 from classes.unit_test import *
 from cache_unit import *
 from pathlib import Path

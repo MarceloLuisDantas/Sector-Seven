@@ -1,0 +1,11 @@
+{
+    "suits": {
+        "math": "./src/math/suit_math.json"
+    },
+    "tests": {},
+    "compilation_flags": [
+        "-g"
+    ],
+    "valgrind_flags": [],
+    "gdb_flags": []
+}

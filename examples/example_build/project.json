@@ -1,0 +1,9 @@
+{
+    "name": "example_build",
+    "type": "bin",
+    "compiler": "gcc",
+    "sources": [],
+    "compilations_flags": [
+        "-Wall"
+    ]
+}
