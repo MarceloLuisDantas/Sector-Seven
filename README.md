@@ -67,10 +67,7 @@ The third and final core file in Sector Seven is `./cache/cache.json`. To avoid 
         ["-g"],
         "ok"
     ],
-
-    .
-    .
-    .
+    "others tests": []
 }
 ```
 
