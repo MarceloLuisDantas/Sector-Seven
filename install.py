@@ -4,7 +4,6 @@ from utils import *
 import os
 
 sector_directory = os.path.expanduser("~/.sector")
-build   = os.path.expanduser("~/.sector/build.py")
 cache   = os.path.expanduser("~/.sector/cache.py")
 init    = os.path.expanduser("~/.sector/init.py")
 project = os.path.expanduser("~/.sector/project.py")
@@ -20,7 +19,6 @@ def remove_and_copy(file_path, file) :
     copy(file, sector_directory)
 
 def copy_all_files() :
-    remove_and_copy(build, "build.py")
     remove_and_copy(cache, "cache.py")
     remove_and_copy(init, "init.py")
     remove_and_copy(project, "project.py")

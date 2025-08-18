@@ -2,6 +2,7 @@ from pathlib import Path
 from os import path
 from utils import *
 from sys import exit
+import subprocess
 
 def check_cache_ok(line: list[str]) :
     return (
@@ -48,3 +49,23 @@ def test_need_to_compiled(test: list[str], flags: list[str], cache: dict) -> int
 
 def update_file_cache(fpath: str, flags: list[str], ok: bool, cache: dict) :
     cache[fpath] = [path.getmtime(Path(fpath)), flags, ("ok" if ok else "err")]
+
+# tuple[bool, str], bool if the file was compiled correctly, str is the possible err
+# Compiles the file to object file in the cache folder
+def comp_cache(source: str, comp: str, flags: list[str], verbose: bool) -> tuple[bool, str] :
+    source_path = Path(source)
+    if create_folder(f"./cache/{source_path.parent}") and verbose:
+        print_creating_directory(f"./cache/{source_path.parent}")
+    
+    comp_line = f"{comp} -c"
+    for flag in flags :
+        comp_line += f" {flag}"
+    comp_line += f" {source} -o ./cache/{source[0:-2]}.o"
+
+    if verbose :
+        print_compiling_line(comp_line)
+
+    result = subprocess.run(comp_line, shell=True, capture_output=True, text=True)
+    if result.returncode != 0 :
+        return (False, result.stderr)
+    return (True, "")

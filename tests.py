@@ -1,5 +1,4 @@
 from utils import *
-from build import comp_cache
 from cache import *
 import subprocess
 

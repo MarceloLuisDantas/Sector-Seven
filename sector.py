@@ -1,5 +1,4 @@
 from init import *
-from build import *
 from utils import *
 import subprocess
 import argparse
@@ -111,7 +110,7 @@ def main() :
     # -------------------------------------------------------------------------------------
 
     if args.build :
-        build_project(project, cache)
+        project.build_project(project, cache)
 
     elif args.run :
         if file_exist(f"./builds/{project.name}") :
@@ -122,7 +121,7 @@ def main() :
             print("Project binary not found")
 
     elif args.build_run :
-        if build_project(project, cache) :
+        if project.build_project(cache) :
             result = subprocess.run(f"./builds/{project.name}")
             if result.returncode != 0 :
                 print(result.stderr)
