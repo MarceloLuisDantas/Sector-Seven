@@ -64,7 +64,10 @@ class Project:
                 comp_line += f" {flag}"
             for source in project.sources :
                 p = Path(source)
-                comp_line += f" ./cache/{p.parent}/{p.name[0:-2]}.o"
+                if str(p.parent) != "." :
+                    comp_line += f" ./cache/{p.parent}/{p.name[0:-2]}.o"
+                else :
+                    comp_line += f" ./cache/{p.name[0:-2]}.o"
             comp_line += f" -o ./builds/{project.name}"
 
             print_compiling_line(comp_line)
