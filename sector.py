@@ -110,7 +110,7 @@ def main() :
     # -------------------------------------------------------------------------------------
 
     if args.build :
-        project.build_project(project, cache)
+        project.build_project(cache)
 
     elif args.run :
         if file_exist(f"./builds/{project.name}") :
